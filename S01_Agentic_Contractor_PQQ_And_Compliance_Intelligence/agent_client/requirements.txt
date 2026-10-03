@@ -1,0 +1,15 @@
+langchain>=0.3.0
+langchain-community>=0.3.0
+langchain-ollama>=0.2.0
+langchain-aws
+langchain-google-vertexai
+langchain-openai
+langgraph>=0.2.0
+azure-identity
+mcp<2
+python-dotenv
+fastapi
+uvicorn
+numpy
+requests
+rich

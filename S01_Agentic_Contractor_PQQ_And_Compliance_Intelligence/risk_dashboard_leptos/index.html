@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QS Risk Terminal | Leptos WASM Monte Carlo Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="rust" data-trunk href="Cargo.toml" data-wasm-opt="z" />
+    <style>
+        :root, .theme-light {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8fafc;
+            --bg-inner: #f1f5f9;
+            --bg-inner-border: #e2e8f0;
+            --border-glass: #e2e8f0;
+            --border-glow: rgba(59, 130, 246, 0.45);
+            --text-main: #1e293b;
+            --text-title: #0f172a;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+            --text-sub: #475569;
+            --btn-preset-bg: #ffffff;
+            --btn-preset-text: #0f172a;
+            --btn-preset-border: #cbd5e1;
+            --slider-track: #e2e8f0;
+            --chart-grid: rgba(15, 23, 42, 0.08);
+            --chart-axis: rgba(15, 23, 42, 0.25);
+            --notice-bg: #f8fafc;
+            --notice-border: #e2e8f0;
+            --notice-text: #475569;
+            --panel-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+            --tab-unselected-bg: #f1f5f9;
+            --tab-unselected-text: #475569;
+            --tab-unselected-border: #e2e8f0;
+            --body-gradient: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.06) 0px, transparent 50%),
+                             radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.05) 0px, transparent 50%);
+            --accent-blue: #2563eb;
+            --accent-cyan: #0891b2;
+            --accent-emerald: #10b981;
+            --accent-amber: #d97706;
+            --accent-rose: #e11d48;
+            --accent-purple: #7c3aed;
+        }
+
+        .theme-dark {
+            --bg-primary: #0b0f19;
+            --bg-card: rgba(17, 24, 39, 0.75);
+            --bg-card-hover: rgba(31, 41, 55, 0.85);
+            --bg-inner: rgba(15, 23, 42, 0.6);
+            --bg-inner-border: rgba(255, 255, 255, 0.04);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(59, 130, 246, 0.35);
+            --text-main: #f8fafc;
+            --text-title: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --text-sub: #cbd5e1;
+            --btn-preset-bg: #1e293b;
+            --btn-preset-text: #cbd5e1;
+            --btn-preset-border: rgba(255, 255, 255, 0.1);
+            --slider-track: #1e293b;
+            --chart-grid: rgba(255, 255, 255, 0.06);
+            --chart-axis: rgba(255, 255, 255, 0.15);
+            --notice-bg: rgba(15, 23, 42, 0.5);
+            --notice-border: rgba(255, 255, 255, 0.05);
+            --notice-text: #64748b;
+            --panel-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --tab-unselected-bg: rgba(15, 23, 42, 0.6);
+            --tab-unselected-text: #94a3b8;
+            --tab-unselected-border: rgba(255, 255, 255, 0.06);
+            --body-gradient: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+                             radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.10) 0px, transparent 50%),
+                             radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-purple: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            box-shadow: var(--panel-shadow);
+            transition: all 0.25s ease-in-out;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--border-glow);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(11, 15, 25, 0.8);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
