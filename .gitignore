@@ -1,0 +1,91 @@
+# Unreleased Architecture Modules (Future Releases)
+S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/
+S03_Agentic_Cost_And_Commercial_Control_Intelligence/
+S04_Agentic_Progress_And_Delay_Intelligence/
+S05_Agentic_Quality_And_Defect_Intelligence/
+S06_Agentic_Contract_And_Claims_Intelligence/
+S07_Agentic_Regulatory_And_Code_Intelligence/
+
+# Backup & Archival Directories
+backup_old/
+**/backup_old/
+terraform_destroy.txt
+**/terraform_destroy.txt
+CASE_STUDY_ENTERPRISE_ARCHITECTURE.md
+**/CASE_STUDY_ENTERPRISE_ARCHITECTURE.md
+
+# Rust Build Artifacts
+target/
+**/target/
+
+# Python Environments & Artifacts
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Terraform State & Lock Files
+.terraform/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+**/*.tfstate
+**/*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+.terraform.lock.hcl
+**/.terraform.lock.hcl
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.pem
+*.key
+*.crt
+
+# IDE & Operating System Files
+.DS_Store
+**/.DS_Store
+.vscode/
+**/.vscode/
+.idea/
+**/.idea/
+*.swp
+*~
+
+# Cloud CLI Metadata
+.azure/
+**/.azure/
