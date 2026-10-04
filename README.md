@@ -87,7 +87,7 @@ When we examine a typical capital project in Singapore, the lifecycle progresses
 
 To support project teams and public officers at each juncture, we structured ACIP into seven specialized modules (S01 through S07). Each module assists with specific statutory checks (such as BCA tendering limits, MOM safety demerit points, and SOPA compliance) before rolling up into an executive command cockpit for portfolio-level visibility:
 
-<img src="images/acip_business_architecture.png" alt="ACIP Business Architecture" style="max-width: 60%; height: auto; display: block;" />
+<img src="images/acip_business_architecture.png" alt="ACIP Business Architecture" style="max-width: 100%; height: auto; display: block;" />
 
 ---
 
@@ -103,7 +103,7 @@ Rather than deploying an opaque, monolithic model, we designed ACIP around a cle
 - **Layer 4 (High-Performance Quantitative Computing)**: Employs a compiled Rust quantitative engine (with vectorized NumPy fallback) for high-throughput Monte Carlo risk stress-testing, generating scenario-based insolvency risk distributions. Rust was specifically chosen over Go and C++ because its strict compile-time ownership model and zero-cost abstractions deliver the deterministic execution rigor required for financial and risk modeling, operating without a tracing garbage collector (unlike Go) and eliminating concurrency data races (common in multithreaded C++).
 - **Layer 5 (Human-in-the-Loop Governance & Role-Based Cockpits)**: Delivers clear, evidence-backed dashboards where licensed Qualified Persons (QPs), Professional Engineers (PEs), professional Quantity Surveyors, and Commercial Directors hold mandatory sign-off authority.
 
-<img src="images/acip_technical_architecture.png" alt="ACIP Technical Architecture" style="max-width: 60%; height: auto; display: block;" />
+<img src="images/acip_technical_architecture.png" alt="ACIP Technical Architecture" style="max-width: 100%; height: auto; display: block;" />
 
 ---
 
