@@ -8,7 +8,7 @@ Go to Active Reference POC (S01):
 
 ## <span id="executive-summary"></span><span style="color:red">⚡ Executive Summary</span>
 
-The Architecture, Engineering, and Construction (AEC) sector accounts for over S$35 billion annually in Singapore's national economy and represents one of the largest global engines of capital deployment. However, the industry remains burdened by structural fragmentation, paper-based administrative friction, and high-stakes financial vulnerability.
+The Architecture, Engineering, and Construction (AEC) sector represents over S$35 billion in annual projected construction demand in Singapore (as projected by the Building and Construction Authority, BCA) and represents one of the largest global engines of capital deployment. However, the industry remains burdened by structural fragmentation, paper-based administrative friction, and high-stakes financial vulnerability.
 
 The **Agentic Construction Intelligence Platform (ACIP)** is an open reference architecture exploring assistive multi-agent decision-support workflows for the built environment. By coupling open standards, deterministic statutory guardrails, the open **Model Context Protocol (MCP)** (implemented using the FastMCP framework), and quantitative risk simulation, ACIP assists project teams, quantity surveyors, and statutory officers in conducting rapid, verifiable due diligence alongside existing enterprise systems of record.
 
@@ -18,8 +18,8 @@ Construction enterprises and institutional developers operate under razor-thin o
 
 Some of the challenges which Construction enterprises face are:
 
-- **Main Contractor Insolvency & Continuity Risk**: The liquidation of premier Grade A1 contractors (exemplified by the Greatearth liquidation halting five major Singapore public housing developments) reveals that statutory registration tiers alone do not guarantee real-time cash flow viability.
-- **Workplace Safety Demerit Halts**: Under Singapore Ministry of Manpower (MOM) regulations, accumulating 25 Safety Demerit Points (SDP) triggers a mandatory debarment freezing foreign worker recruitment, severely impacting site manpower and project schedules.
+- **Main Contractor Insolvency & Continuity Risk**: The liquidation of premier Grade A1 contractors (exemplified by the August 2021 Greatearth liquidation halting five major Singapore public housing developments) reveals that statutory registration tiers alone do not guarantee real-time cash flow viability.
+- **Workplace Safety Demerit Halts**: Under Singapore Ministry of Manpower (MOM) regulations, accumulating 25 Safety Demerit Points (SDP) triggers a mandatory debarment freezing foreign worker recruitment, disrupting site manpower and project schedules.
 - **Subcontractor Payment Chokeholds**: Non-compliant "Pay-When-Paid" provisions continue to be inserted into subcontracts despite being rendered unenforceable and of no effect under Section 9 of the Singapore Building and Construction Industry Security of Payment Act (SOPA). Such clauses starve trade subcontractors of working capital and trigger supply-chain statutory adjudications.
 - **Commodity & Macro Volatility**: Rapid inflation in reinforcing rebar, structural steel, ready-mixed concrete, and foreign worker levy hikes quickly invert fixed-price lump-sum contracts into severe operating deficits.
 
@@ -30,16 +30,16 @@ Some of the challenges which Construction enterprises face are:
 Currently, we understand the Singapore government is spearheading the following initiatives to improve productivity and digitalisation in the built environment industry. These are:
 
 - **JTC OPTIMUS & IDDTA**: JTC's benchmark Connected Data Environment (CDE) supporting national industrial infrastructure. In 2026, JTC onboarded specialized technology providers across precast logistics, reality capture, and aerial defect inspection. ACIP serves as an intelligent reasoning and audit layer interfacing with connected data environments.
-- **BCA Integrated Digital Delivery (IDD) Framework**: BCA's 4-stage digital lifecycle model: Digital Design -> Digital Fabrication -> Digital Construction -> Digital Asset Delivery. ACIP modules map directly to each IDD stage.
+- **BCA Integrated Digital Delivery (IDD) Framework**: BCA's 4-stage digital lifecycle model: Digital Design -> Digital Fabrication -> Digital Construction -> Digital Asset Delivery. ACIP modules map to these key lifecycle stages.
 - **CORENET X**: Singapore's unified regulatory submission portal transitioning the industry to coordinated openBIM (IFC+SG) submissions across statutory authorities (BCA, URA, SCDF, PUB, LTA, NEA, NParks). ACIP S07 is designed to provide pre-submission model checking to reduce regulatory submission errors.
 - **SGBuildex**: BCA and IMDA's federated data-exchange standard connecting developers, contractors, testing laboratories, and statutory bodies via standardized APIs.
-- **BCA AI for Built Environment Guidance**: Official government advisory endorsing AI for five core domains: Knowledge Management, Tender & Contract Management, Bid Evaluation, Automated Defect Inspection, and Progress/Delay Analytics.
+- **BCA Built Environment Industry Transformation Map (ITM)**: National transformation roadmap advancing digital procurement, collaborative contracting, and automated quality assurance across the built environment lifecycle.
 
 #### 🌍 Global Commercial Platforms
 
 In addition, we have also researched some of the leading commercial platforms in the built environment industry. These are:
 
-- **Procore**: Global leader in construction SaaS covering preconstruction, financials, and project execution. Shipping single-turn generative assistants via Procore Copilot.
+- **Procore**: Global leader in construction SaaS covering preconstruction, financials, and project execution, increasingly incorporating AI-assisted document and workflow tools.
 - **Autodesk Forma & Autodesk Construction Cloud (ACC)**: Cloud platform unifying BIM authoring (Revit) with field management (Construction IQ) and experimental openBIM MCP integrations.
 - **Oracle Construction & Engineering**: Industry-standard Primavera P6 for critical-path scheduling, Textura for payment management, and Oracle Construction Intelligence Cloud for predictive delay risk.
 - **Bentley Systems**: Pioneer of infrastructure digital twins (iTwin) powering civil infrastructure, rail, and utilities.
@@ -97,7 +97,7 @@ From a technical standpoint, building an enterprise-grade AI system for the buil
 
 Rather than deploying an opaque, monolithic model, we designed ACIP around a clean, 5-layer decoupled architecture:
 
-- **Layer 1 (Enterprise Data & CDE Foundation)**: Connects to existing systems of record—such as Procore, Autodesk Construction Cloud, JTC OPTIMUS, Primavera P6, SAP ERP, and CORENET X—preserving single-source-of-truth data integrity.
+- **Layer 1 (Enterprise Data & CDE Foundation)**: Architectural design intent interfaces with existing systems of record—such as Procore, Autodesk Construction Cloud, JTC OPTIMUS, Primavera P6, SAP ERP, and CORENET X—preserving single-source-of-truth data integrity (with the S01 reference implementation operating against seeded SQLite registries).
 - **Layer 2 (Model Context Protocol & Deterministic Guardrails)**: Standardizes tool interactions via typed MCP JSON-RPC interfaces, enforcing versioned statutory rules and financial calculations in deterministic Python and Rust engines to keep generative models entirely outside the authoritative computation path.
 - **Layer 3 (Multi-Agent Cognitive Orchestration)**: Coordinates specialized agents (Planner, Forensic Auditor, and Adversarial Reviewers) across private clouds or sovereign on-premises LLM models.
 - **Layer 4 (High-Performance Quantitative Computing)**: Employs a compiled Rust quantitative engine (with vectorized NumPy fallback) for high-throughput Monte Carlo risk stress-testing, generating scenario-based insolvency risk distributions. Rust was specifically chosen over Go and C++ because its strict compile-time ownership model and zero-cost abstractions deliver the deterministic execution rigor required for financial and risk modeling, operating without a tracing garbage collector (unlike Go) and eliminating concurrency data races (common in multithreaded C++).
@@ -120,7 +120,7 @@ ACIP is governed by three non-negotiable enterprise protocols:
 ### <span id="deterministic-boundary"></span>🔒 2.2 Deterministic Execution Boundary for Statutory Calculations <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 - Generative foundation models are strictly forbidden from fabricating regulatory thresholds, guessing balance sheet figures, or executing arbitrary database mutations.
 - All regulatory and mathematical evaluations (e.g. BCA CW01 tendering limits, MOM 25 SDP debarment thresholds, SOPA Section 11 payment response deadlines, and Section 9 pay-when-paid enforceability checks) are handled exclusively by deterministic code executed via typed Model Context Protocol (MCP) tools.
-- An immutable audit trail records all evidence inputs, tool invocations, and deterministic outputs, ensuring every finding is fully traceable for professional review.
+- An append-only audit trail records all evidence inputs, tool invocations, and deterministic outputs, ensuring every finding is fully traceable for professional review.
 
 ### <span id="data-sovereignty"></span>🔐 2.3 Enterprise Data Sovereignty & Confidentiality <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 - All corporate tender documents, financial records, proprietary pricing models, and site inspection media remain strictly governed within private enterprise cloud tenants or air-gapped on-premises environments.
@@ -138,7 +138,7 @@ The ACIP modular portfolio spans seven specialized, interoperable modules coveri
 ├──────────────┬─────────────────────────────────────┬───────────────────┬───────────────┤
 │ Module Code  │ Platform Module Title               │ Primary Focus     │ Status        │
 ├──────────────┼─────────────────────────────────────┼───────────────────┼───────────────┤
-│ S01          │ Contractor PQQ & Compliance Intel   │ Solvency & MOM    │ Active POC    │
+│ S01          │ Contractor PQQ & Compliance Intel   │ Solvency & MOM    │ Reference Impl│
 │ S02          │ Bid Evaluation & Tender Intel       │ PQM & BOQ Audit   │ Planned       │
 │ S03          │ Cost & Commercial Control Intel     │ 5D BIM & VOs      │ Planned       │
 │ S04          │ Progress & Delay Intelligence       │ SCL Delay & 4D    │ Planned       │
@@ -159,7 +159,7 @@ When public agencies and institutional developers award major capital contracts,
 Traditional pre-qualification audits often require four to eight weeks of manual evaluation across siloed portals and spreadsheets, and can struggle to surface three critical commercial vulnerabilities:
 
 1. **Concealed Balance Sheet Distress**: High-tier statutory registration grades (such as BCA CW01 A1) certify historical track record, but they do not reflect real-time working capital volatility under sudden commodity and labor inflation shocks.
-2. **Workplace Safety Demerit Halts**: Accumulated Ministry of Manpower (MOM) Safety Demerit Points (SDP) reaching the statutory 25-point threshold trigger an immediate debarment freezing foreign worker recruitment, severely impacting site progress.
+2. **Workplace Safety Demerit Halts**: Accumulated Ministry of Manpower (MOM) Safety Demerit Points (SDP) reaching the statutory 25-point threshold trigger an immediate debarment freezing foreign worker recruitment, disrupting site progress.
 3. **Unenforceable Contractual Traps**: Non-compliant "Pay-When-Paid" provisions continue to surface in draft subcontracts despite being rendered unenforceable and of no effect under Section 9 of the Singapore Security of Payment Act (SOPA), triggering rapid supply-chain statutory adjudications and cash-flow bottlenecks that directly endanger project completion.
 
 #### ⚡ Key Capabilities

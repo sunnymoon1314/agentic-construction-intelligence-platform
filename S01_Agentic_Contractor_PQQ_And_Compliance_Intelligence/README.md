@@ -107,7 +107,7 @@ Before beginning, ensure the following software is installed on the host machine
 ## <span id="overview"></span><span style="color:red">🏗️ 1. Architecture Overview</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
 📝 Note: Executive Business Problem & Case Studies
-For full commercial context, statutory liabilities, real-world Singapore case studies (MOM Safety Demerits, Greatearth liquidation, SOPA Section 9), and the tender evaluation comparison matrix, please read the [S01 Business Problem Statement & Case Studies](BUSINESS_PROBLEM_STATEMENT.md).
+For full commercial context, statutory liabilities, real-world Singapore case studies (MOM Safety Demerits, August 2021 Greatearth liquidation, SOPA Section 9), and the tender evaluation comparison matrix, please read the [S01 Business Problem Statement & Case Studies](BUSINESS_PROBLEM_STATEMENT.md).
 
 ### <span id="system-architecture"></span>🏛️ 1.1 System Architecture & Multi-Cloud Guardrails <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
