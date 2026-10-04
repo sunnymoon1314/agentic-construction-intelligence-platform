@@ -589,20 +589,6 @@ To package the agent, web UI, and MCP server into a single container and deploy 
 
 ![AWS Cloud-Native Deployment Architecture](./images/architecture_aws.png)
 
-```mermaid
-graph TD
-    Client["Tender Evaluation Committee / Client Browser"] -->|HTTPS Ingress Port 443| Ingress["AWS Application Load Balancer (Dual-AZ Ingress)"]
-    Registry["Amazon Elastic Container Registry (Private ARM64 Repo)"] -->|Deploy Container Image| Compute["AWS ECS Fargate Task: FastAPI Web Server & ReAct Agent"]
-    Ingress -->|Forward Port 8000| Compute
-
-    Compute -->|Secure Tool Requests| MCPServer["Enterprise Compliance FastMCP Server"]
-    MCPServer -->|Direct SQL Queries| RegulatoryDB[("Local SQLite Regulatory DB: BCA, MOM, ACRA, Tenders")]
-
-    Compute -->|IAM Task Role SigV4 Auth| FoundationLLM["Amazon Bedrock: Amazon Nova Pro Foundation Model"]
-
-    Compute -->|Export Structured JSON Telemetry| Observability["Amazon CloudWatch: Audit Logs & Container Metrics"]
-```
-
 Deploys the containerized agent and MCP server serverlessly to AWS ECS Fargate:
 ```bash
 # 1. Provision AWS ECS Infrastructure via Terraform
@@ -655,20 +641,6 @@ open ${ALB_URL}
 <summary><b>🚀 Click to expand 5.4 Azure Deployment (Azure Container Apps + Azure OpenAI) guide, Terraform IaC, and architecture</b></summary>
 
 ![Azure Cloud-Native Deployment Architecture](./images/architecture_azure.png)
-
-```mermaid
-graph TD
-    Client["Tender Evaluation Committee / Client Browser"] -->|HTTPS Ingress Port 443| Ingress["Azure Container Apps Ingress (Built-in Envoy Proxy)"]
-    Registry["Azure Container Registry (Private AMD64 Repo)"] -->|Deploy Container Image| Compute["Azure Container Apps Dynamic Replica: FastAPI Web Server & ReAct Agent"]
-    Ingress -->|Forward Port 8000| Compute
-
-    Compute -->|Secure Tool Requests| MCPServer["Enterprise Compliance FastMCP Server"]
-    MCPServer -->|Direct SQL Queries| RegulatoryDB[("Local SQLite Regulatory DB: BCA, MOM, ACRA, Tenders")]
-
-    Compute -->|Entra ID Managed Identity Auth| FoundationLLM["Azure OpenAI Service: GPT-4o Foundation Model"]
-
-    Compute -->|Export Structured JSON Telemetry| Observability["Azure Monitor Log Analytics: Audit Logs & App Metrics"]
-```
 
 Deploys the containerized solution to Azure Container Apps with native Entra ID managed identity:
 ```bash
@@ -731,20 +703,6 @@ open ${CONTAINER_APP_URL}
 <summary><b>🚀 Click to expand 5.5 Google Cloud Deployment (Google Cloud Run + Vertex AI) guide, Terraform IaC, and architecture</b></summary>
 
 ![Google Cloud Deployment Architecture](./images/architecture_gcp.png)
-
-```mermaid
-graph TD
-    Client["Tender Evaluation Committee / Client Browser"] -->|HTTPS Ingress Port 443| Ingress["Google Cloud Run Ingress (Global Edge Load Balancer)"]
-    Registry["Google Cloud Artifact Registry (Private Docker OCI Repo)"] -->|Deploy Container Image| Compute["Google Cloud Run v2 Service: FastAPI Web Server & ReAct Agent"]
-    Ingress -->|Forward Port 8000| Compute
-
-    Compute -->|Secure Tool Requests| MCPServer["Enterprise Compliance FastMCP Server"]
-    MCPServer -->|Direct SQL Queries| RegulatoryDB[("Local SQLite Regulatory DB: BCA, MOM, ACRA, Tenders")]
-
-    Compute -->|Service Account ADC Auth| FoundationLLM["Google Cloud Vertex AI: Gemini 2.5 Pro Foundation Model"]
-
-    Compute -->|Export Structured JSON Telemetry| Observability["Google Cloud Operations Suite: Cloud Logging & Metrics"]
-```
 
 Deploys the containerized solution to Google Cloud Run with autoscaling to zero:
 ```bash

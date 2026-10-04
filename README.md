@@ -29,7 +29,7 @@ Some of the challenges which Construction enterprises face are:
 
 Currently, we understand the Singapore government is spearheading the following initiatives to improve productivity and digitalisation in the built environment industry. These are:
 
-- **JTC OPTIMUS & IDDTA**: JTC's benchmark Connected Data Environment (CDE) supporting national industrial infrastructure. In 2026, JTC onboarded specialized technology providers across precast logistics, reality capture, and aerial defect inspection. ACIP serves as an intelligent reasoning and audit layer interfacing with connected data environments.
+- **JTC OPTIMUS & IDDTA (Integrated Digital Delivery Technology Alliance)**: JTC's benchmark Connected Data Environment (CDE) supporting national industrial infrastructure. In 2026, JTC onboarded specialized technology providers across precast logistics, reality capture, and aerial defect inspection. ACIP serves as an intelligent reasoning and audit layer interfacing with connected data environments.
 - **BCA Integrated Digital Delivery (IDD) Framework**: BCA's 4-stage digital lifecycle model: Digital Design -> Digital Fabrication -> Digital Construction -> Digital Asset Delivery. ACIP modules map to these key lifecycle stages.
 - **CORENET X**: Singapore's unified regulatory submission portal transitioning the industry to coordinated openBIM (IFC+SG) submissions across statutory authorities (BCA, URA, SCDF, PUB, LTA, NEA, NParks). ACIP S07 is designed to provide pre-submission model checking to reduce regulatory submission errors.
 - **SGBuildex**: BCA and IMDA's federated data-exchange standard connecting developers, contractors, testing laboratories, and statutory bodies via standardized APIs.
@@ -60,6 +60,7 @@ In the sections that follow, we dive deeper into the ACIP architecture and explo
   - [2.2 Deterministic Execution Boundary for Statutory Calculations](#deterministic-boundary)
   - [2.3 Enterprise Data Sovereignty & Confidentiality](#data-sovereignty)
 - [3. Modular ACIP Portfolio & Implementation Roadmap (S01 to S07)](#portfolio-roadmap)
+  - [3.0 ACIP Architectural Control Plane & Authority Matrix](#control-plane)
   - [3.1 S01: Agentic Contractor PQQ & Compliance Intelligence (Active Reference Implementation)](#s01-pqq)
   - [3.2 S02: Agentic Bid Evaluation & Tender Intelligence (Planned)](#s02-tender)
   - [3.3 S03: Agentic Cost & Commercial Control Intelligence (Planned)](#s03-cost)
@@ -132,7 +133,7 @@ ACIP is governed by three non-negotiable enterprise protocols:
 
 The ACIP modular portfolio spans seven specialized, interoperable modules covering the full capital projects lifecycle from pre-qualification through regulatory code approval and claims resolution:
 
-```
+```text
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                    AGENTIC CONSTRUCTION INTELLIGENCE PLATFORM (ACIP)                   │
 ├──────────────┬─────────────────────────────────────┬───────────────────┬───────────────┤
@@ -147,6 +148,58 @@ The ACIP modular portfolio spans seven specialized, interoperable modules coveri
 │ S07          │ Regulatory & Code Intelligence      │ CORENET X openBIM │ Planned       │
 └──────────────┴─────────────────────────────────────┴───────────────────┴───────────────┘
 ```
+
+---
+
+### <span id="control-plane"></span>🏛️ 3.0 ACIP Architectural Control Plane & Authority Matrix <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+
+To maintain rigorous technical and legal defensibility across all seven modules, ACIP enforces a strict 5-layer separation of concerns matching our core Technology Stack (Section 1.2). The platform operates on a single governing principle:
+
+**Governing Architectural Principle**: ACIP agents may recommend, explain, and orchestrate; they do not self-certify statutory compliance, determine contractual entitlement, issue professional opinions, or replace legally mandated professional authority.
+
+```text
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                         LAYER 5: HUMAN PROFESSIONAL AUTHORITY                          │
+│          Tender Evaluation Board | Quantity Surveyor | Qualified Person (QP)           │
+│              Professional Engineer (PE) | Project Planner | Legal Counsel              │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                               ▲ Authoritative Sign-Off                                 │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                 LAYER 4: HIGH-PERFORMANCE QUANTITATIVE COMPUTING                       │
+│        Rust Monte Carlo Simulation Engine | Vectorized Risk Stress-Testing             │
+│            Compiled Axum Micro-Services | Leptos WASM Client Acceleration              │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                             ▲ Numerical Risk Distributions                             │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                         LAYER 3: AGENTIC REASONING & SYNTHESIS                         │
+│           LangGraph State Machines | LLM Reasoning Loops | FastMCP Clients             │
+│         Evidence Synthesis | Blind-Spot Exploration | Cross-Document Reasoning         │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                        ▲ Verifiable Findings & Tool Invocations                        │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│               LAYER 2: DETERMINISTIC MCP STATUTORY & LOGIC GUARDRAILS                  │
+│             Pure deterministic, mathematically verified code modules:                  │
+│          PQM Scoring | CPM Schedule Float | openBIM QTO | Statutory Deadlines          │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                            ▲ Columnar Buffers & Query Feeds                            │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                   LAYER 1: ENTERPRISE DATA & IMMUTABLE EVIDENCE                        │
+│        DuckDB / Polars Parquet | SQLite Ledgers | IFC4 openBIM | Primavera XER         │
+│          Site Inspection Media | Cryptographic SHA-256 Content Addressing              │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+#### 🛡️ Cross-Module Authority & Execution Matrix
+
+| Module | Deterministic & Quantitative Gates (Layers 2 & 4) | AI Proposes & Synthesizes (Layer 3) | Human Decides & Endorses (Layer 5) |
+| :--- | :--- | :--- | :--- |
+| **S01: PQQ & Compliance** | MOM SDP debarment limits, solvency ratios, Rust Monte Carlo | Risk hypotheses, adversarial debate synthesis | Tender Board qualification determination |
+| **S02: Bid Evaluation** | Rate-leveling, ALT deviation vs median, PQM composite scores | Clarification letters, scope exclusion flags | Tender Board contract award recommendation |
+| **S03: Cost & Commercial** | openBIM quantity takeoff, cost commitments ledger | VO entitlement clause identification, payment response dossiers | Quantity Surveyor (QS) interim payment certificate |
+| **S04: Progress & Delay** | Critical path float, Time Impact Analysis (TIA) schedule variance | Contemporaneous delay narratives, event correlation | Planning Engineer & Project Manager delay determination |
+| **S05: Quality & Defects** | Workmanship defect clustering, subcontractor risk trends | Bounding-box candidate defect triage, draft NCRs | Clerk-of-Works & Structural Engineer inspection sign-off |
+| **S06: Contracts & Claims** | SOPA Section 11/15 statutory deadline calendars, time-bar tracking | Chronological evidence graphs, precedent case research | Legal Counsel & Claims Consultant dispute strategy |
+| **S07: Regulatory Intel** | 3D spatial clearance vectors, travel distances, indicative GFA | Pre-submission clash triage, IDS XML verification | Qualified Person (QP) & Professional Engineer (PE) endorsement |
 
 ---
 
@@ -166,7 +219,7 @@ Traditional pre-qualification audits often require four to eight weeks of manual
 
 To address these vulnerabilities, S01 operates as an assistive decision-support layer alongside existing procurement workflows. 
 
-Rather than relying on ungrounded generative AI, the module deterministically verifies contractor registration workheads and financial grading limits against project budgets, audits active MOM demerit points against statutory debarment thresholds, and computes key balance sheet liquidity indicators (such as the Acid-Test Quick ratio, Debt-to-Equity leverage, and estimated performance bond capacity). 
+Rather than relying on ungrounded generative AI, the module deterministically verifies contractor registration workheads and financial grading limits against project budgets, audits active MOM demerit points against statutory debarment thresholds, and computes key balance sheet liquidity indicators (such as the Acid-Test ratio, Debt-to-Equity leverage, and estimated performance bond capacity). 
 
 In addition, S01 scans contractual terms for statutory SOPA compliance and orchestrates an adversarial multi-agent review—pairing a Prosecutor Agent against a Defender Agent—to surface competing risk hypotheses and uncover latent blind spots. Rather than treating generative debate as authoritative evidence, the platform evaluates all surfaced arguments against verifiable statutory data and deterministic tools before tender boards make their final determinations.
 
@@ -189,7 +242,7 @@ To give engineering and procurement teams maximum flexibility based on their dat
 
 #### 🎯 Core Business Problem & Industry Risk
 
-When a public tender closes, tender evaluation boards must evaluate multi-volume submissions spanning extensive pricing schedules, trade submittals, and commercial qualifications. With evaluation schedules operating on compressed 3- to 4-week turnaround windows, panels face tight timelines to assess commercial competitiveness and technical suitability simultaneously.
+When a public tender closes, tender evaluation boards must evaluate multi-volume submissions spanning extensive pricing schedules, trade submittals, and commercial qualifications. With evaluation schedules operating on compressed turnaround windows, panels face tight timelines to assess commercial competitiveness and technical suitability simultaneously.
 
 Under compressed review timelines, manual spreadsheet audits can overlook nuanced commercial strategies:
 
@@ -197,14 +250,18 @@ Under compressed review timelines, manual spreadsheet audits can overlook nuance
 2. **Concealed Scope Qualifications & Exclusions**: Technical submittals may include non-standard scope exclusions within voluminous addenda clarifications, shifting significant financial risk back to the employer post-award.
 3. **Price-Quality Method (PQM) Calculation Sensitivity**: Evaluating composite scores across technical and pricing proposals under the Singapore BCA Price-Quality Method (PQM) framework requires meticulous normalization; manual spreadsheet formulas remain susceptible to transposition oversights during high-stakes tender board evaluations.
 
-#### ⚡ Key Capabilities
+#### ⚡ Key Capabilities & Agentic Workflow
 
-S02 is architected to serve as an intelligent tender evaluation co-pilot for quantity surveyors and procurement committees:
-
-- **Automated Bill of Quantities (BOQ) Normalization**: Ingests contractor pricing schedules in Excel and CSV formats, standardizes trade classifications, and statistically flags pricing outliers, unpriced scope items, and abnormally low bid components.
-- **Front-Loading & Cash Flow Distortion Detection**: Evaluates line-item unit rate curves against historic market benchmarks and project baseline schedules to surface front-loaded billing distributions prior to contract award.
+- **Automated Bill of Quantities (BOQ) Normalization**: Ingests contractor pricing schedules in Excel and CSV formats, standardizes trade classifications, and statistically flags pricing outliers, unpriced scope items, and abnormally low bid components (ALT).
+- **Front-Loading & Cash Flow Distortion Detection**: Evaluates line-item unit rate curves against the Employer's Pre-Tender Estimate (PTE), peer tender bids, and historical project benchmarks to surface front-loaded billing distributions prior to contract award.
 - **Scope-Gap & Qualification Cross-Checking**: Structures comparative reviews between contractor clarification letters and baseline developer specifications, surfacing concealed omissions, proprietary substitutions, and conditional qualifications.
-- **Deterministic BCA PQM Scoring Engine**: Evaluates single- or dual-envelope tender proposals using deterministic mathematical formulas aligned with the administrative BCA Price-Quality Method (PQM) framework, generating defensible, audit-ready tender evaluation matrices.
+- **Configurable BCA PQM Scoring Engine**: Computes weighted price/quality composite scores aligned with the administrative BCA Price-Quality Method (PQM) framework under the procuring agency's configured price/quality weightage policies (such as 40/60 to 70/30 depending on project complexity), generating defensible, audit-ready tender evaluation matrices.
+
+#### 🛠️ Technical Stack & Architectural Mechanics
+
+- **Data Ingestion & Analytical Store**: DuckDB columnar analytical engine paired with Polars (Rust-accelerated columnar DataFrames) via an Apache Arrow pipeline with minimal-copy feature ingestion into scikit-learn anomaly detectors and statistical rate-leveling estimators.
+- **Orchestration & Verification**: FastMCP tool endpoints standardizing deterministic rate-leveling queries, coordinated by a LangGraph agentic loop that cross-examines contractor qualification addenda against the Employer's Requirements for human tender board review.
+- **Hybrid Visualization Cockpit**: Panel (HoloViz) core analytical application supporting fine-grained reactive cross-filtering across complex BOQs, paired with an embedded Rust Leptos WebAssembly (WASM) component delivering sub-millisecond real-time rate sensitivity analysis.
 
 ---
 
@@ -214,20 +271,23 @@ S02 is architected to serve as an intelligent tender evaluation co-pilot for qua
 
 Commercial cost growth on capital projects typically arises through the gradual accumulation of unapproved Variation Orders (VOs), unresolved scope ambiguities, and disputed interim payment valuations.
 
-In Singapore, this commercial tension is governed by strict statutory rules:
+In Singapore, this commercial tension is governed by strict statutory rules and contractual frameworks:
 
-1. **Statutory Payment Dispute Risk (SOPA Section 11)**: Under the Building and Construction Industry Security of Payment Act (SOPA), a payment response is due by the contractual due date or within 21 days of receiving a payment claim, whichever is earlier. Failing to serve a valid, timely payment response with substantiated withholding reasons severely restricts the respondent under Section 15(3) from raising reasons for withholding in subsequent adjudication, leaving the commercial team tactically compromised.
+1. **Statutory Payment Dispute Risk (SOPA Section 11)**: Under the Building and Construction Industry Security of Payment Act (SOPA), a payment response is due by the contractual due date or within 21 days of receiving a payment claim, whichever is earlier. Failing to serve a valid, timely payment response with substantiated withholding reasons severely restricts the respondent under Section 15(3) from raising reasons for withholding in subsequent adjudication (except for matters arising subsequent to the payment response), leaving the commercial team tactically compromised.
 2. **Proliferation of Unsubstantiated Variation Claims**: Trade contractors frequently submit variation claims for works already covered under the original contract scope or approved baseline drawings, counting on exhausted commercial teams to approve them under project delivery pressure.
 3. **Fragmented Cost Forecasting**: Traditional commercial administration keeps commitments, approved variations, and pending claims in disconnected spreadsheets, preventing leadership from seeing the true Cost-to-Complete until contingencies are completely depleted.
 
-#### ⚡ Key Capabilities
+#### ⚡ Key Capabilities & Agentic Workflow
 
-S03 establishes an assistive commercial oversight framework designed to support quantity surveyors and commercial directors:
-
-- **Variation Order (VO) Contractual Substantiation**: Cross-examines contractor VO applications against contract baseline specifications, drawing revisions, and agreed Schedules of Rates (SOR) to verify scope validity before approval.
+- **Variation Order (VO) Contractual Substantiation**: Cross-examines contractor VO applications against contract baseline specifications, drawing revisions, and agreed Schedules of Rates (SOR) to surface contractual entitlement clauses and flag potential notice-period time bars.
 - **Automated SOPA Section 11 Payment Response Assembly**: Audits monthly trade progress claims against verified site milestones and assists commercial teams in generating detailed, evidence-backed Payment Response dossiers within the applicable contractual or statutory timetable to preserve legitimate withholding grounds.
-- **5D BIM & Progress Claim Valuation**: Reconciles claimed quantities against 5D Building Information Models and physical site completion records, ensuring progress payments reflect verified on-site installation.
-- **Predictive Cost-to-Complete Reconciliation**: Continuously aggregates approved commitments, potential variation allowances, and contract contingencies into real-time financial forecasts.
+- **5D BIM & Progress Claim Valuation**: Reconciles claimed quantities against 5D Building Information Models and physical site completion records, flagging discrepancies for human certification.
+- **Near-Real-Time Cost-to-Complete Reconciliation**: Continuously aggregates approved commitments, potential variation allowances, and contract contingencies into dynamic financial forecasts.
+
+#### 🛠️ Technical Stack & Architectural Mechanics
+
+- **5D BIM Model Parsing**: `IfcOpenShell` cost and quantity takeoff (QTO) utilities extracting spatial quantities and property sets directly from openBIM IFC4 models, with data-quality validation on authoring-tool exports.
+- **Analytical Ledger & Rule Gates**: DuckDB analytical cost commitments ledger with deterministic Python calculation gates enforcing Singapore SIA and PSSCOC contract validation rules, with mandatory human Quantity Surveyor (QS) certification authority.
 
 ---
 
@@ -235,7 +295,7 @@ S03 establishes an assistive commercial oversight framework designed to support 
 
 #### 🎯 Core Business Problem & Industry Risk
 
-Project delivery schedules on major capital developments represent significant operational and financial commitments. Schedule slippage introduces substantial commercial friction, triggers Liquidated Ascertained Damages (LAD) exposure, and complicates delay liability between contracting parties.
+Project delivery schedules on major capital developments represent significant operational and financial commitments. Schedule slippage introduces substantial commercial friction, triggers Liquidated Damages (LD) exposure, and complicates delay liability between contracting parties.
 
 When delays occur, establishing factual responsibility is complex and contentious:
 
@@ -243,14 +303,17 @@ When delays occur, establishing factual responsibility is complex and contentiou
 2. **Complex Concurrent Delays**: On complex sites, employer-caused delays (such as late access or design changes) frequently overlap with contractor-culpable defaults (such as labor shortages or poor coordination), making forensic delay apportionment demanding.
 3. **Fragmented Site Records**: Establishing contemporaneous facts requires reconciling disparate sources across daily clerk-of-works logs, subcontractor attendance sheets, delivery notes, and weather station data across months of construction.
 
-#### ⚡ Key Capabilities
-
-S04 is architected to introduce objective, forensic schedule analytics to project management and legal teams:
+#### ⚡ Key Capabilities & Agentic Workflow
 
 - **Critical Path Schedule Variance Analytics**: Direct integration with Primavera P6 (XER) and Microsoft Project schedule files to detect critical milestone slippages early, rather than waiting for monthly reporting cycles.
 - **Multi-Source Site Evidence Reconciliation**: Ingests daily clerk-of-works logs, meteorological rainfall records, and turnstile workforce attendance data to independently substantiate or challenge delay narratives.
-- **SCL Protocol-Aligned Forensic Schedule Analytics**: Applies recognized Society of Construction Law (SCL) Delay and Disruption Protocol methodologies—including Time Impact Analysis (TIA) and Window Analysis—to assist planning teams in objectively analyzing concurrent delays and critical path impact against baseline programs.
+- **SCL Protocol-Aligned Forensic Schedule Analytics**: Applies recognized methods described in the Society of Construction Law (SCL) Delay and Disruption Protocol—including Time Impact Analysis (TIA) and Window Analysis—against contemporaneous baseline programs and schedule updates. The system surfaces delay events and contemporaneous attributions for expert human review; legal liability for concurrent delay remains a matter for contractual interpretation and judicial determination.
 - **Proactive Milestone Slippage Alerts**: Highlights emerging non-critical delays trending toward critical path consumption, allowing project teams to intervene before milestone delivery dates are compromised.
+
+#### 🛠️ Technical Stack & Architectural Mechanics
+
+- **Schedule Ingestion & Graph Modeling**: Python `xerparser` / `PyP6Xer` for native Primavera P6 XER parsing and MPXJ for Microsoft Project files, paired with NetworkX (and `rustworkx` for massive enterprise programs exceeding 100,000 activities) for deterministic critical path network modeling, with ground-truth float validated against the scheduling engine.
+- **Forensic Evidence Reconciliation**: DuckDB temporal event store cross-referencing daily clerk-of-works logs and meteorological records against schedule variance timelines.
 
 ---
 
@@ -258,22 +321,25 @@ S04 is architected to introduce objective, forensic schedule analytics to projec
 
 #### 🎯 Core Business Problem & Industry Risk
 
-In Singapore's built environment, achieving high scores under the BCA Construction Quality Assessment System (CONQUAS) directly impacts a developer's market standing and a builder's eligibility for future public sector tenders.
+In Singapore's built environment, achieving high scores under the BCA Construction Quality Assessment System (CONQUAS) provides an important benchmark of construction workmanship quality and directly feeds into PQM quality scoring for public sector building tenders.
 
 Despite this importance, site quality monitoring continues to rely on traditional, high-friction inspection methods:
 
 1. **Sample-Based Visual Audits**: Site supervisors and clerks-of-works can inspect only a modest sample of completed structural and architectural elements, leaving large areas unverified until post-handover defects emerge.
-2. **Latent Structural Defects**: Critical structural anomalies—such as honeycombing, rebar exposure, improper concrete compaction, and micro-cracking—require early identification before being concealed by architectural finishes.
+2. **Latent Workmanship Defects**: Surface anomalies—such as visible honeycombing, exposed reinforcement, improper concrete compaction, and dampness penetration—require early identification before being concealed by architectural finishes.
 3. **Dispersed NCR Resolution Lifecycles**: Non-Conformance Reports (NCRs) tracked across ad-hoc spreadsheets lead to unresolved defect backlogs, missed re-inspection dates, and protracted disputes during final completion handovers.
 
-#### ⚡ Key Capabilities
+#### ⚡ Key Capabilities & Agentic Workflow
 
-S05 designs vision intelligence workflows to support site quality assurance and defect remediation:
-
-- **Multimodal Computer Vision Defect Triaging**: Analyzes site inspection photos and 360-degree walkthrough scans to automatically identify and classify physical defects, including concrete cracking, honeycombing, exposed reinforcement, and moisture penetration.
-- **CONQUAS-Aligned Quality Risk Assessment**: Maps detected defects against the current BCA CONQUAS framework (CONQUAS 2022) across structural, architectural, and M&E trades, identifying systemic quality risks before formal CONQUAS assessments and statutory TOP inspections.
-- **Closed-Loop NCR Management**: Automatically drafts Non-Conformance Reports complete with photographic proof, assigned trade subcontractor tags, and statutory rectification timelines, tracking the issue through verified re-inspection and sign-off.
+- **Two-Stage Computer Vision Defect Triaging**: Employs a specialized detection layer to locate defect regions on site inspection photos and 360 walkthrough scans, followed by a vision-language model to classify candidate visual defects (such as concrete honeycombing, rebar exposure, and moisture staining) for structural engineer inspection.
+- **CONQUAS 2022 Pre-Audit Triage**: Maps flagged candidate defects against the current BCA CONQUAS 2022 assessment taxonomy across structural, architectural, and M&E trades for pre-audit risk triage, assisting site teams prior to formal assessments. The system does not produce official CONQUAS scores or replace registered BCA assessors.
+- **Closed-Loop NCR Management**: Automatically prepares draft Non-Conformance Reports complete with photographic evidence, assigned trade subcontractor tags, and contractual rectification timelines, tracking the issue through verified human re-inspection and sign-off.
 - **Trade Performance & Defect Analytics**: Analyzes quality trends across individual trade subcontractors, pinpointing recurring workmanship deficiencies to guide targeted supervision.
+
+#### 🛠️ Technical Stack & Architectural Mechanics
+
+- **Two-Stage Vision Architecture**: Specialized Apache 2.0-compatible Computer Vision detection model (RT-DETR / ONNX Runtime) for spatial bounding-box localization, paired with a multimodal Vision-Language Model for descriptive classification against CONQUAS standards.
+- **Audit Ledger**: SQLite / DuckDB structured NCR database maintaining complete photographic provenance and append-only rectification audit trails.
 
 ---
 
@@ -285,18 +351,21 @@ Contractual disputes in construction represent substantial commercial friction, 
 
 Dispute outcomes frequently hinge on procedural compliance rather than technical merits:
 
-1. **Strict Condition Precedent Forfeiture Bars**: Modern standard forms of contract (such as PSSCOC, SIA, and FIDIC) enforce strict condition precedent notice clauses. If a contractor or employer fails to issue a formal written notice of claim within a specified window (typically 28 days), the entitlement to time or cost recovery is permanently forfeited.
-2. **Rapid Statutory Adjudication Deadlines**: Under Section 15 of the Singapore SOPA framework, when an adjudication application is served, the respondent has a strict 7-day statutory window to lodge an Adjudication Response, which is legally confined to the reasons previously established in the Payment Response.
-3. **Intensive Document Discovery**: Compiling dispute defense bundles requires commercial teams to manually scour tens of thousands of emails, formal Architect's Instructions (AIs), Request for Information (RFI) logs, and site meeting minutes under tight timetables.
+1. **Condition Precedent Notice Clauses**: Many standard construction contracts (including PSSCOC, SIA, and FIDIC) enforce condition-precedent or time-bar mechanisms requiring claims to be formally notified within specified contractual periods; failure to serve timely notice risks entitlement forfeiture, subject to contract drafting and judicial interpretation.
+2. **Rapid Statutory Adjudication Deadlines**: Under Section 15 of the Singapore SOPA framework, when an adjudication application is served, the respondent has a strict 7-day statutory window (from receipt of the application or the adjudicator's notice of acceptance) to lodge an Adjudication Response, which is legally confined to the reasons previously established in the Payment Response.
+3. **Intensive Document Discovery**: Compiling dispute defense bundles requires commercial teams to manually scour tens of thousands of emails, formal Superintending Officer Instructions (SOIs) under PSSCOC, Architect's Instructions (AIs) under SIA, Request for Information (RFI) logs, and site meeting minutes under tight timetables.
 
-#### ⚡ Key Capabilities
+#### ⚡ Key Capabilities & Agentic Workflow
 
-S06 is architected as an automated contract intelligence framework to assist commercial teams in preserving rights and managing dispute evidence:
+- **Condition Precedent Notice Tracking**: Continuously monitors project communications to identify potential claim triggers and alert commercial managers well in advance of contractual time-bar deadlines, reducing the risk of accidental entitlement forfeiture.
+- **SOPA Adjudication Evidence Dossier Assembly**: Rapidly compiles structured adjudication response dossiers, assembling contemporaneous notices, instructions, inspection reports, and back-charge documentation to substantiate the withholding reasons established during the Payment Response stage.
+- **Contemporaneous Evidence Graph**: Correlates project correspondence, instructions, RFI turnaround logs, and site progress photos into an interactive, chronological evidentiary timeline for human legal review.
+- **Legal Precedent Case Benchmarking**: Cross-references dispute issues against Singapore High Court and Court of Appeal construction case law benchmarks from verified legal corpora to assist legal counsel in evaluating exposure and settlement thresholds. The system provides research and audit-assist workflows only and does not provide formal legal advice.
 
-- **Condition Precedent Notice Tracking**: Continuously monitors project communications to identify potential claim triggers and alert commercial managers well in advance of contractual time-bar deadlines.
-- **SOPA Adjudication Evidence Synthesis**: Rapidly compiles structured adjudication response dossiers, assembling contemporaneous notices, architect instructions, inspection reports, and back-charge documentation to substantiate the withholding reasons established during the Payment Response stage.
-- **Contemporaneous Evidence Graph**: Correlates project correspondence, architect instructions, RFI turnaround logs, and site progress photos into an interactive, chronological evidentiary timeline.
-- **Legal Precedent Case Benchmarking**: Cross-references dispute issues against Singapore High Court and Court of Appeal construction case law benchmarks to assist legal counsel in evaluating exposure and settlement thresholds.
+#### 🛠️ Technical Stack & Architectural Mechanics
+
+- **Temporal Event Graph**: High-performance embedded event store using DuckDB property graph extensions (`DuckPGQ`) or SQL recursive CTEs structuring chronological project communications, RFIs, and instructions into an auditable evidence network.
+- **Deterministic Statutory Rules**: Versioned Python rule engine monitoring SOPA Section 11 and Section 15 statutory deadline calendars with automated alerts.
 
 ---
 
@@ -308,20 +377,23 @@ Obtaining statutory building plan approvals in Singapore involves navigating com
 
 Historically, regulatory coordination has presented significant schedule uncertainty:
 
-1. **Successive Written Direction (WD) Rejection Cycles**: Design models submitted for planning permission or building plan approval often contain subtle code oversights, resulting in successive rounds of formal Written Directions from regulatory authorities that delay project commencement.
-2. **National CORENET X Transition**: Singapore is mandating CORENET X for new building works, shifting the sector from disconnected 2D drawings to coordinated openBIM (IFC+SG) regulatory submissions.
+1. **Successive Written Direction (WD) Rejection Cycles**: Design models submitted for building plan approval often contain subtle code oversights, resulting in successive rounds of formal Written Directions from regulatory authorities that delay project commencement.
+2. **National CORENET X Transition**: Singapore is mandating CORENET X progressively (commencing with new major building works having GFA ≥ 30,000 m² from October 2025, stepping down to GFA ≥ 5,000 m² from 1 October 2026, with smaller projects continuing on CORENET 2.0 pending future phases), transitioning the industry from disconnected 2D drawings to coordinated openBIM (IFC4 + IFC-SG) regulatory submissions. Implementation thresholds and submission processes are treated as versioned configuration as mandated by the relevant authorities.
 3. **High Coordination Overhead Across Multi-Disciplinary Codes**: Ensuring an architectural model simultaneously satisfies BCA Accessibility codes, SCDF Fire Code travel distances, and URA Gross Floor Area (GFA) envelope restrictions requires exhaustive manual cross-checking.
 
-#### ⚡ Key Capabilities
+#### ⚡ Key Capabilities & Agentic Workflow
 
-S07 is architected as an automated pre-submission compliance framework, validating digital building models prior to formal regulatory submission:
-
-- **Automated openBIM IFC4 Code Checking**: Ingests buildingSMART IFC4 models and Information Delivery Specifications (IDS), validating model geometry and spatial data against Singapore statutory standards.
+- **Automated openBIM IFC4 Code Checking**: Ingests buildingSMART IFC4 models and Information Delivery Specifications (IDS), validating model geometry and spatial data against Singapore statutory standards prior to formal submission.
 - **Deterministic Statutory Rule Engines**:
   - **BCA Building Control Regulations**: Automates geometric clearance audits, staircase dimensions, accessibility ramps, and barrier-free design compliance.
-  - **SCDF Fire Code Compliance**: Checks continuous travel distances, fire compartmentation boundaries, and fire engine accessway clearances.
-  - **URA Development Control Verification**: Computes Gross Floor Area (GFA) allocations, building setback distances, and allowable building height envelopes.
-- **CORENET X Pre-Submission Gate**: Evaluates multidisciplinary openBIM models against statutory validation rules to catch geometric clashes, accessibility breaches, and property-set omissions early, significantly reducing avoidable Written Directions and submission delays.
+  - **SCDF Fire Code Compliance**: Checks configured, machine-checkable requirements (such as continuous travel distances, fire compartmentation boundaries, and fire engine accessway clearances).
+  - **URA Development Control Verification**: Computes indicative Gross Floor Area (GFA) allocations according to configured URA rules and identifies potential classification queries for professional QP verification.
+- **CORENET X Pre-Submission Gate**: Evaluates multidisciplinary openBIM models against statutory validation rules to catch geometric clashes, accessibility breaches, and property-set omissions early, significantly reducing the risk of avoidable Written Directions and submission delays. ACIP functions as an intelligent pre-submission quality assurance layer and does not replace the official CORENET X Model Checker or mandatory Qualified Person (QP) / Professional Engineer (PE) statutory endorsements.
+
+#### 🛠️ Technical Stack & Architectural Mechanics
+
+- **openBIM Model Ingestion**: `IfcOpenShell` parsing buildingSMART IFC4 schemas and Information Delivery Specifications (IDS) XML rulesets.
+- **Spatial Geometry Rule Engine**: Deterministic Python computational geometry engine evaluating 3D spatial clearance vectors, travel distances, and GFA envelope boundaries.
 
 ---
 
