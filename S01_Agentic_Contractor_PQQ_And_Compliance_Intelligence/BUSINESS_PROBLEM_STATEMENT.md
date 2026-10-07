@@ -1,8 +1,10 @@
-# <span style="color:red">🏢 S01: Business Problem Statement & Case Studies</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to ACIP Platform Overview](../README.md#toc)</span>
+# <span style="color:red">🏢 S01: Business Problem Statement & Case Studies</span>
 
-[🛠️ Go to S01 Implementation Guide & Technical Runbook](README.md) | [⬆️ Back to ACIP Platform Overview](../README.md#toc)
+[🛠️ Go to S01 Implementation Guide & Technical Runbook](README.md) | [⬆️ Back to ACIP Overview](../README.md#toc)
 
 ---
+
+**S01: Agentic Contractor PQQ & Compliance Intelligence** is an assistive decision-support module designed for developer organizations, commercial directors, quantity surveyors, and tender evaluation boards in the Architecture, Engineering, and Construction (AEC) sector.
 
 **Target Audience**: Commercial Directors, Senior Quantity Surveyors, Legal Counsel, Procurement Specialists, and Tender Assessment Committee Members.
 
@@ -11,7 +13,7 @@
 ## <span id="toc"></span>📑 Table Of Contents (TOC)
 
 - [1. Executive Summary: The Core Business Problem](#business-problem)
-- [2. What This Framework Is (and Is Not)](#framework-scope)
+- [2. What This Module Is (and Is Not)](#module-scope)
 - [3. The Three-Stage Procurement Lifecycle](#procurement-lifecycle)
 - [4. Core Business Rationale & Statutory Liabilities](#why-rationale)
 - [5. Real-World Singapore Case Studies & Statutory Precedents](#case-studies)
@@ -34,7 +36,7 @@ Traditional procurement reviews rely on fragmented 4-to-8 week manual audits inv
 
 ---
 
-## <span id="framework-scope"></span><span style="color:red">🛡️ 2. What This Framework Is (and Is Not)</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+## <span id="module-scope"></span><span style="color:red">🛡️ 2. What This Module Is (and Is Not)</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
 - **🧪 Working Reference Implementation**: S01 is a functional, end-to-end runnable Proof of Concept with working code, synthetic benchmark registries, deterministic statutory engines, tool servers, and automated verification suites.
 - **✅ What It Is**: An intelligent **Audit-Assist Co-Pilot and Decision-Support Platform**. Powered by the Model Context Protocol (MCP) and multi-agent cognitive reasoning, it automates evidence retrieval, deterministic statutory checking, multi-agent adversarial evaluation, and high-throughput Monte Carlo risk simulation across multi-cloud foundation models (AWS Nova Pro, Azure OpenAI GPT-4o, GCP Gemini 2.5 Pro, and sovereign local Llama 3.1).
@@ -108,7 +110,7 @@ To address these commercial blind spots and establish legally defensible certain
 | **Audit Traceability & Speed** | Fragmented email trails, physical meeting minutes, and weeks of spreadsheet reviews. | Automated generation of an append-only, tamper-evident forensic audit dossier with full human sign-off. | **Accelerates Decision Velocity**: Shrinks evaluation cycles from weeks to minutes while maintaining total accountability. |
 
 📝 Note: Policy Benchmarks vs. Statutory Mandates
-The financial ratios utilized in the evaluation matrix above (Current Ratio > 1.2, Quick Ratio > 1.0, Debt-to-Equity < 1.5, and 10% Performance Bond sizing) represent standard tender board procurement policy benchmarks and configurable risk thresholds rather than statutory limits under the Companies Act or BCA CRS. The framework allows evaluation teams to adjust these thresholds to match project-specific procurement guidelines.
+The financial ratios utilized in the evaluation matrix above (Current Ratio > 1.2, Quick Ratio > 1.0, Debt-to-Equity < 1.5, and 10% Performance Bond sizing) represent standard tender board procurement policy benchmarks and configurable risk thresholds rather than statutory limits under the Companies Act or BCA CRS. The module allows evaluation teams to adjust these thresholds to match project-specific procurement guidelines.
 
 ---
 

@@ -1,10 +1,10 @@
-# <span style="color:red">🛠️ S01: Implementation Guide & Technical Runbook</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to ACIP Platform Overview](../README.md#toc)</span>
+# <span style="color:red">🛠️ S01: Implementation Guide & Technical Runbook</span>
 
-[📄 Go to S01 Business Problem Statement & Case Studies](BUSINESS_PROBLEM_STATEMENT.md) | [⬆️ Back to ACIP Platform Overview](../README.md#toc)
+[📄 Go to S01 Business Problem Statement & Case Studies](BUSINESS_PROBLEM_STATEMENT.md) | [⬆️ Back to ACIP Overview](../README.md#toc)
 
 ---
 
-The **Agentic Contractor Pre-Qualification (PQQ) Framework** is an enterprise AI audit-assist platform designed for developer companies, quantity surveyors, and tender evaluation boards in the Architecture, Engineering, and Construction (AEC) sector.
+**S01: Agentic Contractor PQQ & Compliance Intelligence** is an assistive decision-support module designed for developer companies, quantity surveyors, and tender evaluation boards in the Architecture, Engineering, and Construction (AEC) sector.
 
 ### 🛡️ Technical Scope & Architectural Boundaries
 - **🧪 Working Reference Implementation**: S01 is a functional, end-to-end runnable Proof of Concept with working code, synthetic benchmark registries, deterministic statutory engines, tool servers, and automated verification test suites.
@@ -13,7 +13,7 @@ The **Agentic Contractor Pre-Qualification (PQQ) Framework** is an enterprise AI
 - **🧪 Data Modeling**: The current local demonstration runs on a **synthetic benchmark database** (`contractors_registry.db`) modeled after official BCA, MOM, and ACRA schemas. All contractor profiles, UENs, and financial ratios are synthetic test personas generated for technical benchmarking and do not represent actual corporate entities. In enterprise production, MCP tools connect to live enterprise ERPs (SAP/Oracle) and authorized government data APIs.
 
 ### 🔄 The Three-Stage Procurement Lifecycle
-The framework partitions evaluation into three distinct, non-conflated stages:
+The module partitions evaluation into three distinct, non-conflated stages:
 1. **Stage 1: Pre-Qualification (PQQ)** -> Screening contractor registration grade, tendering limits, MOM safety records, and balance sheet solvency before bids are considered.
 2. **Stage 2: Tender Bid Evaluation (PQM)** -> Scoring dual-envelope commercial submissions against benchmark budgets using the Singapore Price-Quality Method (PQM).
 3. **Stage 3: Subcontract Risk Audit** -> Scanning draft project agreements for unenforceable Pay-When-Paid clauses under SOPA Section 9 and onerous liquidated damages clauses.
@@ -30,7 +30,7 @@ The framework partitions evaluation into three distinct, non-conflated stages:
 - [3. Approach 1: Pure Local Sovereign Deployment & Testing (Zero Cost)](#local-deployment)
   - [3.1 Implementation Approach Selection Matrix](#selection-matrix)
   - [3.2 Download Llama 3.1](#download-llama)
-  - [3.3 Create and Activate Conda Environment](#conda-env)
+  - [3.3 Environment Configuration & Conda Setup](#conda-env)
   - [3.4 Initialize the Contractor Registry Database](#init-db)
   - [3.5 Launch the Pre-Qualification Agent & Dashboard](#launch-agent)
   - [3.6 Access the Web Dashboard](#web-dashboard)
@@ -111,30 +111,14 @@ For full commercial context, statutory liabilities, real-world Singapore case st
 
 ### <span id="system-architecture"></span>🏛️ 1.1 System Architecture & Multi-Cloud Guardrails <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
-The **Agentic Pre-Qualification Framework** is architected to integrate deterministic statutory rules with multi-cloud foundation models via the **Model Context Protocol (MCP)**. To ensure deterministic calculation precision and statutory defensibility, all financial formulas (Current Ratio, Debt-to-Equity, Performance Bond capacity) and statutory checks (MOM Safety Demerits, BCA tendering limits) are executed by pre-tested, deterministic Python engines with no LLM access to the calculation path, while the LLM focuses on high-level evidence synthesis and forensic reporting.
+The **S01: Agentic Contractor PQQ & Compliance Intelligence** module is architected to integrate deterministic statutory rules with multi-cloud foundation models via the **Model Context Protocol (MCP)**. To ensure deterministic calculation precision and statutory defensibility, all financial formulas (Current Ratio, Debt-to-Equity, Performance Bond capacity) and statutory checks (MOM Safety Demerits, BCA tendering limits) are executed by pre-tested, deterministic Python engines with no LLM access to the calculation path, while the LLM focuses on high-level evidence synthesis and forensic reporting.
 
 ![Enterprise Contractor Pre-Qualification and Compliance MCP Framework Architecture](./images/architecture_pqq_mcp.png)
 
 <details>
 <summary><b>📐 Click to view Mermaid Architecture Diagram Source</b></summary>
 
-```mermaid
-graph TD
-    Client["Tender Assessment Committee / Quantity Surveyor"] -->|Multi-Stage Inquiries (PQQ / PQM / SOPA)| API["Enterprise Web Dashboard & REST API (FastAPI)"]
-    API -->|Prompt & State Dispatch| Agent["ReAct Agentic Workflow (LangGraph / LangChain)"]
-    Agent -->|Multi-Cloud Reasoning| LLM["Omni-Cloud LLMs (Local Llama 3.1 / Bedrock Nova / Vertex Gemini / Azure GPT)"]
-    Agent -->|Secure Tool Requests| MCPServer["Enterprise Compliance Engine (FastMCP Server)"]
-    MCPServer -->|Stage 1: Registration Caps| Tool1["Stage 1 PQQ: query_contractor_profile (BCA CRS Workheads)"]
-    MCPServer -->|Stage 1: Safety Points| Tool2["Stage 1 PQQ: verify_safety_compliance (MOM SDP Demerits)"]
-    MCPServer -->|Stage 1: Balance Sheet| Tool3["Stage 1 PQQ: assess_financial_solvency (Liquidity & Bonds)"]
-    MCPServer -->|Stage 2: Tender Scoring| Tool4["Stage 2 PQM: evaluate_pqm_score (Price-Quality Scoring)"]
-    MCPServer -->|Stage 3: Subcontract Audit| Tool5["Stage 3 SOPA: audit_contract_risk (Subcontract Clauses)"]
-    Tool1 -->|Read Workhead Limits| Reg1[("BCA Registry DB: CW01/CW02 Tendering Caps")]
-    Tool2 -->|Verify Demerit Points| Reg2[("MOM Safety DB: SDP Threshold >= 25 & Debarment")]
-    Tool3 -->|Audit 3-Yr Financials| Reg3[("Audited Balance Sheets: Liquidity & Debt Ratios")]
-    Tool4 -->|Compare Bids to Median| Reg4[("Tender Benchmarks: CONQUAS & Quality Metrics")]
-    Tool5 -->|Scan Baseline Rules| Reg5[("Statutory Rules: SOPA, PSSCOC, SIA, REDAS Standards")]
-```
+The complete Mermaid diagram source has been extracted to [architecture_pqq_mcp.md](./images/architecture_pqq_mcp.md).
 
 </details>
 
@@ -225,6 +209,7 @@ S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/
 │   ├── architecture_aws.png            # AWS ECS Fargate + Amazon Bedrock serverless architecture
 │   ├── architecture_azure.png          # Azure Container Apps + Azure OpenAI serverless architecture
 │   ├── architecture_gcp.png            # Google Cloud Run + Vertex AI serverless architecture
+│   ├── architecture_pqq_mcp.md         # Mermaid architecture diagram specification source
 │   ├── architecture_pqq_mcp.png        # Multi-agent ReAct & FastMCP statutory inspection architecture
 │   └── workflow_comparison.png         # Dual-track manual review vs. autonomous agentic evaluation workflow
 ├── mcp_server/                         # FastMCP server, regulatory tools, and SQLite registry database
@@ -275,7 +260,6 @@ S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/
 ├── BUSINESS_PROBLEM_STATEMENT.md       # Executive business problem statement, procurement lifecycle, and statutory precedents
 ├── demo_audit.py                       # Rich-powered interactive terminal CLI audit simulation runner
 ├── Dockerfile                          # Unified multi-stage container packaging MCP server, agent, and web dashboard
-├── environment.yml                     # Conda environment definition with all required Python dependencies
 ├── FAQ.md                              # Frequently Asked Questions with in-depth technical explanations
 ├── README.md                           # Comprehensive technical runbook, multi-cloud deployment guides, and benchmarks
 └── TROUBLESHOOTING.md                  # Troubleshooting guide with error categories and Before/After fixes
@@ -285,7 +269,7 @@ S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/
 
 ## <span id="local-deployment"></span><span style="color:red">💻 3. Approach 1: Pure Local Sovereign Deployment & Testing (Zero Cost)</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
-This framework supports **four progressive implementation approaches** to accommodate different evaluation needs, data sovereignty requirements, and enterprise cloud maturity:
+This module supports **four progressive implementation approaches** to accommodate different evaluation needs, data sovereignty requirements, and enterprise cloud maturity:
 
 ### <span id="selection-matrix"></span>🧭 3.1 Implementation Approach Selection Matrix <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
@@ -303,26 +287,70 @@ Approach 1 executes the entire pre-qualification pipeline locally on your workst
 ### <span id="download-llama"></span>🦙 3.2 Download Llama 3.1 <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 Pull the local open-weight model with native function calling capabilities:
 ```bash
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 ollama pull llama3.1
 ```
 
 ![Ollama pull Llama 3.1 open-weight model terminal output](images/ollama_pull.png)
 
-### <span id="conda-env"></span>🐍 3.3 Create and Activate Conda Environment <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
-Initialize the isolated environment with all required dependencies:
+### <span id="conda-env"></span>🐍 3.3 Environment Configuration & Conda Setup <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+
+Because ACIP contains many modules (S01 to S07) sharing one Conda environment, setting `ACIP_MODULE_DEFAULT_FOLDER` guarantees commands run inside the S01 module folder no matter which terminal tab or folder you are currently in.
+
+Step 1: Set the module folder once (open a terminal inside the S01 folder in your IDE, or if starting from the ACIP platform root, navigate into the S01 folder first):
+
 ```bash
-# Ensure you are at the project root before starting
-conda env create -f environment.yml
-conda activate enterprise_mcp_agent
+# If starting from the ACIP platform root:
+cd S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence
+
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
+export ACIP_MODULE_DEFAULT_FOLDER="$(pwd)"
+echo "${ACIP_MODULE_DEFAULT_FOLDER}"
 ```
+
+Expected output (your path will differ):
+
+```text
+/Users/<your_username>/.../Agentic_Construction_Intelligence_Platform/S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence
+```
+
+Step 2: Create (first time only) and activate the unified ACIP Conda environment:
+
+We require conda environment `acip_mcp_framework` to be created before you can run the codes documented in this module. If you have not done so, please run the following command to create the environment:
+
+```bash
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
+cd "${ACIP_MODULE_DEFAULT_FOLDER}"
+conda env create -f ../environment.yml
+```
+
+This is followed by activating the environment:
+
+```bash
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
+conda activate acip_mcp_framework
+```
+
+📝 Note: If you have already created `acip_mcp_framework` (e.g. while working in S02 or another ACIP module), skip `conda env create` and proceed directly to `conda activate acip_mcp_framework`.
+
+Step 3: Create a local `.env` configuration file from `.env.example`:
+
+```bash
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
+cd "${ACIP_MODULE_DEFAULT_FOLDER}"
+cp .env.example .env
+set -a; source .env; set +a
+```
+
+📝 Note: `ACIP_MODULE_DEFAULT_FOLDER` is managed as an environment variable in your shell or Conda environment and is not stored inside `.env`.
+
 
 ![Conda environment creation and activation](images/conda_env_create_activate.png)
 
 ### <span id="init-db"></span>🗄️ 3.4 Initialize the Contractor Registry Database <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 Seed the mock Singapore contractor database (`contractors_registry.db`) containing Tier 1 contractors, mid-tier firms, safety-debarred entities, and benchmark tenders:
 ```bash
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 python mcp_server/mock_data.py
 ```
 
@@ -331,7 +359,7 @@ python mcp_server/mock_data.py
 ### <span id="launch-agent"></span>🤖 3.5 Launch the Pre-Qualification Agent & Dashboard <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 The FastAPI server automatically launches the Model Context Protocol server as a managed child subprocess using the stdio transport:
 ```bash
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 uvicorn agent_client.agent_api:app --reload --host 0.0.0.0 --port 8003
 ```
@@ -367,7 +395,7 @@ The PQQ Cockpit provides three integrated operational tabs:
 For quick headless testing, command-line demonstrations, or automated CI verification without launching a browser or web server, execute `demo_audit.py`. It renders formatted terminal tables and summary scorecards in ~1.2 seconds:
 
 ```bash
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 python3 demo_audit.py
 ```
 
@@ -398,7 +426,7 @@ All 4 compliance audit scenarios executed and verified in ~1.22 seconds.
 ```
 
 ### <span id="risk-engine"></span>🦀 3.8 Quantitative Risk Engine (Rust Axum & Vectorized NumPy Fallback) <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
-The compliance framework includes a compiled quantitative risk sidecar executing high-throughput Monte Carlo risk simulations across fluctuating material and labor cost indices to calculate contractor Value at Risk (VaR 95%, CVaR 95%) and scenario-based insolvency risk distributions.
+The compliance module includes a compiled quantitative risk sidecar executing high-throughput Monte Carlo risk simulations across fluctuating material and labor cost indices to calculate contractor Value at Risk (VaR 95%, CVaR 95%) and scenario-based insolvency risk distributions.
 
 **Direct Integration with PQQ Dashboard**:
 The Rust microservice connects directly to the PQQ Dashboard (port 8000/8003):
@@ -408,7 +436,7 @@ The Rust microservice connects directly to the PQQ Dashboard (port 8000/8003):
 
 **Launch the Quantitative Risk Microservice via Docker**
 ```bash
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 docker build -t risk-engine risk_engine/
 docker run -d -p 8080:8080 --name risk-engine-sidecar risk-engine
 ```
@@ -420,7 +448,7 @@ docker run -d -p 8080:8080 --name risk-engine-sidecar risk-engine
 📝 Note: Alternative Local Execution with Cargo
 If Rust is installed natively on your workstation, you can alternatively launch the microservice directly without Docker:
 ```bash
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 cd risk_engine
 cargo run --release
 ```
@@ -441,7 +469,7 @@ While the main PQQ Cockpit (`http://localhost:8003`) handles regulatory chat and
 
 **Launch the Risk Simulation Dashboard via Docker**
 ```bash
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 docker build -t risk-dashboard-leptos risk_dashboard_leptos/
 docker run -d -p 3000:80 --name leptos-dashboard-app risk-dashboard-leptos
 ```
@@ -455,7 +483,7 @@ docker run -d -p 3000:80 --name leptos-dashboard-app risk-dashboard-leptos
 📝 Note: Alternative Local Execution with Trunk
 If Rust and Trunk are installed locally on your workstation, you can alternatively serve the WebAssembly dashboard directly:
 ```bash
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 cd risk_dashboard_leptos
 trunk serve --port 3000 --open
 ```
@@ -493,22 +521,22 @@ Set the `CLOUD_PROVIDER` variable to select your target model backend (`AWS`, `A
 
 ```bash
 # 1. AWS Bedrock (Amazon Nova Pro via Amazon Bedrock)
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 CLOUD_PROVIDER=AWS uvicorn agent_client.agent_api:app --reload --host 0.0.0.0 --port 8000
 
 # 2. Azure OpenAI (GPT-4o via Azure OpenAI with Entra ID)
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 CLOUD_PROVIDER=AZURE uvicorn agent_client.agent_api:app --reload --host 0.0.0.0 --port 8001
 
 # 3. GCP Vertex AI (Gemini 2.5 Pro via Google Cloud Vertex AI)
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 CLOUD_PROVIDER=GCP uvicorn agent_client.agent_api:app --reload --host 0.0.0.0 --port 8002
 
 # 4. Local Sovereign Fallback (Llama 3.1 via Ollama)
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 CLOUD_PROVIDER=LOCAL uvicorn agent_client.agent_api:app --reload --host 0.0.0.0 --port 8003
 ```
@@ -566,7 +594,7 @@ The **Enterprise Contractor Pre-Qualification & Compliance Audit Terminal** will
 
 ![Approach 3: Cloud Workload Direct Provisioning](./images/approach_3_cloud_workload.png)
 
-Approach 3 packages the entire framework (FastAPI web server, ReAct agent, FastMCP server, and regulatory database) into a production Docker container, pushes it to your cloud container registry, and deploys it directly into a dedicated project VPC serverlessly using Terraform Infrastructure as Code (IaC).
+Approach 3 packages the entire module (FastAPI web server, ReAct agent, FastMCP server, and regulatory database) into a production Docker container, pushes it to your cloud container registry, and deploys it directly into a dedicated project VPC serverlessly using Terraform Infrastructure as Code (IaC).
 
 ### <span id="why-cloud-native"></span>💡 5.1 Why Choose Cloud Workload Direct Provisioning? <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 - **Production Availability**: Provides a persistent, publicly accessible HTTPS endpoint backed by cloud load balancers or edge ingresses.
@@ -592,7 +620,7 @@ To package the agent, web UI, and MCP server into a single container and deploy 
 Deploys the containerized agent and MCP server serverlessly to AWS ECS Fargate:
 ```bash
 # 1. Provision AWS ECS Infrastructure via Terraform
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 cd terraform/aws
 terraform init
@@ -645,7 +673,7 @@ open ${ALB_URL}
 Deploys the containerized solution to Azure Container Apps with native Entra ID managed identity:
 ```bash
 # 1. Provision Azure Container Apps Infrastructure via Terraform
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 cd terraform/azure
 terraform init
@@ -707,7 +735,7 @@ open ${CONTAINER_APP_URL}
 Deploys the containerized solution to Google Cloud Run with autoscaling to zero:
 ```bash
 # 1. Provision Google Cloud Run Infrastructure via Terraform
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 cd terraform/gcp
 terraform init
@@ -775,7 +803,7 @@ The unit test suite verifies the core Python business logic, FastMCP tool functi
 
 Run the built-in test suite to verify all 12 MCP tool functions, SQLite queries, financial ratio math, and statutory SOPA validation rules:
 ```bash
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 python3 -m unittest tests/test_mcp_framework.py -v
 ```
 
@@ -814,18 +842,18 @@ If cloud infrastructure was provisioned via Terraform, navigate to the respectiv
 
 ```bash
 # For AWS:
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 cd terraform/aws
 terraform destroy -var="aws_region=${AWS_DEFAULT_REGION}" -auto-approve
 
 # For Azure:
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 cd terraform/azure
 terraform destroy -auto-approve
 
 # For GCP:
-# Ensure you are at the project root before starting
+# Ensure you are at the S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence module root folder before starting
 set -a; source .env; set +a
 cd terraform/gcp
 terraform destroy -var="project_id=${GCP_PROJECT_ID}" -auto-approve

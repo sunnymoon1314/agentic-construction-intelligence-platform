@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACIP S02: Agentic Bid Evaluation & Tender Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      /* Default Light Mode */
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --border-color: rgba(15, 23, 42, 0.10);
+      --border-accent: rgba(37, 99, 235, 0.35);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent-blue: #2563eb;
+      --accent-green: #059669;
+      --accent-amber: #d97706;
+      --accent-red: #dc2626;
+      --accent-purple: #7c3aed;
+      --status-green-bg: rgba(5, 150, 105, 0.10);
+      --status-amber-bg: rgba(217, 119, 6, 0.12);
+      --status-red-bg: rgba(220, 38, 38, 0.10);
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] {
+      /* Sleek Dark Mode */
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: #141c2e;
+      --bg-card-hover: #1e293b;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(59, 130, 246, 0.35);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+      --status-green-bg: rgba(16, 185, 129, 0.16);
+      --status-amber-bg: rgba(245, 158, 11, 0.16);
+      --status-red-bg: rgba(239, 68, 68, 0.16);
+      --card-shadow: none;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.35;
+      font-size: 12px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-viewport {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 16px;
+      gap: 8px;
+      box-sizing: border-box;
+    }
+
+    /* ---------------------------------------------------------
+       1. Top Header Bar (Stacked: Title on top, Project list below)
+       --------------------------------------------------------- */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 12px;
+      box-shadow: var(--card-shadow);
+      flex-shrink: 0;
+      gap: 12px;
+    }
+
+    .header-main-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon-box {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 7px;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .brand-text-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+      line-height: 1.15;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .brand-acip-tag {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-left: 2px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .brand-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.1px;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    .project-toolbar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    /* Project Dropdown Selector (Point 4) */
+    .project-selector-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .project-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .project-select {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .meta-chip {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 5px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .config-status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      padding: 3px 8px;
+      margin-right: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+    }
+
+    .config-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #16a34a;
+      display: inline-block;
+      box-shadow: 0 0 4px rgba(22, 163, 74, 0.6);
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 13px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    /* ---------------------------------------------------------
+       2. Compact KPI Metric Strips (Point 1: Shrink Height to ~60px)
+       --------------------------------------------------------- */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .kpi-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--card-shadow);
+      min-height: 58px;
+    }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kpi-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .kpi-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .kpi-val {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+      font-feature-settings: "tnum";
+    }
+
+    .kpi-sub {
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    /* ---------------------------------------------------------
+       3. Main Center Split Workstation (~54% Viewport Height)
+       --------------------------------------------------------- */
+    .center-split {
+      display: grid;
+      grid-template-columns: 1.62fr 0.98fr;
+      gap: 8px;
+      flex: 1 1 54%;
+      min-height: 0; /* Important for flex child scrolling control */
+    }
+
+    .card-panel {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 9px 11px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--card-shadow);
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Point 6: Neutral Bold Headers */
+    .panel-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .table-container {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      text-align: left;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      background: var(--bg-primary);
+      z-index: 2;
+    }
+
+    th {
+      padding: 5px 6px;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 4px 6px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-primary);
+      white-space: nowrap;
+      font-size: 11px;
+    }
+
+    #leaderboardTable tbody tr {
+      cursor: pointer;
+    }
+
+    tr:hover td {
+      background: var(--bg-card-hover);
+    }
+
+    /* Alert Colors (Point 6 & User Feedback) */
+    .val-positive-alert {
+      color: var(--accent-red);
+      font-weight: 700;
+    }
+    .val-negative-alert {
+      color: var(--accent-red);
+      font-weight: 700;
+    }
+    .val-ok {
+      color: var(--accent-green);
+      font-weight: 700;
+    }
+    .val-warn {
+      color: var(--accent-amber);
+      font-weight: 700;
+    }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .status-award {
+      background: var(--status-green-bg);
+      color: var(--accent-green);
+      border: 1px solid rgba(5, 150, 105, 0.3);
+    }
+
+    .status-clarify {
+      background: var(--status-amber-bg);
+      color: var(--accent-amber);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+    }
+
+    .status-disqualify {
+      background: var(--status-red-bg);
+      color: var(--accent-red);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+    }
+
+    .status-neutral {
+      background: var(--bg-primary);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Right Charts layout */
+    .chart-container {
+      flex: 1;
+      position: relative;
+      min-height: 0;
+    }
+
+    /* ---------------------------------------------------------
+       4. Bottom Multi-Agent Consensus Feed (~24% Viewport Height)
+       --------------------------------------------------------- */
+    .bottom-feed-panel {
+      flex: 0 0 25%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--card-shadow);
+      min-height: 0;
+    }
+
+    .agent-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 4px;
+    }
+
+    .agent-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 9px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+
+    .agent-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+
+    /* Point 6: Neutral Bold Subheaders */
+    .agent-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .agent-body {
+      font-size: 10.5px;
+      color: var(--text-secondary);
+      line-height: 1.35;
+      overflow-y: auto;
+      max-height: 80px;
+    }
+
+    .agent-body strong {
+      color: var(--text-primary);
+    }
+
+    .agent-footer {
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border-color);
+      padding-top: 3px;
+    }
+
+    /* Custom Scrollbar for compact single-page layout */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 3px;
+    }
+
+    /* ---------------------------------------------------------
+       Dynamic Info Tooltips
+       --------------------------------------------------------- */
+    .info-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 5px;
+      margin-right: 0;
+      position: relative;
+      user-select: none;
+      transition: all 0.15s ease;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
+    .info-btn:hover {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+
+    /* Hide static inline tooltips to prevent clipping; handled by #acipGlobalTooltip */
+    .info-btn .acip-tooltip {
+      display: none !important;
+    }
+
+    /* Floating Global Tooltip (Never Clipped by Menus, Window Edges, or Table Overflow) */
+    .acip-global-tooltip {
+      position: fixed;
+      z-index: 999999;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.45;
+      max-width: 350px;
+      box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      text-transform: none;
+      letter-spacing: normal;
+      white-space: normal;
+      text-align: left;
+    }
+
+    [data-theme="dark"] .acip-global-tooltip {
+      background: #1e293b;
+      color: #f1f5f9;
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .acip-global-tooltip::after {
+      content: "";
+      position: absolute;
+      left: var(--arrow-left, 50%);
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      pointer-events: none;
+    }
+
+    /* Arrow when tooltip is below the icon (pointing up) */
+    .acip-global-tooltip.pos-below::after {
+      bottom: 100%;
+      border-color: transparent transparent #0f172a transparent;
+    }
+    [data-theme="dark"] .acip-global-tooltip.pos-below::after {
+      border-color: transparent transparent #1e293b transparent;
+    }
+
+    /* Arrow when tooltip is above the icon (pointing down) */
+    .acip-global-tooltip.pos-above::after {
+      top: 100%;
+      border-color: #0f172a transparent transparent transparent;
+    }
+    [data-theme="dark"] .acip-global-tooltip.pos-above::after {
+      border-color: #1e293b transparent transparent transparent;
+    }
+
+    /* Chart Top Color Legend */
+    .chart-legend-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .legend-color-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .dot-blue {
+      background-color: var(--accent-blue);
+    }
+
+    .dot-amber {
+      background-color: var(--accent-amber);
+    }
+
+    .dot-red {
+      background-color: var(--accent-red);
+    }
+
+    /* ---------------------------------------------------------
+       Forensic BOQ Rate-Leveling Drill-Down Drawer
+       --------------------------------------------------------- */
+    .drawer-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .drawer-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drilldown-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(920px, 94vw);
+      height: 100vh;
+      background: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: -8px 0 36px rgba(0, 0, 0, 0.25);
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    .drilldown-drawer.active {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 11px 18px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+
+    .drawer-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .drawer-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .drawer-title-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--accent-blue);
+      border: 1px solid rgba(37, 99, 235, 0.25);
+    }
+
+    .drawer-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .drawer-close-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .drawer-close-btn:hover {
+      background: var(--accent-red);
+      color: #ffffff;
+      border-color: var(--accent-red);
+    }
+
+    .drawer-switcher-bar {
+      padding: 8px 18px;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+
+    .drawer-tab-btn {
+      padding: 5px 11px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .drawer-tab-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    .drawer-tab-btn.active {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .drawer-dossier-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .dossier-metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 7px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .dossier-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--text-muted);
+    }
+
+    .dossier-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-primary);
+      font-feature-settings: 'tnum';
+    }
+
+    .dossier-sub {
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .forensic-alert-box {
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 11.5px;
+      line-height: 1.45;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border: 1px solid transparent;
+      flex-shrink: 0;
+    }
+
+    .forensic-alert-box.alert-red {
+      background: var(--status-red-bg);
+      border-color: rgba(220, 38, 38, 0.35);
+      color: var(--text-primary);
+    }
+
+    .forensic-alert-box.alert-amber {
+      background: var(--status-amber-bg);
+      border-color: rgba(217, 119, 6, 0.35);
+      color: var(--text-primary);
+    }
+
+    .forensic-alert-box.alert-green {
+      background: var(--status-green-bg);
+      border-color: rgba(5, 150, 105, 0.35);
+      color: var(--text-primary);
+    }
+
+    .forensic-alert-box.alert-blue {
+      background: rgba(37, 99, 235, 0.08);
+      border-color: rgba(37, 99, 235, 0.3);
+      color: var(--text-primary);
+    }
+
+    .alert-header-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .clause-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--accent-amber);
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .clause-verbatim {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 7px 10px;
+      border-radius: 5px;
+      color: var(--text-primary);
+      line-height: 1.45;
+    }
+
+    .boq-section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .boq-filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .boq-filter-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .boq-pill-btn {
+      padding: 3px 8px;
+      border-radius: 5px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .boq-pill-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    .boq-pill-btn.active {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+
+    .boq-search-box {
+      display: flex;
+      align-items: center;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      padding: 3px 8px;
+      gap: 5px;
+      font-size: 11px;
+    }
+
+    .boq-search-input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 11px;
+      color: var(--text-primary);
+      width: 160px;
+    }
+
+    .boq-table-wrapper {
+      max-height: 290px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--bg-secondary);
+    }
+
+    .boq-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10.5px;
+      text-align: left;
+    }
+
+    .boq-table thead {
+      position: sticky;
+      top: 0;
+      background: var(--bg-primary);
+      z-index: 2;
+    }
+
+    .boq-table th {
+      padding: 5px 6px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .boq-table td {
+      padding: 5px 6px;
+      border-bottom: 1px solid var(--border-color);
+      font-feature-settings: 'tnum';
+    }
+
+    .boq-table tr.highlight-anomaly {
+      background-color: rgba(220, 38, 38, 0.05);
+    }
+
+    .drawer-council-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 7px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .drawer-actions-bar {
+      padding: 10px 18px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .drawer-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: all 0.15s;
+    }
+
+    .drawer-btn:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .drawer-btn-primary {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+
+    .drawer-btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    /* Clarification Letter Modal */
+    .cl-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .cl-modal-backdrop.active {
+      display: flex;
+    }
+
+    .cl-modal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      width: min(720px, 94vw);
+      max-height: 85vh;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .cl-modal-header {
+      padding: 12px 18px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cl-modal-body {
+      padding: 16px 18px;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.55;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      white-space: pre-wrap;
+    }
+
+    /* Leaderboard Interactive row cues */
+    #leaderboardBody tr {
+      cursor: pointer;
+      transition: background-color 0.15s;
+    }
+
+    #leaderboardBody tr:hover {
+      background-color: var(--bg-card-hover);
+    }
+
+    .kpi-card {
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-viewport">
+    
+    <!-- 1. Top Header Bar -->
+    <header class="top-bar">
+      <div class="header-main-col">
+        <!-- Row 1: Brand Icon Box + Flush Title/Subtitle Stack -->
+        <div class="brand-container">
+          <div class="brand-icon-box">🏗️</div>
+          <div class="brand-text-stack">
+            <h1 class="brand-title">
+              <span>Agentic Bid Evaluation &amp; Tender Intelligence</span>
+              <span class="brand-acip-tag">(ACIP S02 <span class="info-btn" id="infoPlatformBtn">ℹ<span class="acip-tooltip tooltip-align-left" style="width: 330px; font-weight: 500; line-height: 1.45;">ACIP is an evidence-centric Agentic Construction Intelligence Platform that combines deterministic engineering computation, construction-domain knowledge, AI reasoning and human professional authority across the project lifecycle.</span></span>)</span>
+            </h1>
+            <span class="brand-sub">
+              Executive Dual-Envelope Deliberation Cockpit
+              <span class="info-btn" id="infoCockpitBtn">ℹ<span class="acip-tooltip" id="tipCockpit">⚡ <strong>S02 Executive Cockpit:</strong> Agentic dual-envelope tender deliberation combining statutory BCA Price-Quality Method (PQM) scoring, forensic QS rate-leveling, scope ambush detection, and multi-agent consensus reporting.</span></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Row 2: Project List shifted below the Title -->
+        <div class="project-toolbar-row">
+          <div class="project-selector-wrapper">
+            <span>📁</span>
+            <span class="project-label">Project:</span>
+            <select id="projectSelect" class="project-select" onchange="switchProject(this.value)">
+              <option value="PRJ-WHC-001" selected>Woodlands Health Campus — Acute Care Wing (S$120M)</option>
+              <option value="PRJ-TWRP-002">Tuas Water Reclamation Plant — Biosolids (S$240M)</option>
+              <option value="PRJ-T5-003">Changi Airport Terminal 5 — Substructure &amp; Tunnels (S$380M)</option>
+            </select>
+            <span class="info-btn" id="infoProjectBtn">ℹ<span class="acip-tooltip" id="tipProject">Project scope &amp; procurement details</span></span>
+          </div>
+
+          <div class="meta-chip">
+            <span>🏛️</span>
+            <span id="headerSector">Healthcare Infrastructure</span>
+          </div>
+
+          <div class="meta-chip">
+            <span>📋</span>
+            <span id="headerBiddersCount">Shortlisted Bidders: 5 of 50</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="config-status">
+          <span class="config-item">
+            <span class="status-dot"></span>
+            <span id="engineBadge">Local Engine</span>
+          </span>
+        </div>
+        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Light / Dark Mode">
+          <span id="themeIcon">🌙</span>
+          <span id="themeText">Dark Mode</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. Compact Metric Strips (Point 1: Shrink Card Height) -->
+    <section class="kpi-row">
+      <div class="kpi-card" id="cardPte" style="border-left: 3px solid var(--accent-blue);">
+        <div class="kpi-header">
+          <div style="display:flex; align-items:center;">
+            <span style="margin-right: 5px;">🎯</span>
+            <span class="kpi-label">PTE Target Benchmark</span>
+            <span class="info-btn tooltip-align-left" id="infoPteBtn">ℹ<span class="acip-tooltip" id="tipPte">PTE context</span></span>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-val" id="kpiPteTotal">S$120.00M</span>
+          <span class="kpi-sub" style="color:var(--text-muted);">Baseline (SGD)</span>
+        </div>
+      </div>
+
+      <div class="kpi-card" id="cardLowest" style="border-left: 3px solid var(--accent-red);" onclick="openDrilldownDrawer('B03')" title="Click for Forensic BOQ Rate-Leveling Drill-Down (Starlight B03)">
+        <div class="kpi-header">
+          <div style="display:flex; align-items:center;">
+            <span style="margin-right: 5px;">📉</span>
+            <span class="kpi-label">Lowest Submitted Bid</span>
+            <span class="info-btn" id="infoLowestBtn">ℹ<span class="acip-tooltip" id="tipLowest">Lowest bid context</span></span>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-val" id="kpiLowestBid">S$76.06M</span>
+          <span class="kpi-sub val-negative-alert" id="kpiLowestVariance">-33.86% ⚠️ ALT</span>
+        </div>
+      </div>
+
+      <div class="kpi-card" id="cardFlri" style="border-left: 3px solid var(--accent-red);" onclick="openDrilldownDrawer('B02')" title="Click for Forensic BOQ Rate-Leveling Drill-Down (WinningPine B02)">
+        <div class="kpi-header">
+          <div style="display:flex; align-items:center;">
+            <span style="margin-right: 5px;">⏳</span>
+            <span class="kpi-label">Front-Loading Rate Index</span>
+            <span class="info-btn" id="infoFlriBtn">ℹ<span class="acip-tooltip" id="tipFlri">FLRI context</span></span>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-val" id="kpiMaxFlri">1.75 FLRI</span>
+          <span class="kpi-sub val-negative-alert" id="kpiEarlyExtraction">WinningPine (39.6% Sub)</span>
+        </div>
+      </div>
+
+      <div class="kpi-card" id="cardScope" style="border-left: 3px solid var(--accent-amber);" onclick="openDrilldownDrawer('B04')" title="Click for Forensic BOQ Rate-Leveling Drill-Down (GemStone B04)">
+        <div class="kpi-header">
+          <div style="display:flex; align-items:center;">
+            <span style="margin-right: 5px;">🔍</span>
+            <span class="kpi-label">Scope Ambush Exposure</span>
+            <span class="info-btn" id="infoScopeBtn">ℹ<span class="acip-tooltip" id="tipScope">Scope context</span></span>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-val" id="kpiScopeExclusions">1 Found</span>
+          <span class="kpi-sub val-warn" id="kpiScopeAmount">GemStone (-S$6.79M)</span>
+        </div>
+      </div>
+
+      <div class="kpi-card" id="cardWinner" style="border-left: 3px solid var(--accent-green);" onclick="openDrilldownDrawer('B01')" title="Click for Forensic BOQ Rate-Leveling Drill-Down (Heng Win B01)">
+        <div class="kpi-header">
+          <div style="display:flex; align-items:center;">
+            <span style="margin-right: 5px;">🏆</span>
+            <span class="kpi-label" style="color: var(--accent-green);">Award Recommended</span>
+            <span class="info-btn tooltip-align-right" id="infoWinnerBtn">ℹ<span class="acip-tooltip" id="tipWinner">Winner context</span></span>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-val" id="kpiWinnerName" style="color: var(--accent-green); font-size:15px;">Heng Win</span>
+          <span class="kpi-sub val-ok" id="kpiWinnerScore">PQM: 97.4 (-0.98%)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Center Split Workstation (Point 2: Single-Page Viewport) -->
+    <main class="center-split">
+      
+      <!-- Left Column: PQM Leaderboard & Rate Leveling -->
+      <section class="card-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <span>⚖️</span> Statutory PQM Leaderboard & Commercial Leveling
+            <span class="info-btn" id="infoLeaderboardBtn">ℹ<span class="acip-tooltip" id="tipLeaderboard">Statutory PQM evaluation details</span></span>
+          </h2>
+          <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0;">
+            <button class="drawer-btn drawer-btn-primary" style="padding: 2px 8px; font-size: 10px; white-space: nowrap; flex-shrink: 0;" onclick="openDrilldownDrawer()" title="Open Forensic BOQ Rate-Leveling Drill-Down Drawer">
+              <span>🔬</span> BOQ Drill-Down
+            </button>
+            <span style="font-size: 10px; color: var(--text-muted); font-weight: 600; white-space: nowrap;">
+              Dual-Envelope BCA Evaluation (50% Price / 50% Quality)
+            </span>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table id="leaderboardTable">
+            <thead>
+              <tr>
+                <th style="width: 30px; text-align: center;">Rank</th>
+                <th style="width: 40px; text-align: center;">Code</th>
+                <th style="width: 195px;">Bidder Organization</th>
+                <th style="width: 75px; text-align: center;">BCA Grade</th>
+                <th style="text-align: right; width: 88px;">Bid Sum (SGD)</th>
+                <th style="text-align: right; width: 78px;">
+                  PTE Var<span class="info-btn" id="infoVarBtn">ℹ<span class="acip-tooltip" id="tipVar">Variance vs PTE Baseline</span></span>
+                </th>
+                <th style="text-align: right; width: 65px;">
+                  FLRI<span class="info-btn" id="infoTableFlriBtn">ℹ<span class="acip-tooltip" id="tipTableFlri">Front-Loading Rate Index</span></span>
+                </th>
+                <th style="text-align: right; width: 55px;">Quality</th>
+                <th style="text-align: right; width: 75px;">
+                  PQM Score<span class="info-btn tooltip-align-right" id="infoPqmBtn">ℹ<span class="acip-tooltip" id="tipPqm">Price-Quality Method</span></span>
+                </th>
+                <th style="width: 130px; text-align: center;">Committee Status</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Right Column: Trade Distribution & Front-Loading Chart -->
+      <section class="card-panel">
+        <div class="panel-header" style="flex-wrap: wrap; gap: 4px;">
+          <h2 class="panel-title">
+            <span>📊</span> Trade Cost Allocation vs Substructure Benchmark
+            <span class="info-btn tooltip-align-right" id="infoChartBtn">ℹ<span class="acip-tooltip" id="tipChart">Substructure Benchmark details</span></span>
+          </h2>
+          <div class="chart-legend-box">
+            <span class="legend-chip"><span class="legend-color-dot dot-blue"></span>&lt; 26% Balanced</span>
+            <span class="legend-chip"><span class="legend-color-dot dot-amber"></span>26%–31.9% Skew</span>
+            <span class="legend-chip"><span class="legend-color-dot dot-red"></span>≥ 32% Front-Loaded</span>
+          </div>
+          <span id="chartBenchmarkLabel" style="display: none;">Substructure Benchmark: 22.61%</span>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="biddersChart"></canvas>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 4. Bottom Row: Multi-Agent Consensus Verdict Feed (Point 6: Neutral Bold Headers) -->
+    <footer class="bottom-feed-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">
+          <span>🤖</span> Multi-Agent Forensic Consensus Feed
+        </h2>
+        <span style="font-size: 10px; color: var(--text-muted); font-weight: 600;">
+          Agentic Deliberation & Verification Against PSSCOC / SIA Framework
+        </span>
+      </div>
+
+      <div class="agent-cards-grid" id="agentFeedGrid">
+        
+        <!-- Card 1: Chairman Verdict -->
+        <article class="agent-card">
+          <div class="agent-card-header">
+            <span class="agent-title"><span>👨‍⚖️</span> Tender Board Chairman Verdict</span>
+            <span class="status-badge status-award">Recommended</span>
+          </div>
+          <p class="agent-body" id="feedChairman">
+            <strong>Heng Win (Private) Limited (B01)</strong> unanimously recommended for contract award at S$113.87M (-0.98% vs PTE). Clean balanced rate structure, 0 MOM demerit points, and high financial solvency.
+          </p>
+          <div class="agent-footer">
+            <span>Protocol: BCA PQM Framework</span>
+            <span class="val-ok">Award Action Ready</span>
+          </div>
+        </article>
+
+        <!-- Card 2: Forensic QS Front-Loading -->
+        <article class="agent-card">
+          <div class="agent-card-header">
+            <span class="agent-title"><span>📊</span> Forensic QS Rate-Leveling Audit</span>
+            <span class="status-badge status-clarify">Clarification</span>
+          </div>
+          <p class="agent-body" id="feedForensic">
+            <strong>WinningPine Construction (B02)</strong> flagged for extreme substructure front-loading (+85% markup, FLRI 1.75). Potential unearned early extraction of <strong>S$20.62M</strong>. Clarification letter CL-01 dispatched.
+          </p>
+          <div class="agent-footer">
+            <span>Risk: Abandonment Exposure</span>
+            <span class="val-warn">Letter CL-01 Issued</span>
+          </div>
+        </article>
+
+        <!-- Card 3: Scope Ambush Detection -->
+        <article class="agent-card">
+          <div class="agent-card-header">
+            <span class="agent-title"><span>📜</span> Contracts Legal &amp; Scope Audit</span>
+            <span class="status-badge status-clarify">Scope Ambush</span>
+          </div>
+          <p class="agent-body" id="feedLegal">
+            <strong>GemStone Building Contractors (B04)</strong> buried clause <strong>QUAL-14.2</strong> on page 38 excluding medical gas piping (-S$6.79M). Normalized bid sum adjusted to S$111.94M. Conditional bid flagged.
+          </p>
+          <div class="agent-footer">
+            <span>Clause: QUAL-14.2 (Page 38)</span>
+            <span class="val-warn">Notice Issued</span>
+          </div>
+        </article>
+
+        <!-- Card 4: Statutory ALT Detector -->
+        <article class="agent-card">
+          <div class="agent-card-header">
+            <span class="agent-title"><span>🛡️</span> Statutory ALT &amp; Insolvency Guard</span>
+            <span class="status-badge status-disqualify">Disqualified</span>
+          </div>
+          <p class="agent-body" id="feedAlt">
+            <strong>Starlight Urban Infrastructure (B03)</strong> bid S$76.06M (-33.86% vs PTE). Triggers statutory BCA Abnormally Low Tender dumping penalty + 12 MOM demerit points. Disqualified due to insolvency risk.
+          </p>
+          <div class="agent-footer">
+            <span>Statutory Code: BCA ALT Penalty</span>
+            <span class="val-negative-alert">Disqualified</span>
+          </div>
+        </article>
+
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    let tenderChart = null;
+    let currentTheme = localStorage.getItem("acip_theme") || "light";
+
+    // Theme Setup
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      const icon = document.getElementById("themeIcon");
+      const text = document.getElementById("themeText");
+      if (theme === "dark") {
+        icon.textContent = "☀️";
+        text.textContent = "Light Mode";
+      } else {
+        icon.textContent = "🌙";
+        text.textContent = "Dark Mode";
+      }
+      localStorage.setItem("acip_theme", theme);
+      if (tenderChart) {
+        updateChartTheme();
+      }
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === "dark" ? "light" : "dark";
+      applyTheme(currentTheme);
+    }
+
+    // Forensic BOQ Drill-Down State
+    let currentTenderData = null;
+    let activeBidderId = "B02";
+    let currentBoqFilter = "ALL";
+    let currentBoqSearch = "";
+
+    // Switch Project (Point 4)
+    function switchProject(projectId) {
+      loadDashboardData(projectId);
+    }
+
+    // Format Currency Millions
+    function fmtM(val) {
+      return "S$" + (val / 1000000).toFixed(2) + "M";
+    }
+
+    // Load Data from Backend API
+    async function loadDashboardData(projectId = "PRJ-WHC-001") {
+      try {
+        const res = await fetch(`/api/data?project_id=${projectId}`);
+        const data = await res.json();
+        renderDashboard(data);
+      } catch (err) {
+        console.error("Failed to load dashboard data:", err);
+      }
+    }
+
+    function renderDashboard(data) {
+      currentTenderData = data;
+      const drawer = document.getElementById("drilldownDrawer");
+      if (drawer && drawer.classList.contains("active")) {
+        renderDrilldownDrawer();
+      }
+
+      // 1. Header Meta
+      document.getElementById("headerSector").textContent = data.sector || "Infrastructure";
+      document.getElementById("headerBiddersCount").textContent = 
+        `Shortlisted Bidders: ${data.bidders.length} of ${data.total_contractors_registry}`;
+
+      if (data.engine) {
+        document.getElementById("engineBadge").textContent = data.engine;
+      }
+
+      // 2. KPI Cards
+      document.getElementById("kpiPteTotal").textContent = fmtM(data.pte_total);
+      
+      const cardLowest = document.getElementById("cardLowest");
+      const cardFlri = document.getElementById("cardFlri");
+      const cardScope = document.getElementById("cardScope");
+
+      const sortedBids = [...data.bidders].sort((a, b) => a.total_bid - b.total_bid);
+      const lowest = sortedBids[0];
+      if (lowest) {
+        document.getElementById("kpiLowestBid").textContent = fmtM(lowest.total_bid);
+        const lowVar = lowest.variance_vs_pte_pct;
+        const lowEl = document.getElementById("kpiLowestVariance");
+        lowEl.textContent = `${lowVar >= 0 ? "+" : ""}${lowVar.toFixed(2)}% ${lowest.commercial_status === 'STATUTORY_ALT_WARNING' ? '⚠️ ALT' : ''}`;
+        
+        let lowVarClass = "val-ok";
+        let lowBorder = "var(--accent-green)";
+        if (lowVar < -20.0) {
+          lowVarClass = "val-negative-alert"; // Red: Statutory ALT (< -20%)
+          lowBorder = "var(--accent-red)";
+        } else if (lowVar > 5.0) {
+          lowVarClass = "val-warn"; // Amber: Over-budget premium (> +5%)
+          lowBorder = "var(--accent-amber)";
+        }
+        lowEl.className = `kpi-sub ${lowVarClass}`;
+        if (cardLowest) cardLowest.style.borderLeft = `3px solid ${lowBorder}`;
+      }
+
+      // Max FLRI
+      const maxFlriBidder = [...data.bidders].sort((a, b) => (b.flri || 0) - (a.flri || 0))[0];
+      if (maxFlriBidder) {
+        const flriVal = maxFlriBidder.flri || 1.0;
+        const subPct = maxFlriBidder.substructure_pct || 0.0;
+        document.getElementById("kpiMaxFlri").textContent = `${flriVal.toFixed(2)} FLRI`;
+        const flriSubEl = document.getElementById("kpiEarlyExtraction");
+        flriSubEl.textContent = `${maxFlriBidder.name.split(" ")[0]} (${subPct.toFixed(1)}% Sub)`;
+
+        let flriClass = "val-ok";
+        let flriBorder = "var(--accent-green)";
+        if (flriVal >= 1.30 || subPct >= 32.0) {
+          flriClass = "val-negative-alert"; // Red: Severe front-loading (>= 1.30 or >= 32%)
+          flriBorder = "var(--accent-red)";
+        } else if (flriVal >= 1.15 || subPct >= 26.0) {
+          flriClass = "val-warn"; // Amber: Mild early skew (1.15-1.29 or 26%-31.9%)
+          flriBorder = "var(--accent-amber)";
+        }
+        flriSubEl.className = `kpi-sub ${flriClass}`;
+        if (cardFlri) cardFlri.style.borderLeft = `3px solid ${flriBorder}`;
+      }
+
+      // Scope Exclusions
+      const exclusionsCnt = (data.exclusions || []).length;
+      document.getElementById("kpiScopeExclusions").textContent = `${exclusionsCnt} Found`;
+      const scopeSubEl = document.getElementById("kpiScopeAmount");
+      if (exclusionsCnt > 0) {
+        const ex = data.exclusions[0];
+        scopeSubEl.textContent = `GemStone (-S$${(ex.potential_cost_exposure / 1000000).toFixed(2)}M)`;
+        scopeSubEl.className = "kpi-sub val-warn"; // Amber: Ambush exclusions detected
+        if (cardScope) cardScope.style.borderLeft = "3px solid var(--accent-amber)";
+      } else {
+        scopeSubEl.textContent = "Zero Critical Omissions";
+        scopeSubEl.className = "kpi-sub val-ok"; // Green: 100% compliant scope coverage
+        if (cardScope) cardScope.style.borderLeft = "3px solid var(--accent-green)";
+      }
+
+      // Winner
+      const winner = data.bidders.find(b => b.rank === 1) || data.bidders[0];
+      if (winner) {
+        document.getElementById("kpiWinnerName").textContent = winner.name.split(" ")[0] + ` (${winner.bidder_id})`;
+        document.getElementById("kpiWinnerScore").textContent = `PQM: ${winner.pqm_composite.toFixed(1)} (${winner.variance_vs_pte_pct >= 0 ? '+' : ''}${winner.variance_vs_pte_pct.toFixed(2)}%)`;
+      }
+
+      // Dynamic Info Tooltips with Vibrant Emoticons and Swatches
+      document.getElementById("tipProject").innerHTML = 
+        `📁 <strong>${data.project_name}</strong> (${data.client_name})<br>` +
+        `PTE Baseline: ${fmtM(data.pte_total)} &nbsp;|&nbsp; Sector: ${data.sector}<br>` +
+        `Procurement under statutory BCA PSSCOC Dual-Envelope framework.`;
+      
+      document.getElementById("tipPte").innerHTML = 
+        `🎯 <strong>Pre-Tender Estimate (PTE):</strong> Statutory cost ceiling baseline (${fmtM(data.pte_total)}) established by Lead Cost Consultant / QS based on BCA Schedule of Rates & engineering benchmarks.`;
+      
+      if (document.getElementById("tipCockpit")) {
+        document.getElementById("tipCockpit").innerHTML = 
+          `⚡ <strong>S02 Executive Cockpit:</strong> Agentic dual-envelope tender deliberation combining statutory BCA Price-Quality Method (PQM) scoring, forensic QS rate-leveling, scope ambush detection, and multi-agent consensus reporting.`;
+      }
+
+      if (lowest) {
+        const lowVar = lowest.variance_vs_pte_pct;
+        const isAlt = lowVar < -20.0;
+        const isOverBudget = lowVar > 5.0;
+        let lowestStatusHtml = "";
+        if (isAlt) {
+          lowestStatusHtml = `🟥 ⚠️ <strong>Statutory ALT Investigation:</strong> Falls below statutory BCA -20% threshold triggering Abnormally Low Tender audit for predatory dumping risk.`;
+        } else if (isOverBudget) {
+          lowestStatusHtml = `🟧 ⚠️ <strong>Over-Budget Premium:</strong> Exceeds statutory PTE baseline by &gt; +5%.`;
+        } else {
+          lowestStatusHtml = `🟩 ✅ <strong>Compliant Commercial Band:</strong> Positioned within normal tender band (-20% to +5%) without statutory penalty.`;
+        }
+        document.getElementById("tipLowest").innerHTML = 
+          `📉 <strong>Lowest Bidder:</strong> ${lowest.name} at ${fmtM(lowest.total_bid)} (${lowVar >= 0 ? '+' : ''}${lowVar.toFixed(2)}% vs PTE).<br>` +
+          lowestStatusHtml;
+      }
+
+      if (maxFlriBidder) {
+        const flriVal = maxFlriBidder.flri || 1.0;
+        const subPct = maxFlriBidder.substructure_pct || 0.0;
+        let flriStatusHtml = "";
+        if (flriVal >= 1.30 || subPct >= 32.0) {
+          flriStatusHtml = `🟥 ⚠️ <strong>Severe early cash extraction:</strong> Substructure allocation (${subPct.toFixed(1)}%) exceeds severe 32% threshold (FLRI ${flriVal.toFixed(2)} ≥ 1.30). Potential unearned drawdown of ~${fmtM(maxFlriBidder.unearned_extraction || 0)}.`;
+        } else if (flriVal >= 1.15 || subPct >= 26.0) {
+          flriStatusHtml = `🟧 ⚠️ <strong>Elevated early trade skew:</strong> Substructure allocation (${subPct.toFixed(1)}%) in mild skew band 26%–31.9% (FLRI 1.15–1.29).`;
+        } else {
+          flriStatusHtml = `🟩 ✅ <strong>Healthy balanced rate structure:</strong> Substructure allocation within healthy market baseline (&lt; 26%, FLRI &lt; 1.15).`;
+        }
+        document.getElementById("tipFlri").innerHTML = 
+          `⏳ <strong>Front-Loading Rate Index (FLRI)</strong> = Early trades ratio vs project baseline (${data.pte_sub_pct.toFixed(1)}%).<br>` +
+          `Highest: <strong>${maxFlriBidder.name}</strong> (${flriVal.toFixed(2)} FLRI).<br>` +
+          flriStatusHtml;
+      }
+
+      if (exclusionsCnt > 0) {
+        const ex = data.exclusions[0];
+        document.getElementById("tipScope").innerHTML = 
+          `🔍 🟧 ⚠️ <strong>Scope Ambush Detected:</strong> ${ex.clause_id} buried on page ${ex.page_nr}, attempting to exclude ~${fmtM(ex.potential_cost_exposure)} in works. Bidder normalized by adding omitted cost back to lump sum.`;
+      } else {
+        document.getElementById("tipScope").innerHTML = 
+          `🔍 🟩 ✅ <strong>100% Scope Coverage:</strong> Agentic contract AI cross-checked all qualification schedules, specifications, and BOQ items. Zero hidden scope omissions detected.`;
+      }
+
+      if (winner) {
+        document.getElementById("tipWinner").innerHTML = 
+          `🏆 🟩 <strong>Recommended Contractor:</strong> ${winner.name} achieved top composite score of ${winner.pqm_composite.toFixed(1)} under BCA PQM Framework (50% Price / 50% Quality), with clean balanced rates and 0 safety demerit points.`;
+      }
+
+      if (document.getElementById("tipLeaderboard")) {
+        document.getElementById("tipLeaderboard").innerHTML = 
+          `⚖️ <strong>Statutory BCA Price-Quality Method (PQM):</strong> Dual-envelope tender evaluation (50% Price / 50% Quality). Bids undergo commercial normalization, contractor grading verification, early-trade front-loading audit, and statutory ALT penalty screening.`;
+      }
+
+      document.getElementById("tipChart").innerHTML = 
+        `📊 <strong>Substructure Benchmark (${data.pte_sub_pct.toFixed(1)}% baseline)</strong><br>` +
+        `Shows % of total bid allocated to early earthworks, ERSS, and piling.<br>` +
+        `🟦 <strong>Blue (&lt; 26%)</strong>: Balanced market rates<br>` +
+        `🟧 <strong>Amber (26%–31.9%)</strong>: Elevated early skew<br>` +
+        `🟥 <strong>Red (≥ 32%)</strong>: Severe front-loading risk`;
+
+      document.getElementById("tipVar").innerHTML = 
+        `📈 <strong>Variance vs PTE Baseline</strong><br>` +
+        `Percentage variance of submitted lump sum against Client Pre-Tender Estimate (PTE).<br>` +
+        `🟩 <strong>Green (-20% to +5%)</strong>: Normal competitive zone<br>` +
+        `🟧 <strong>Amber (&gt; +5%)</strong>: Over-budget premium<br>` +
+        `🟥 <strong>Red (&lt; -20%)</strong>: Statutory ALT dumping risk`;
+
+      document.getElementById("tipTableFlri").innerHTML = 
+        `⏳ <strong>Front-Loading Rate Index (FLRI)</strong><br>` +
+        `Ratio of bidder's early trade allocation against client baseline (${data.pte_sub_pct.toFixed(1)}%).<br>` +
+        `🟩 <strong>Green (&lt; 1.15)</strong>: Balanced rate structure<br>` +
+        `🟧 <strong>Amber (1.15–1.29)</strong>: Mild early skew<br>` +
+        `🟥 <strong>Red (≥ 1.30)</strong>: Severe cash extraction risk`;
+
+      document.getElementById("tipPqm").innerHTML = 
+        `⚖️ <strong>BCA Statutory Price-Quality Method (PQM):</strong> Composite score (0-100 scale). Computed as 50% Price Score (curved around median tender price) + 50% Quality Score (CONQUAS, track record, safety demerit points, and BCA financial grading).`;
+
+      if (document.getElementById("chartBenchmarkLabel")) {
+        document.getElementById("chartBenchmarkLabel").textContent = 
+          `Substructure Benchmark: ${data.pte_sub_pct.toFixed(1)}%`;
+      }
+
+      // Dynamic Multi-Agent Consensus Feed based on active project
+      const projectId = data.project_id;
+      if (projectId === "PRJ-T5-003") {
+        document.getElementById("feedChairman").innerHTML = `<strong>Shinsei Precision Builders (B01)</strong> unanimously recommended for contract award at S$369.11M (-1.21% vs PTE). Unrivaled automated tunneling safety record, CONQUAS 97.0, and balanced BOQ rates.`;
+        document.getElementById("feedForensic").innerHTML = `<strong>DongHae Global Engineering (B02)</strong> flagged for +65% substructure front-loading (FLRI 1.59, <strong>S$42.50M</strong> unearned cash extraction exposure). Clarification letter CL-01 dispatched.`;
+        document.getElementById("feedLegal").innerHTML = `<strong>GrandPillar Infrastructure (B03)</strong> and <strong>Shinsei Precision Builders (B01)</strong> verified 100% compliant with CAG Airport Security & Underground Transit Works standards. Zero conditional qualifications detected.`;
+        document.getElementById("feedAlt").innerHTML = `<strong>Everest Building & Civil Engineering (B04)</strong> bid S$238.30M (-34.56% vs PTE). Triggers statutory BCA Abnormally Low Tender dumping penalty and disqualified due to extreme execution & insolvency risk.`;
+      } else if (projectId === "PRJ-TWRP-002") {
+        document.getElementById("feedChairman").innerHTML = `<strong>Heng Win (Private) Limited (B01)</strong> recommended for contract award at S$225.40M (-2.00% vs PTE). Exceptional track record, 0 demerit points, and balanced rate distribution across biosolids facilities.`;
+        document.getElementById("feedForensic").innerHTML = `<strong>Vanguard Underground Engineering (B04)</strong> flagged for heavy substructure front-loading (+72% markup, FLRI 1.64). Potential unearned early extraction of <strong>S$35.10M</strong>. Clarification notice issued.`;
+        document.getElementById("feedLegal").innerHTML = `All 4 shortlisted bidders verified 100% compliant with PUB Particular Conditions. No buried scope exclusions or conditional qualifications detected in submissions.`;
+        document.getElementById("feedAlt").innerHTML = `No statutory ALT dumping detected. Bids range from -2.00% to +6.58% of PTE. <strong>Kuraishi Engineering (B03)</strong> noted for specialized slurry shield shaft methodology (+4.0% premium).`;
+      } else {
+        // WHC Baseline
+        document.getElementById("feedChairman").innerHTML = `<strong>Heng Win (Private) Limited (B01)</strong> unanimously recommended for contract award at S$113.87M (-0.98% vs PTE). Clean balanced rate structure, 0 MOM demerit points, and high financial solvency.`;
+        document.getElementById("feedForensic").innerHTML = `<strong>WinningPine Construction (B02)</strong> flagged for extreme substructure front-loading (+85% markup, FLRI 1.75). Potential unearned early extraction of <strong>S$20.62M</strong>. Clarification letter CL-01 dispatched.`;
+        document.getElementById("feedLegal").innerHTML = `<strong>GemStone Building Contractors (B04)</strong> buried clause <strong>QUAL-14.2</strong> on page 38 excluding medical gas piping (-S$6.79M). Normalized bid sum adjusted to S$111.94M. Conditional bid flagged.`;
+        document.getElementById("feedAlt").innerHTML = `<strong>Starlight Urban Infrastructure (B03)</strong> bid S$76.06M (-33.86% vs PTE). Triggers statutory BCA Abnormally Low Tender dumping penalty + 12 MOM demerit points. Disqualified due to insolvency risk.`;
+      }
+
+      // 3. Table Rows
+      const tbody = document.getElementById("leaderboardBody");
+      tbody.innerHTML = "";
+
+      data.bidders.forEach(b => {
+        const tr = document.createElement("tr");
+
+        // Strict PTE VAR grading (strictly variance vs PTE, no FLRI bleed-over)
+        let varClass = "val-ok";
+        if (b.variance_vs_pte_pct < -20.0) {
+          varClass = "val-negative-alert"; // Red: Statutory Abnormally Low Tender (< -20%)
+        } else if (b.variance_vs_pte_pct > 5.0) {
+          varClass = "val-warn"; // Amber: Over-budget bid premium (> +5%)
+        } else {
+          varClass = "val-ok"; // Green: Normal competitive market zone (-20% to +5%)
+        }
+
+        // Strict FLRI Front-Loading grading
+        let flriClass = "val-ok";
+        const flriVal = b.flri || 1.0;
+        if (flriVal >= 1.30) {
+          flriClass = "val-negative-alert"; // Red: High front-loading
+        } else if (flriVal >= 1.15) {
+          flriClass = "val-warn"; // Amber: Mild early skew
+        } else {
+          flriClass = "val-ok"; // Green: Balanced rate structure
+        }
+
+        // Status Badge
+        let statusBadge = `<span class="status-badge status-neutral">${b.commercial_status}</span>`;
+        if (b.rank === 1) {
+          statusBadge = `<span class="status-badge status-award">Award Recommended</span>`;
+        } else if (b.commercial_status === "STATUTORY_ALT_WARNING") {
+          statusBadge = `<span class="status-badge status-disqualify">ALT Disqualified</span>`;
+        } else if (b.is_front_loader) {
+          statusBadge = `<span class="status-badge status-clarify">Front-Loader Skew</span>`;
+        } else if (b.bidder_id === "B04") {
+          statusBadge = `<span class="status-badge status-clarify">Scope Ambush</span>`;
+        }
+
+        tr.onclick = () => openDrilldownDrawer(b.bidder_id);
+        tr.title = `Click for Forensic BOQ Rate-Leveling Drill-Down (${b.name})`;
+
+        tr.innerHTML = `
+          <td style="font-weight: 700; text-align: center;">${b.rank}</td>
+          <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; text-align: center;">${b.bidder_id}</td>
+          <td style="font-weight: 600;" title="${b.name}">${b.name}</td>
+          <td style="font-weight: 700; color: var(--text-primary); text-align: center; font-size: 11px;">${b.bca_grade}</td>
+          <td style="text-align: right; font-feature-settings: 'tnum'; font-weight: 700; color: var(--text-primary);">S$${(b.total_bid / 1000000).toFixed(2)}M</td>
+          <td style="text-align: right; font-feature-settings: 'tnum';" class="${varClass}">${b.variance_vs_pte_pct >= 0 ? '+' : ''}${b.variance_vs_pte_pct.toFixed(2)}%</td>
+          <td style="text-align: right; font-feature-settings: 'tnum'; font-weight: 700;" class="${flriClass}">${flriVal.toFixed(2)}</td>
+          <td style="text-align: right; font-feature-settings: 'tnum'; font-weight: 600; color: var(--text-primary); font-size: 11px;">${b.qual_score.toFixed(1)}</td>
+          <td style="text-align: right; font-feature-settings: 'tnum'; font-weight: 800; color: var(--accent-blue);">${b.pqm_composite.toFixed(1)}</td>
+          <td style="text-align: center;">
+            ${statusBadge}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // 4. Render Chart
+      renderChart(data);
+    }
+
+    function renderChart(data) {
+      const ctx = document.getElementById("biddersChart").getContext("2d");
+      if (tenderChart) {
+        tenderChart.destroy();
+      }
+
+      // Two-line X-axis labels: Code on line 1, short company name on line 2
+      const labels = data.bidders.map(b => [b.bidder_id, b.name.split(" ")[0]]);
+      const subVals = data.bidders.map(b => Number((b.substructure_pct || 0).toFixed(1)));
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+
+      // Three-color coding: Blue (<26%), Amber (26-31.9%), Red (>=32%)
+      const bgColors = subVals.map(v => {
+        if (v >= 32.0) return isDark ? '#ef4444' : '#dc2626'; // Red
+        if (v >= 26.0) return isDark ? '#f59e0b' : '#d97706'; // Amber
+        return isDark ? '#3b82f6' : '#2563eb'; // Blue
+      });
+
+      // 1. Dotted horizontal benchmark line plugin
+      const benchmarkLinePlugin = {
+        id: 'benchmarkLine',
+        afterDraw: (chart) => {
+          const { ctx, chartArea, scales } = chart;
+          if (!chartArea || !scales || !scales.y) return;
+          const { left, right } = chartArea;
+          const benchmarkVal = data.pte_sub_pct || 22.61;
+          const yPos = scales.y.getPixelForValue(benchmarkVal);
+          const currentDark = document.documentElement.getAttribute("data-theme") === "dark";
+
+          ctx.save();
+          ctx.setLineDash([5, 4]);
+          ctx.strokeStyle = currentDark ? '#94a3b8' : '#64748b';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(left, yPos);
+          ctx.lineTo(right, yPos);
+          ctx.stroke();
+          ctx.restore();
+        }
+      };
+
+      // 2. Bar values on top of each bar
+      const barValuesPlugin = {
+        id: 'barValues',
+        afterDatasetsDraw: (chart) => {
+          const { ctx } = chart;
+          const currentDark = document.documentElement.getAttribute("data-theme") === "dark";
+          chart.data.datasets.forEach((dataset, i) => {
+            const meta = chart.getDatasetMeta(i);
+            meta.data.forEach((bar, index) => {
+              const val = dataset.data[index];
+              ctx.save();
+              ctx.fillStyle = currentDark ? '#f1f5f9' : '#0f172a';
+              ctx.font = '700 10.5px Inter, sans-serif';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+              ctx.fillText(`${val.toFixed(1)}%`, bar.x, bar.y - 4);
+              ctx.restore();
+            });
+          });
+        }
+      };
+
+      tenderChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Substructure Allocation (%)',
+              data: subVals,
+              backgroundColor: bgColors,
+              borderRadius: 4,
+              borderSkipped: false,
+              barThickness: 46,
+              maxBarThickness: 52
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                title: function(items) {
+                  const b = data.bidders[items[0].dataIndex];
+                  return `${b.bidder_id}: ${b.name}`;
+                },
+                label: function(context) {
+                  const b = data.bidders[context.dataIndex];
+                  const flriStr = (b.flri || 1.0).toFixed(2);
+                  const statusNote = b.substructure_pct >= 32.0 
+                    ? `⚠️ High Front-Loading (FLRI ${flriStr})` 
+                    : (b.substructure_pct >= 26.0 ? `⚠️ Mild Front-Loading (FLRI ${flriStr})` : `✅ Balanced (FLRI ${flriStr})`);
+                  return [
+                    `Substructure: ${context.raw.toFixed(1)}% of bid sum`,
+                    `Baseline Benchmark: ${data.pte_sub_pct.toFixed(1)}%`,
+                    `Status: ${statusNote}`
+                  ];
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 50,
+              grid: {
+                color: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                color: isDark ? '#94a3b8' : '#64748b',
+                font: { size: 10 },
+                callback: function(v) { return v + '%'; }
+              }
+            },
+            x: {
+              grid: { display: false },
+              ticks: {
+                color: isDark ? '#cbd5e1' : '#334155',
+                font: { size: 9.5, weight: 600 }
+              }
+            }
+          }
+        },
+        plugins: [benchmarkLinePlugin, barValuesPlugin]
+      });
+    }
+
+    function updateChartTheme() {
+      if (!tenderChart) return;
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      tenderChart.options.scales.y.grid.color = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+      tenderChart.options.scales.y.ticks.color = isDark ? '#94a3b8' : '#64748b';
+      tenderChart.options.scales.x.ticks.color = isDark ? '#cbd5e1' : '#334155';
+      tenderChart.update();
+    }
+
+    // Dynamic Floating Tooltip Initializer
+    function initGlobalTooltips() {
+      let tipEl = document.getElementById("acipGlobalTooltip");
+      if (!tipEl) {
+        tipEl = document.createElement("div");
+        tipEl.id = "acipGlobalTooltip";
+        tipEl.className = "acip-global-tooltip";
+        document.body.appendChild(tipEl);
+      }
+
+      let activeBtn = null;
+
+      document.addEventListener("mouseover", (e) => {
+        const btn = e.target.closest(".info-btn");
+        if (!btn) return;
+        if (btn === activeBtn) return;
+        activeBtn = btn;
+
+        const innerTip = btn.querySelector(".acip-tooltip");
+        const text = innerTip ? innerTip.innerHTML.trim() : btn.getAttribute("data-tooltip");
+        if (!text) return;
+
+        tipEl.innerHTML = text;
+        tipEl.style.visibility = "hidden";
+        tipEl.style.opacity = "0";
+        tipEl.style.display = "block";
+
+        const rect = btn.getBoundingClientRect();
+        const tipRect = tipEl.getBoundingClientRect();
+        const tipWidth = tipRect.width;
+
+        let left = rect.left + rect.width / 2 - tipWidth / 2;
+        if (left < 12) left = 12;
+        if (left + tipWidth > window.innerWidth - 12) {
+          left = window.innerWidth - tipWidth - 12;
+        }
+
+        // Arrow horizontal offset relative to tooltip
+        const arrowLeft = Math.max(12, Math.min(tipWidth - 12, rect.left + rect.width / 2 - left));
+        tipEl.style.setProperty("--arrow-left", `${arrowLeft}px`);
+
+        // Check vertical space: if icon is near the top (< 160px from top of screen), show below
+        if (rect.top < 160) {
+          tipEl.style.top = `${rect.bottom + 8}px`;
+          tipEl.style.bottom = "auto";
+          tipEl.className = "acip-global-tooltip pos-below";
+        } else {
+          tipEl.style.bottom = `${window.innerHeight - rect.top + 8}px`;
+          tipEl.style.top = "auto";
+          tipEl.className = "acip-global-tooltip pos-above";
+        }
+
+        tipEl.style.left = `${left}px`;
+        tipEl.style.visibility = "visible";
+        tipEl.style.opacity = "1";
+      });
+
+      document.addEventListener("mouseout", (e) => {
+        const btn = e.target.closest(".info-btn");
+        if (btn) {
+          if (e.relatedTarget && btn.contains(e.relatedTarget)) {
+            return;
+          }
+          activeBtn = null;
+          tipEl.style.opacity = "0";
+          tipEl.style.visibility = "hidden";
+        }
+      });
+    }
+
+    // =========================================================
+    // Forensic BOQ Rate-Leveling Drill-Down Logic
+    // =========================================================
+    function openDrilldownDrawer(bidderId) {
+      if (bidderId) {
+        activeBidderId = bidderId;
+      } else if (!activeBidderId && currentTenderData && currentTenderData.bidders && currentTenderData.bidders.length > 0) {
+        activeBidderId = currentTenderData.bidders[0].bidder_id;
+      }
+      const backdrop = document.getElementById("drilldownBackdrop");
+      const drawer = document.getElementById("drilldownDrawer");
+      if (backdrop) backdrop.classList.add("active");
+      if (drawer) drawer.classList.add("active");
+      renderDrilldownDrawer();
+    }
+
+    function closeDrilldownDrawer() {
+      const backdrop = document.getElementById("drilldownBackdrop");
+      const drawer = document.getElementById("drilldownDrawer");
+      if (backdrop) backdrop.classList.remove("active");
+      if (drawer) drawer.classList.remove("active");
+    }
+
+    function setDrawerBidder(bidderId) {
+      activeBidderId = bidderId;
+      renderDrilldownDrawer();
+    }
+
+    function setBoqFilter(filter) {
+      currentBoqFilter = filter;
+      document.querySelectorAll(".boq-pill-btn").forEach(b => b.classList.remove("active"));
+      const activeBtnMap = {
+        ALL: "btnFilterAll",
+        OUTLIERS: "btnFilterOutliers",
+        SUBSTRUCTURE: "btnFilterSub",
+        SERVICES: "btnFilterServices"
+      };
+      const btn = document.getElementById(activeBtnMap[filter]);
+      if (btn) btn.classList.add("active");
+      renderBoqTableOnly();
+    }
+
+    function handleBoqSearch(val) {
+      currentBoqSearch = (val || "").toLowerCase().trim();
+      renderBoqTableOnly();
+    }
+
+    function renderDrilldownDrawer() {
+      if (!currentTenderData || !currentTenderData.bidders) return;
+
+      const bidder = currentTenderData.bidders.find(b => b.bidder_id === activeBidderId) || currentTenderData.bidders[0];
+      if (!bidder) return;
+      activeBidderId = bidder.bidder_id;
+
+      // 1. Switcher Tabs
+      const switcher = document.getElementById("drawerSwitcherBar");
+      if (switcher) {
+        switcher.innerHTML = currentTenderData.bidders.map(b => {
+          const isActive = b.bidder_id === activeBidderId;
+          let icon = "🔹";
+          if (b.rank === 1) icon = "🏆";
+          else if (b.is_front_loader) icon = "⚠️";
+          else if (b.bidder_id === "B04") icon = "🔍";
+          else if (b.commercial_status === "STATUTORY_ALT_WARNING") icon = "🚨";
+          return `<button class="drawer-tab-btn ${isActive ? 'active' : ''}" onclick="setDrawerBidder('${b.bidder_id}')">
+            <span>${icon}</span>
+            <span>${b.bidder_id}</span>
+            <span>${b.name.split(" ")[0]}</span>
+          </button>`;
+        }).join("");
+      }
+
+      // 2. Dossier Metric Cards
+      const dossierGrid = document.getElementById("drawerDossierGrid");
+      if (dossierGrid) {
+        const pteVar = bidder.variance_vs_pte_pct || 0;
+        let varColor = pteVar < -20 ? "var(--accent-red)" : (pteVar > 5 ? "var(--accent-amber)" : "var(--accent-green)");
+        const flri = bidder.flri || 1.0;
+        let flriColor = flri >= 1.30 ? "var(--accent-red)" : (flri >= 1.15 ? "var(--accent-amber)" : "var(--accent-green)");
+
+        dossierGrid.innerHTML = `
+          <div class="dossier-metric-card">
+            <span class="dossier-label">Submitted Tender Sum</span>
+            <span class="dossier-val" style="color: ${varColor};">S$${(bidder.total_bid / 1000000).toFixed(2)}M</span>
+            <span class="dossier-sub" style="color: ${varColor};">${pteVar >= 0 ? '+' : ''}${pteVar.toFixed(2)}% vs PTE</span>
+          </div>
+          <div class="dossier-metric-card">
+            <span class="dossier-label">Substructure / FLRI</span>
+            <span class="dossier-val" style="color: ${flriColor};">${flri.toFixed(2)} FLRI</span>
+            <span class="dossier-sub" style="color: ${flriColor};">${(bidder.substructure_pct || 0).toFixed(1)}% Substructure Allocation</span>
+          </div>
+          <div class="dossier-metric-card">
+            <span class="dossier-label">Unearned Drawdown Risk</span>
+            <span class="dossier-val" style="color: ${bidder.unearned_extraction > 0 ? 'var(--accent-red)' : 'var(--accent-green)'};">
+              ${bidder.unearned_extraction > 0 ? 'S$' + (bidder.unearned_extraction / 1000000).toFixed(2) + 'M' : 'S$0.00'}
+            </span>
+            <span class="dossier-sub" style="color: var(--text-muted);">${bidder.unearned_extraction > 0 ? 'Working Capital Extraction' : 'Balanced Milestones'}</span>
+          </div>
+          <div class="dossier-metric-card">
+            <span class="dossier-label">BCA & Safety Rating</span>
+            <span class="dossier-val">${bidder.bca_grade} • ${bidder.conquas_score || 90}</span>
+            <span class="dossier-sub" style="color: ${bidder.safety_demerit_points > 0 ? 'var(--accent-red)' : 'var(--accent-green)'};">
+              ${bidder.safety_demerit_points} MOM Demerit Pts
+            </span>
+          </div>
+        `;
+      }
+
+      // 3. Strategic Alert Summary Box & Scope Exclusion Lookup
+      const matchingExclusion = (currentTenderData.exclusions || []).find(e => e.bidder_id === activeBidderId);
+      const alertBox = document.getElementById("drawerAlertBox");
+      if (alertBox) {
+        if (bidder.is_front_loader || bidder.flri >= 1.30) {
+          alertBox.className = "forensic-alert-box alert-red";
+          alertBox.innerHTML = `
+            <div class="alert-header-row">
+              <span>⚠️</span>
+              <span>Severe Cash-Flow Front-Loading Detected (FLRI ${bidder.flri.toFixed(2)} &ge; 1.30)</span>
+            </div>
+            <div>Contractor strategically inflated early substructure trade packages (Demolition, ERSS, Diaphragm Walls) while deflating late-stage MEP Chillers. This exposes the Employer to <strong>S$${(bidder.unearned_extraction / 1000000).toFixed(2)}M</strong> in unearned working capital extraction prior to month 9.</div>
+          `;
+        } else if (matchingExclusion) {
+          alertBox.className = "forensic-alert-box alert-amber";
+          const expM = matchingExclusion.potential_cost_exposure ? (matchingExclusion.potential_cost_exposure / 1000000).toFixed(2) : "0.00";
+          alertBox.innerHTML = `
+            <div class="alert-header-row">
+              <span>🔍</span>
+              <span>Concealed Scope Exclusion Ambush (Clause ${matchingExclusion.clause_id})</span>
+            </div>
+            <div>Contractor buried an addenda qualification on page ${matchingExclusion.page_nr} excluding the <strong>S$${expM}M</strong> package (Item ${matchingExclusion.omitted_item_code}). This artificial rate omission enables an unearned headline bid discount that will trigger post-award variation claims.</div>
+          `;
+        } else if (bidder.commercial_status === "STATUTORY_ALT_WARNING" || bidder.variance_vs_pte_pct < -20.0) {
+          alertBox.className = "forensic-alert-box alert-red";
+          alertBox.innerHTML = `
+            <div class="alert-header-row">
+              <span>🚨</span>
+              <span>Statutory BCA Abnormally Low Tender (ALT) Disqualification Trigger</span>
+            </div>
+            <div>Bidder submitted <strong>S$${(bidder.total_bid / 1000000).toFixed(2)}M</strong>, falling <strong>${bidder.variance_vs_pte_pct.toFixed(2)}%</strong> below the Pre-Tender Estimate. Coupled with <strong>${bidder.safety_demerit_points} MOM Safety Demerit Points</strong> and depleted balance sheet liquidity, this indicates high contractor insolvency and project abandonment risk.</div>
+          `;
+        } else if (bidder.rank === 1) {
+          alertBox.className = "forensic-alert-box alert-green";
+          const netWorthM = bidder.net_worth_sgd ? (bidder.net_worth_sgd / 1000000).toFixed(0) : "42";
+          alertBox.innerHTML = `
+            <div class="alert-header-row">
+              <span>🏆</span>
+              <span>BCA PQM Benchmark Rank #1: Unanimous Tender Recommendation</span>
+            </div>
+            <div>Clean, balanced unit rates across all trades (&plusmn;1.0% vs PTE benchmark). ${bidder.safety_demerit_points} MOM safety demerit points, audited S$${netWorthM}M net worth, and pristine BCA ${bidder.bca_grade} tendering capacity. Fully compliant unconditional tender.</div>
+          `;
+        } else {
+          alertBox.className = "forensic-alert-box alert-blue";
+          alertBox.innerHTML = `
+            <div class="alert-header-row">
+              <span>ℹ️</span>
+              <span>Defensive Outlier Premium (+${bidder.variance_vs_pte_pct.toFixed(2)}% vs PTE)</span>
+            </div>
+            <div>Bidder submitted a defensive tender priced significantly above client engineering benchmarks. Rates are statistically safe but non-competitive on commercial price scoring.</div>
+          `;
+        }
+      }
+
+      // 4. Scope Clause Card (Database-driven from bidder_qualifications)
+      const clauseCard = document.getElementById("drawerClauseCard");
+      if (clauseCard) {
+        if (matchingExclusion) {
+          clauseCard.style.display = "flex";
+          const clauseId = matchingExclusion.clause_id;
+          const pageNr = matchingExclusion.page_nr;
+          const clauseText = matchingExclusion.clause_text;
+          const itemCode = matchingExclusion.omitted_item_code;
+          const exposure = (matchingExclusion.potential_cost_exposure / 1000000).toFixed(2);
+          const severityText = (matchingExclusion.severity || "CRITICAL SCOPE OMISSION").replace(/_/g, " ");
+          clauseCard.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="font-weight: 800; font-size: 11.5px; color: var(--accent-amber); display: flex; align-items: center; gap: 5px;">
+                <span>📜</span>
+                <span>Tender Qualification Schedule: Clause ${clauseId} (Page ${pageNr})</span>
+              </div>
+              <span class="status-badge status-disqualify" style="font-size: 9.5px; text-transform: uppercase;">${severityText}</span>
+            </div>
+            <div class="clause-verbatim">&ldquo;${clauseText}&rdquo;</div>
+            <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-muted);">
+              <span>Affected BOQ Item: <strong>Item ${itemCode}</strong></span>
+              <span>Cost Exposure Impact: <strong style="color: var(--accent-red);">S$${exposure}M</strong></span>
+            </div>
+          `;
+        } else {
+          clauseCard.style.display = "none";
+        }
+      }
+
+      // 5. BOQ Items Table
+      renderBoqTableOnly();
+
+      // 6. Deliberation Memo
+      const councilText = document.getElementById("drawerCouncilText");
+      if (councilText) {
+        if (bidder.bidder_id === "B02") {
+          councilText.innerHTML = `
+            <div>🕵️‍♂️ <strong>Forensic QS Auditor:</strong> <span style="font-weight: 500;">"Line-item leveling demonstrates systematic rate distortion between early civil excavation (Item 02.01: S$64.75 vs S$35.00) and late MEP chillers (Item 06.01: S$487.50 vs S$750.00). Unearned cash-flow extraction risk quantified at S$20.62M."</span></div>
+            <div style="margin-top: 4px;">⚖️ <strong>Commercial &amp; Contracts Agent:</strong> <span style="font-weight: 500;">"Recommend withholding progress certification for civil works exceeding PTE benchmark rates until superstructure reaches L10."</span></div>
+            <div style="margin-top: 4px;">🏛️ <strong>Tender Board Chairman:</strong> <span style="font-weight: 500;">"Clarification Notice CL-01 dispatched requesting substructure unit rate justification and revised milestone breakdown."</span></div>
+          `;
+        } else if (bidder.bidder_id === "B04") {
+          councilText.innerHTML = `
+            <div>🕵️‍♂️ <strong>Forensic QS Auditor:</strong> <span style="font-weight: 500;">"Item 07.01 copper gas piping omitted from lump sum total. Equalization adjustment adds S$6.79M, increasing normalized bid from S$105.15M to S$111.94M."</span></div>
+            <div style="margin-top: 4px;">⚖️ <strong>Commercial &amp; Contracts Agent:</strong> <span style="font-weight: 500;">"Clause QUAL-14.2 violates Instruction to Tenderers Section 4. Bid is conditional and legally non-compliant unless unconditionally withdrawn."</span></div>
+            <div style="margin-top: 4px;">🏛️ <strong>Tender Board Chairman:</strong> <span style="font-weight: 500;">"Issue Clarification Letter CL-02 requiring unconditional withdrawal within 48 hours or formal disqualification."</span></div>
+          `;
+        } else if (bidder.bidder_id === "B03") {
+          councilText.innerHTML = `
+            <div>🕵️‍♂️ <strong>Forensic QS Auditor:</strong> <span style="font-weight: 500;">"Extreme dumping detected across all 8 trades (-33.86%). Contractor cannot execute medical MEP at S$18.5M without substantial subcontractor losses."</span></div>
+            <div style="margin-top: 4px;">⚖️ <strong>Commercial &amp; Contracts Agent:</strong> <span style="font-weight: 500;">"12 MOM Demerit points and S$18M net worth fail BCA minimum solvency guidelines for Category A healthcare tenders."</span></div>
+            <div style="margin-top: 4px;">🏛️ <strong>Tender Board Chairman:</strong> <span style="font-weight: 500;">"Statutory ALT penalty applied. Score capped at 32.2. Formally disqualified under BCA PQM guidelines."</span></div>
+          `;
+        } else if (bidder.rank === 1) {
+          councilText.innerHTML = `
+            <div>🕵️‍♂️ <strong>Forensic QS Auditor:</strong> <span style="font-weight: 500;">"All 18 BOQ rates within &plusmn;1.0% of independent cost consultant estimates. Balanced rate distribution eliminates front-loading risk."</span></div>
+            <div style="margin-top: 4px;">⚖️ <strong>Commercial &amp; Contracts Agent:</strong> <span style="font-weight: 500;">"0 tender qualifications, 0 MOM demerit points. Subcontractor agreements pre-aligned with Singapore SOPA 2004 provisions."</span></div>
+            <div style="margin-top: 4px;">🏛️ <strong>Tender Board Chairman:</strong> <span style="font-weight: 500;">"Unanimous recommendation for contract award at S$113.87M. Letter of Acceptance ready for Tender Board sign-off."</span></div>
+          `;
+        } else {
+          councilText.innerHTML = `
+            <div>🕵️‍♂️ <strong>Forensic QS Auditor:</strong> <span style="font-weight: 500;">"Unit rates reflect high overhead markup (+12.0% above market median). No front-loading detected."</span></div>
+            <div style="margin-top: 4px;">⚖️ <strong>Commercial &amp; Contracts Agent:</strong> <span style="font-weight: 500;">"Standard commercial terms without contractual qualifications."</span></div>
+            <div style="margin-top: 4px;">🏛️ <strong>Tender Board Chairman:</strong> <span style="font-weight: 500;">"Non-competitive tender sum. Ranked #5 in commercial evaluation."</span></div>
+          `;
+        }
+      }
+
+      // 7. Update Clarification Button
+      const clIdEl = document.getElementById("drawerClId");
+      if (clIdEl) {
+        const clMap = {
+          "B01": "CL-00",
+          "B02": "CL-01",
+          "B03": "CL-03",
+          "B04": "CL-02",
+          "B05": "CL-05"
+        };
+        clIdEl.textContent = clMap[activeBidderId] || "CL-01";
+      }
+    }
+
+    function renderBoqTableOnly() {
+      if (!currentTenderData || !currentTenderData.boq_drilldown) return;
+      const allRows = currentTenderData.boq_drilldown.filter(r => r.bidder_id === activeBidderId);
+
+      // Counts
+      const cntAll = allRows.length;
+      const cntOutliers = allRows.filter(r => Math.abs(r.variance_vs_pte_pct) >= 35.0).length;
+      const cntSub = allRows.filter(r => ["TRD-01", "TRD-02", "TRD-03"].includes(r.trade_id)).length;
+      const cntServices = allRows.filter(r => ["TRD-05", "TRD-06", "TRD-07"].includes(r.trade_id)).length;
+
+      const cAll = document.getElementById("cntFilterAll");
+      const cOut = document.getElementById("cntFilterOutliers");
+      const cSub = document.getElementById("cntFilterSub");
+      const cServ = document.getElementById("cntFilterServices");
+      if (cAll) cAll.textContent = cntAll;
+      if (cOut) cOut.textContent = cntOutliers;
+      if (cSub) cSub.textContent = cntSub;
+      if (cServ) cServ.textContent = cntServices;
+
+      // Filtered subset
+      let filtered = allRows;
+      if (currentBoqFilter === "OUTLIERS") {
+        filtered = filtered.filter(r => Math.abs(r.variance_vs_pte_pct) >= 35.0);
+      } else if (currentBoqFilter === "SUBSTRUCTURE") {
+        filtered = filtered.filter(r => ["TRD-01", "TRD-02", "TRD-03"].includes(r.trade_id));
+      } else if (currentBoqFilter === "SERVICES") {
+        filtered = filtered.filter(r => ["TRD-05", "TRD-06", "TRD-07"].includes(r.trade_id));
+      }
+
+      if (currentBoqSearch) {
+        filtered = filtered.filter(r => 
+          r.item_code.toLowerCase().includes(currentBoqSearch) ||
+          r.trade_name.toLowerCase().includes(currentBoqSearch) ||
+          r.item_description.toLowerCase().includes(currentBoqSearch)
+        );
+      }
+
+      const tbody = document.getElementById("boqTableBody");
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding: 16px; color: var(--text-muted);">No line items match the selected filter.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(r => {
+        const v = r.variance_vs_pte_pct;
+        let vClass = "val-ok";
+        let flagBadge = `<span class="status-badge status-neutral" style="font-size:9px;">Compliant</span>`;
+        let rowClass = "";
+
+        if (v >= 35.0) {
+          vClass = "val-negative-alert";
+          flagBadge = `<span class="status-badge status-disqualify" style="font-size:9px;">⚠️ Front-Load</span>`;
+          rowClass = "highlight-anomaly";
+        } else if (v <= -30.0) {
+          vClass = "val-negative-alert";
+          flagBadge = `<span class="status-badge status-disqualify" style="font-size:9px;">🚨 Dump Rate</span>`;
+          rowClass = "highlight-anomaly";
+        } else if (Math.abs(v) >= 15.0) {
+          vClass = "val-warn";
+          flagBadge = `<span class="status-badge status-clarify" style="font-size:9px;">Skewed</span>`;
+        }
+
+        if (activeBidderId === "B04" && r.item_code === "07.01") {
+          flagBadge = `<span class="status-badge status-disqualify" style="font-size:9px;">🚫 Excluded</span>`;
+          rowClass = "highlight-anomaly";
+        }
+
+        const deltaVal = r.delta_sgd || 0;
+        const deltaFormatted = deltaVal >= 0 
+          ? `+S$${(deltaVal / 1000).toLocaleString('en-US', {maximumFractionDigits: 0})}k`
+          : `-S$${Math.abs(deltaVal / 1000).toLocaleString('en-US', {maximumFractionDigits: 0})}k`;
+
+        return `
+          <tr class="${rowClass}">
+            <td style="font-family: 'JetBrains Mono', monospace; font-weight: 700; text-align: center;">${r.item_code}</td>
+            <td style="font-weight: 600;" title="${r.trade_name}">${r.trade_name}</td>
+            <td title="${r.item_description}">${r.item_description}</td>
+            <td style="text-align: center; color: var(--text-muted);">${r.quantity.toLocaleString()} ${r.unit}</td>
+            <td style="text-align: right;">S$${r.pte_unit_rate.toFixed(2)}</td>
+            <td style="text-align: right; font-weight: 700;">S$${r.submitted_unit_rate.toFixed(2)}</td>
+            <td style="text-align: right; font-weight: 700;" class="${vClass}">${v >= 0 ? '+' : ''}${v.toFixed(1)}%</td>
+            <td style="text-align: right;">S$${(r.submitted_total_amount / 1000000).toFixed(2)}M</td>
+            <td style="text-align: right; font-weight: 600;" class="${deltaVal > 0 ? 'val-negative-alert' : (deltaVal < 0 ? 'val-warn' : 'val-ok')}">${deltaFormatted}</td>
+            <td style="text-align: center;">${flagBadge}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function openClarificationModal() {
+      if (!currentTenderData) return;
+      const bidder = currentTenderData.bidders.find(b => b.bidder_id === activeBidderId) || currentTenderData.bidders[0];
+      const modal = document.getElementById("clModalBackdrop");
+      const titleEl = document.getElementById("clModalTitle");
+      const subEl = document.getElementById("clModalSub");
+      const bodyEl = document.getElementById("clModalBody");
+
+      titleEl.textContent = `Tender Clarification Notice (${bidder.bidder_id}) — ${bidder.name}`;
+      subEl.textContent = `Reference: ACIP/S02/${currentTenderData.tender_id}/CL-${bidder.bidder_id}`;
+
+      let letterText = "";
+      if (bidder.bidder_id === "B02") {
+        letterText = `CONFIDENTIAL & PRIVILEGED
+TENDER EVALUATION COMMITTEE
+c/o Ministry of Health Holdings (MOHH)
+Woodlands Health Campus — Acute Care Wing (TND-WHC-2026-001)
+
+Date: 7 October 2026
+To: Managing Director
+WinningPine Construction Pte Ltd (UEN: 198900123C)
+
+SUBJECT: FORMAL CLARIFICATION NOTICE CL-01 (ABNORMALLY ELEVATED SUBSTRUCTURE UNIT RATES & CASH-FLOW REBALANCING)
+
+Dear Sir / Madam,
+
+Pursuant to Clause 12.3 of the Instructions to Tenderers under the Public Sector Standard Conditions of Contract (PSSCOC), the Tender Evaluation Committee has performed deterministic rate leveling across all competitive submissions.
+
+1. OBSERVATION OF CASH-FLOW FRONT-LOADING:
+Your submitted tender sum of S$121,550,200.50 reflects a severe temporal imbalance in trade allocation:
+- Substructure Trade Packages (TRD-01 to TRD-03) comprise S$48.10M (39.57% of your total tender sum), representing an 85.0% premium over the Pre-Tender Estimate baseline (22.61% benchmark).
+- Specifically:
+  * Item 02.01 (Bulk Excavation): Submitted at S$64.75/m3 vs Baseline S$35.00/m3 (+85.0%)
+  * Item 03.01 (Bored Piling): Submitted at S$1,156.25/m vs Baseline S$625.00/m (+85.0%)
+- Conversely, Late-Stage Mechanical Services (Item 06.01 Chillers) were submitted at S$487.50/kW vs Baseline S$750.00/kW (-35.0%).
+
+2. COMMERCIAL RISK EXPOSURE:
+Our quantitative audit indicates an unearned early capital extraction of approximately S$20,620,000.00 prior to Month 9. In the event of subcontractor insolvency or project delay, this unearned drawdown places the Employer at substantial financial risk.
+
+3. REQUIRED CLARIFICATION:
+You are hereby required to provide within five (5) working days:
+a) Detailed unit rate build-up breakdown for Items 01.01, 01.02, 02.01, 02.02, and 03.01 demonstrating verified supplier quotations.
+b) Written commitment to rebalance interim payment milestones to reflect true physical progress without front-loaded capital extraction.
+c) Agreement to furnish an enhanced Performance Security bond equal to 15% of the Contract Sum.
+
+Yours faithfully,
+Lead Cost Consultant & Tender Evaluation Committee Chairman
+Agentic Construction Intelligence Platform (ACIP S02)`;
+      } else if (bidder.bidder_id === "B04") {
+        letterText = `CONFIDENTIAL & PRIVILEGED
+TENDER EVALUATION COMMITTEE
+c/o Ministry of Health Holdings (MOHH)
+Woodlands Health Campus — Acute Care Wing (TND-WHC-2026-001)
+
+Date: 7 October 2026
+To: Commercial Director
+GemStone Building Contractors Pte Ltd (UEN: 197000345C)
+
+SUBJECT: FORMAL CLARIFICATION NOTICE CL-02 (UNCONDITIONAL WITHDRAWAL OF QUALIFICATION CLAUSE QUAL-14.2)
+
+Dear Sir / Madam,
+
+The Tender Evaluation Committee has concluded its compliance audit of qualification schedules submitted for Tender TND-WHC-2026-001.
+
+1. DISCOVERY OF UNACCEPTABLE CONTRACTUAL QUALIFICATION:
+On Page 38 of your Qualification Letter, your firm stipulated:
+"QUAL-14.2: Item 07.01 Degreased medical copper pipeline distribution is deemed excluded from base lump sum and shall be procured under Client Direct Nominated Subcontract (NSC)."
+
+2. STATUTORY NON-COMPLIANCE:
+Under Clause 4.1 of the Employer's Requirements, this tender is strictly solicited on a Comprehensive Lump Sum Fixed Price basis encompassing all acute medical gas systems. 
+Your exclusion of Item 07.01 constitutes an unauthorized scope omission with an assessed cost exposure of S$6,790,000.00.
+
+3. DIRECTIVE FOR IMMEDIATE RECTIFICATION:
+You are required to submit within forty-eight (48) hours of this notice:
+a) An unconditional letter signed by your Authorized Director formally withdrawing Clause QUAL-14.2 without price adjustment to your submitted sum (S$105,149,742.25).
+b) Confirmation that all medical gas and cleanroom installations under Division 07 will be executed within your submitted lump sum.
+
+Failure to withdraw this qualification unconditionally will result in the immediate equalization of your bid to S$111,939,742.25, or full disqualification as a non-conforming tender.
+
+Yours faithfully,
+Lead Cost Consultant & Tender Evaluation Committee Chairman
+Agentic Construction Intelligence Platform (ACIP S02)`;
+      } else if (bidder.bidder_id === "B03") {
+        letterText = `CONFIDENTIAL & PRIVILEGED
+TENDER EVALUATION COMMITTEE
+c/o Ministry of Health Holdings (MOHH)
+Woodlands Health Campus — Acute Care Wing (TND-WHC-2026-001)
+
+Date: 7 October 2026
+To: Managing Director
+Starlight Urban Infrastructure Pte Ltd (UEN: 201500888F)
+
+SUBJECT: STATUTORY INVESTIGATION NOTICE CL-03 (ABNORMALLY LOW TENDER INVESTIGATION & FINANCIAL SOLVENCY AUDIT)
+
+Dear Sir / Madam,
+
+Your submitted tender sum of S$76,059,987.75 has triggered a mandatory Abnormally Low Tender (ALT) investigation under statutory Singapore Building and Construction Authority (BCA) guidelines, falling 33.86% below the Pre-Tender Estimate (S$120.00M).
+
+You are required to submit detailed rate breakdowns, proof of trade contractor binding commitments, and parent company financial guarantees within 3 working days.
+
+Yours faithfully,
+Tender Evaluation Committee Chairman
+Agentic Construction Intelligence Platform (ACIP S02)`;
+      } else if (bidder.rank === 1) {
+        letterText = `CONFIDENTIAL & PRIVILEGED
+TENDER EVALUATION COMMITTEE
+c/o Ministry of Health Holdings (MOHH)
+Woodlands Health Campus — Acute Care Wing (TND-WHC-2026-001)
+
+Date: 7 October 2026
+To: Managing Director
+Heng Win (Private) Limited (UEN: 197600888B)
+
+SUBJECT: PRE-AWARD VERIFICATION NOTICE CL-00 (AWARD READINESS & PERFORMANCE SECURITY REQUIREMENTS)
+
+Dear Sir / Madam,
+
+The Tender Evaluation Committee is pleased to inform you that following comprehensive dual-envelope evaluation, your submission has been ranked #1 on the BCA Price-Quality Method (PQM) leaderboard with a composite score of 97.4.
+
+Please confirm receipt and provide performance security bank guarantee pre-clearance within 7 calendar days.
+
+Yours faithfully,
+Tender Evaluation Committee Chairman
+Agentic Construction Intelligence Platform (ACIP S02)`;
+      } else {
+        letterText = `CONFIDENTIAL & PRIVILEGED
+TENDER EVALUATION COMMITTEE
+Woodlands Health Campus — Acute Care Wing (TND-WHC-2026-001)
+
+To: Titan Piling & Civil Engineering Pte Ltd
+Notice regarding tender pricing evaluation and benchmarking.`;
+      }
+
+      bodyEl.textContent = letterText;
+      modal.classList.add("active");
+    }
+
+    function closeClarificationModal() {
+      const modal = document.getElementById("clModalBackdrop");
+      if (modal) modal.classList.remove("active");
+    }
+
+    function copyClarificationText() {
+      const bodyEl = document.getElementById("clModalBody");
+      if (bodyEl) {
+        navigator.clipboard.writeText(bodyEl.textContent).then(() => {
+          alert("Clarification Letter copied to clipboard!");
+        });
+      }
+    }
+
+    function exportBidderBoqCsv() {
+      if (!currentTenderData || !currentTenderData.boq_drilldown) return;
+      const rows = currentTenderData.boq_drilldown.filter(r => r.bidder_id === activeBidderId);
+      if (rows.length === 0) return;
+
+      let csv = "Item Code,Trade Package,Item Description,Unit,Quantity,PTE Unit Rate,Submitted Unit Rate,Variance Pct,Submitted Total Amount,Delta SGD\n";
+      rows.forEach(r => {
+        csv += `"${r.item_code}","${r.trade_name}","${r.item_description}","${r.unit}",${r.quantity},${r.pte_unit_rate},${r.submitted_unit_rate},${r.variance_vs_pte_pct},${r.submitted_total_amount},${r.delta_sgd}\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `BOQ_Forensic_Leveling_${activeBidderId}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Keyboard shortcut to close drawer or modal
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeClarificationModal();
+        closeDrilldownDrawer();
+      }
+    });
+
+    // Initialize on page load
+    window.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const reqTheme = urlParams.get("theme");
+      if (reqTheme === "dark" || reqTheme === "light") {
+        currentTheme = reqTheme;
+      }
+      applyTheme(currentTheme);
+      initGlobalTooltips();
+      loadDashboardData("PRJ-WHC-001");
+      const reqDrawer = urlParams.get("drawer");
+      if (reqDrawer) {
+        openDrilldownDrawer(reqDrawer);
+      }
+    });
+  </script>
+
+  <!-- =========================================================
+       Forensic BOQ Rate-Leveling Drill-Down Drawer
+       ========================================================= -->
+  <div id="drilldownBackdrop" class="drawer-backdrop" onclick="closeDrilldownDrawer()"></div>
+
+  <aside id="drilldownDrawer" class="drilldown-drawer" aria-label="Forensic BOQ Drill-Down Drawer">
+    <!-- Drawer Header -->
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <div class="drawer-title">
+          <span>🔬</span>
+          <span>Forensic BOQ Rate-Leveling Drill-Down Drawer</span>
+          <span class="drawer-title-badge">Zero-Black-Box Evidence</span>
+        </div>
+        <div class="drawer-sub">
+          Deterministic Unit Rate Leveling • Front-Loading Exposure (FLRI) • Verbatim Clause Ambush Audit
+        </div>
+      </div>
+      <button class="drawer-close-btn" onclick="closeDrilldownDrawer()" title="Close Drawer (Esc)">✕</button>
+    </div>
+
+    <!-- Bidder Switcher Tab Bar -->
+    <div id="drawerSwitcherBar" class="drawer-switcher-bar">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- Drawer Scrollable Body -->
+    <div class="drawer-body" id="drawerBody">
+      <!-- 1. Executive Bidder Dossier Strip -->
+      <div class="drawer-dossier-grid" id="drawerDossierGrid">
+        <!-- Metric cards populated dynamically -->
+      </div>
+
+      <!-- 2. Strategic Trap & Forensic Summary Box -->
+      <div id="drawerAlertBox" class="forensic-alert-box alert-amber">
+        <!-- Alert content populated dynamically -->
+      </div>
+
+      <!-- 3. Scope Exclusion / Addenda Qualification Card (if applicable) -->
+      <div id="drawerClauseCard" class="clause-card" style="display: none;">
+        <!-- Clause text populated dynamically -->
+      </div>
+
+      <!-- 4. Interactive BOQ Line Items Section -->
+      <div class="boq-section-card">
+        <div class="boq-filter-bar">
+          <div class="boq-filter-tabs">
+            <button class="boq-pill-btn active" id="btnFilterAll" onclick="setBoqFilter('ALL')">All Line Items (<span id="cntFilterAll">18</span>)</button>
+            <button class="boq-pill-btn" id="btnFilterOutliers" onclick="setBoqFilter('OUTLIERS')">⚠️ Rate Outliers (&ge;35%) (<span id="cntFilterOutliers">0</span>)</button>
+            <button class="boq-pill-btn" id="btnFilterSub" onclick="setBoqFilter('SUBSTRUCTURE')">🏗️ Substructure (Early) (<span id="cntFilterSub">0</span>)</button>
+            <button class="boq-pill-btn" id="btnFilterServices" onclick="setBoqFilter('SERVICES')">⚡ MEP &amp; Finishes (Late) (<span id="cntFilterServices">0</span>)</button>
+          </div>
+          <div class="boq-search-box">
+            <span>🔎</span>
+            <input type="text" id="boqSearchInput" class="boq-search-input" placeholder="Search line items, trades..." oninput="handleBoqSearch(this.value)">
+          </div>
+        </div>
+
+        <div class="boq-table-wrapper">
+          <table class="boq-table" id="boqTable">
+            <thead>
+              <tr>
+                <th style="width: 45px; text-align: center;">Item</th>
+                <th style="width: 140px;">Trade Package</th>
+                <th>Item Description</th>
+                <th style="width: 65px; text-align: center;">Qty / Unit</th>
+                <th style="width: 80px; text-align: right;">PTE Rate</th>
+                <th style="width: 80px; text-align: right;">Bid Rate</th>
+                <th style="width: 75px; text-align: right;">Var (%)</th>
+                <th style="width: 85px; text-align: right;">Total (SGD)</th>
+                <th style="width: 85px; text-align: right;">Delta (SGD)</th>
+                <th style="width: 100px; text-align: center;">Forensic Flag</th>
+              </tr>
+            </thead>
+            <tbody id="boqTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 5. Multi-Agent Forensic Deliberation Evidence Trail -->
+      <div class="drawer-council-card" id="drawerCouncilCard">
+        <div style="font-weight: 800; font-size: 11.5px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+          <span>🏛️</span>
+          <span>Multi-Agent Deliberation Evidence Trail (QS Auditor • Contracts Counsel • Tender Board)</span>
+        </div>
+        <div style="font-size: 11px; line-height: 1.5; color: var(--text-secondary);" id="drawerCouncilText">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawer Action Footer Bar -->
+    <div class="drawer-actions-bar">
+      <div style="display: flex; gap: 8px;">
+        <button class="drawer-btn" onclick="exportBidderBoqCsv()" title="Export this bidder's BOQ rate variance data to CSV">
+          <span>📥</span> Export BOQ Leveling (CSV)
+        </button>
+        <button class="drawer-btn drawer-btn-primary" onclick="openClarificationModal()" title="View formal Clarification Letter drafted by Tender Intelligence Agent">
+          <span>📄</span> Draft Clarification Letter (<span id="drawerClId">CL-01</span>)
+        </button>
+      </div>
+      <button class="drawer-btn" onclick="closeDrilldownDrawer()">
+        Close
+      </button>
+    </div>
+  </aside>
+
+  <!-- =========================================================
+       Clarification Letter Modal Viewer
+       ========================================================= -->
+  <div id="clModalBackdrop" class="cl-modal-backdrop" onclick="closeClarificationModal()">
+    <div class="cl-modal" onclick="event.stopPropagation()">
+      <div class="cl-modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 16px;">📑</span>
+          <div>
+            <div style="font-weight: 800; font-size: 13px; color: var(--text-primary);" id="clModalTitle">Tender Clarification Notice</div>
+            <div style="font-size: 10.5px; color: var(--text-muted);" id="clModalSub">Statutory PSSCOC / Public Procurement Clarification Draft</div>
+          </div>
+        </div>
+        <button class="drawer-close-btn" onclick="closeClarificationModal()">✕</button>
+      </div>
+      <div class="cl-modal-body" id="clModalBody">
+        <!-- Letter text -->
+      </div>
+      <div class="drawer-actions-bar">
+        <button class="drawer-btn" onclick="copyClarificationText()">
+          <span>📋</span> Copy Letter to Clipboard
+        </button>
+        <button class="drawer-btn drawer-btn-primary" onclick="closeClarificationModal()">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

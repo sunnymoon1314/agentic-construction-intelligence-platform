@@ -1,0 +1,118 @@
+{
+  "tender_id": "TND-WHC-2026-001",
+  "bidder_id": "B01",
+  "bidder_name": "Heng Win (Private) Limited",
+  "uen": "197600888B",
+  "total_bid_sum": 113870045.25,
+  "line_items": [
+    {
+      "item_code": "01.01",
+      "submitted_unit_rate": 55.55,
+      "submitted_total_amount": 2499750.0,
+      "variance_pct": 1.0
+    },
+    {
+      "item_code": "01.02",
+      "submitted_unit_rate": 559.59,
+      "submitted_total_amount": 1035241.5,
+      "variance_pct": 1.0
+    },
+    {
+      "item_code": "02.01",
+      "submitted_unit_rate": 35.35,
+      "submitted_total_amount": 4949000.0,
+      "variance_pct": 1.0
+    },
+    {
+      "item_code": "02.02",
+      "submitted_unit_rate": 1515.0,
+      "submitted_total_amount": 3636000.0,
+      "variance_pct": 1.0
+    },
+    {
+      "item_code": "03.01",
+      "submitted_unit_rate": 631.25,
+      "submitted_total_amount": 10100000.0,
+      "variance_pct": 1.0
+    },
+    {
+      "item_code": "03.02",
+      "submitted_unit_rate": 505.0,
+      "submitted_total_amount": 4040000.0,
+      "variance_pct": 1.0
+    },
+    {
+      "item_code": "04.01",
+      "submitted_unit_rate": 278.6,
+      "submitted_total_amount": 9751000.0,
+      "variance_pct": -0.5
+    },
+    {
+      "item_code": "04.02",
+      "submitted_unit_rate": 1492.5,
+      "submitted_total_amount": 12686250.0,
+      "variance_pct": -0.5
+    },
+    {
+      "item_code": "04.03",
+      "submitted_unit_rate": 49.04,
+      "submitted_total_amount": 3432800.0,
+      "variance_pct": -0.5
+    },
+    {
+      "item_code": "05.01",
+      "submitted_unit_rate": 637.0,
+      "submitted_total_amount": 11466000.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "05.02",
+      "submitted_unit_rate": 147.0,
+      "submitted_total_amount": 6174000.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "06.01",
+      "submitted_unit_rate": 9310000.0,
+      "submitted_total_amount": 9310000.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "06.02",
+      "submitted_unit_rate": 128153.85,
+      "submitted_total_amount": 8330000.25,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "06.03",
+      "submitted_unit_rate": 9800000.0,
+      "submitted_total_amount": 9800000.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "07.01",
+      "submitted_unit_rate": 245.0,
+      "submitted_total_amount": 6860000.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "07.02",
+      "submitted_unit_rate": 5764.71,
+      "submitted_total_amount": 4900003.5,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "08.01",
+      "submitted_unit_rate": 176.4,
+      "submitted_total_amount": 2822400.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "08.02",
+      "submitted_unit_rate": 196.0,
+      "submitted_total_amount": 2077600.0,
+      "variance_pct": -2.0
+    }
+  ],
+  "qualifications": []
+}

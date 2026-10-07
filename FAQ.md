@@ -10,9 +10,9 @@ Answer: ACIP is an open reference architecture and research Proof of Concept (PO
 
 ---
 
-🔹 **Q2: Where can I find the implementation guides, source code, and technical runbooks for modules S02 through S07?**
+🔹 **Q2: Where can I find the implementation guides, source code, and technical runbooks for modules S03 through S07?**
 
-Answer: Modules S02 through S07 are planned on the progressive ACIP architectural roadmap. At present, S01 (Agentic Contractor PQQ & Compliance Intelligence) serves as the primary, working reference implementation with complete source code, SQLite synthetic registries, MCP tool servers, adversarial agent pipelines, compiled Rust engine, and automated test suites. The high-level architectural specifications and core problem statements for S02 through S07 are summarized in Section 3 of the Master README, while their underlying codebases, synthetic datasets, and technical runbooks will be developed, verified, and released sequentially.
+Answer: Modules S03 through S07 are planned on the progressive ACIP architectural roadmap. At present, S01 (Agentic Contractor PQQ & Compliance Intelligence) and S02 (Agentic Bid Evaluation & Tender Intelligence) serve as active, working reference implementations with complete source code, synthetic registries (SQLite in S01, DuckDB in S02), FastMCP tool servers, interactive visual cockpits, and automated test suites. The high-level architectural specifications and core problem statements for S03 through S07 are summarized in Section 3 of the Master README, while their underlying codebases, synthetic datasets, and technical runbooks will be developed, verified, and released sequentially.
 
 ---
 

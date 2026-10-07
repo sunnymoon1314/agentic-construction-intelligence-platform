@@ -1,0 +1,118 @@
+{
+  "tender_id": "TND-WHC-2026-001",
+  "bidder_id": "B02",
+  "bidder_name": "WinningPine Construction Pte Ltd",
+  "uen": "198900123C",
+  "total_bid_sum": 121550200.5,
+  "line_items": [
+    {
+      "item_code": "01.01",
+      "submitted_unit_rate": 101.75,
+      "submitted_total_amount": 4578750.0,
+      "variance_pct": 85.0
+    },
+    {
+      "item_code": "01.02",
+      "submitted_unit_rate": 1025.0,
+      "submitted_total_amount": 1896250.0,
+      "variance_pct": 85.0
+    },
+    {
+      "item_code": "02.01",
+      "submitted_unit_rate": 64.75,
+      "submitted_total_amount": 9065000.0,
+      "variance_pct": 85.0
+    },
+    {
+      "item_code": "02.02",
+      "submitted_unit_rate": 2775.0,
+      "submitted_total_amount": 6660000.0,
+      "variance_pct": 85.0
+    },
+    {
+      "item_code": "03.01",
+      "submitted_unit_rate": 1156.25,
+      "submitted_total_amount": 18500000.0,
+      "variance_pct": 85.0
+    },
+    {
+      "item_code": "03.02",
+      "submitted_unit_rate": 925.0,
+      "submitted_total_amount": 7400000.0,
+      "variance_pct": 85.0
+    },
+    {
+      "item_code": "04.01",
+      "submitted_unit_rate": 350.0,
+      "submitted_total_amount": 12250000.0,
+      "variance_pct": 25.0
+    },
+    {
+      "item_code": "04.02",
+      "submitted_unit_rate": 1875.0,
+      "submitted_total_amount": 15937500.0,
+      "variance_pct": 25.0
+    },
+    {
+      "item_code": "04.03",
+      "submitted_unit_rate": 61.61,
+      "submitted_total_amount": 4312700.0,
+      "variance_pct": 25.01
+    },
+    {
+      "item_code": "05.01",
+      "submitted_unit_rate": 422.5,
+      "submitted_total_amount": 7605000.0,
+      "variance_pct": -35.0
+    },
+    {
+      "item_code": "05.02",
+      "submitted_unit_rate": 97.5,
+      "submitted_total_amount": 4095000.0,
+      "variance_pct": -35.0
+    },
+    {
+      "item_code": "06.01",
+      "submitted_unit_rate": 6175000.0,
+      "submitted_total_amount": 6175000.0,
+      "variance_pct": -35.0
+    },
+    {
+      "item_code": "06.02",
+      "submitted_unit_rate": 85000.0,
+      "submitted_total_amount": 5525000.0,
+      "variance_pct": -35.0
+    },
+    {
+      "item_code": "06.03",
+      "submitted_unit_rate": 6500000.0,
+      "submitted_total_amount": 6500000.0,
+      "variance_pct": -35.0
+    },
+    {
+      "item_code": "07.01",
+      "submitted_unit_rate": 162.5,
+      "submitted_total_amount": 4550000.0,
+      "variance_pct": -35.0
+    },
+    {
+      "item_code": "07.02",
+      "submitted_unit_rate": 3823.53,
+      "submitted_total_amount": 3250000.5,
+      "variance_pct": -35.0
+    },
+    {
+      "item_code": "08.01",
+      "submitted_unit_rate": 117.0,
+      "submitted_total_amount": 1872000.0,
+      "variance_pct": -35.0
+    },
+    {
+      "item_code": "08.02",
+      "submitted_unit_rate": 130.0,
+      "submitted_total_amount": 1378000.0,
+      "variance_pct": -35.0
+    }
+  ],
+  "qualifications": []
+}

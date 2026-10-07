@@ -1,0 +1,3 @@
+project_id  = "acip-woodlands-prod"
+region      = "asia-southeast1"
+environment = "prod"

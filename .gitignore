@@ -1,5 +1,4 @@
 # Unreleased Architecture Modules (Future Releases)
-S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/
 S03_Agentic_Cost_And_Commercial_Control_Intelligence/
 S04_Agentic_Progress_And_Delay_Intelligence/
 S05_Agentic_Quality_And_Defect_Intelligence/
@@ -13,6 +12,16 @@ terraform_destroy.txt
 **/terraform_destroy.txt
 CASE_STUDY_ENTERPRISE_ARCHITECTURE.md
 **/CASE_STUDY_ENTERPRISE_ARCHITECTURE.md
+
+# Internal Delivery Playbook & Metrics
+DELIVERY_PLAYBOOK_AND_METRICS.md
+**/DELIVERY_PLAYBOOK_AND_METRICS.md
+
+# Internal AI Council Review Documents
+ACIP_S02_AI_COUNCIL_REVIEW_DOSSIER.md
+**/ACIP_S02_AI_COUNCIL_REVIEW_DOSSIER.md
+COUNCIL_REVIEW_RESPONSE_MATRIX.md
+**/COUNCIL_REVIEW_RESPONSE_MATRIX.md
 
 # Rust Build Artifacts
 target/

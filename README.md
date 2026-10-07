@@ -1,8 +1,7 @@
 # <span style="color:red">🏗️ Agentic Construction Intelligence Platform (ACIP)</span>
 
-Go to Active Reference POC (S01):
-- 📄 **[S01 Business Problem Statement & Case Studies](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/BUSINESS_PROBLEM_STATEMENT.md)**
-- 🛠️ **[S01 Implementation Guide & Technical Runbook](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/README.md)**
+- **Go to Business Problem Statement & Case Studies:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/BUSINESS_PROBLEM_STATEMENT.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/BUSINESS_PROBLEM_STATEMENT.md)
+- **Go to Implementation Guide & Technical Runbook:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/README.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/README.md)
 
 ---
 
@@ -62,14 +61,15 @@ In the sections that follow, we dive deeper into the ACIP architecture and explo
 - [3. Modular ACIP Portfolio & Implementation Roadmap (S01 to S07)](#portfolio-roadmap)
   - [3.0 ACIP Architectural Control Plane & Authority Matrix](#control-plane)
   - [3.1 S01: Agentic Contractor PQQ & Compliance Intelligence (Active Reference Implementation)](#s01-pqq)
-  - [3.2 S02: Agentic Bid Evaluation & Tender Intelligence (Planned)](#s02-tender)
+  - [3.2 S02: Agentic Bid Evaluation & Tender Intelligence (Active Reference Implementation)](#s02-tender)
   - [3.3 S03: Agentic Cost & Commercial Control Intelligence (Planned)](#s03-cost)
   - [3.4 S04: Agentic Progress & Delay Intelligence (Planned)](#s04-progress)
   - [3.5 S05: Agentic Quality & Defect Intelligence (Planned)](#s05-quality)
   - [3.6 S06: Agentic Contract & Claims Intelligence (Planned)](#s06-claims)
   - [3.7 S07: Agentic Regulatory & Code Intelligence (Planned)](#s07-regulatory)
 - [4. Frequently Asked Questions (FAQ)](FAQ.md)
-- [5. Open Source Governance & Licensing](#licensing)
+- [5. Project Execution, Velocity & Delivery Playbook](DELIVERY_PLAYBOOK_AND_METRICS.md)
+- [6. Open Source Governance & Licensing](#licensing)
 
 ---
 
@@ -140,7 +140,7 @@ The ACIP modular portfolio spans seven specialized, interoperable modules coveri
 │ Module Code  │ Platform Module Title               │ Primary Focus     │ Status        │
 ├──────────────┼─────────────────────────────────────┼───────────────────┼───────────────┤
 │ S01          │ Contractor PQQ & Compliance Intel   │ Solvency & MOM    │ Reference Impl│
-│ S02          │ Bid Evaluation & Tender Intel       │ PQM & BOQ Audit   │ Planned       │
+│ S02          │ Bid Evaluation & Tender Intel       │ PQM & Drill-Down  │ Reference Impl│
 │ S03          │ Cost & Commercial Control Intel     │ 5D BIM & VOs      │ Planned       │
 │ S04          │ Progress & Delay Intelligence       │ SCL Delay & 4D    │ Planned       │
 │ S05          │ Quality & Defect Intelligence       │ CONQUAS Defect QA │ Planned       │
@@ -238,7 +238,7 @@ To give engineering and procurement teams maximum flexibility based on their dat
 
 ---
 
-### <span id="s02-tender"></span>📦 3.2 S02: Agentic Bid Evaluation & Tender Intelligence (Planned) <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+### <span id="s02-tender"></span>📦 3.2 S02: Agentic Bid Evaluation & Tender Intelligence (Active Reference Implementation) <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
 #### 🎯 Core Business Problem & Industry Risk
 
@@ -252,16 +252,34 @@ Under compressed review timelines, manual spreadsheet audits can overlook nuance
 
 #### ⚡ Key Capabilities & Agentic Workflow
 
-- **Automated Bill of Quantities (BOQ) Normalization**: Ingests contractor pricing schedules in Excel and CSV formats, standardizes trade classifications, and statistically flags pricing outliers, unpriced scope items, and abnormally low bid components (ALT).
-- **Front-Loading & Cash Flow Distortion Detection**: Evaluates line-item unit rate curves against the Employer's Pre-Tender Estimate (PTE), peer tender bids, and historical project benchmarks to surface front-loaded billing distributions prior to contract award.
-- **Scope-Gap & Qualification Cross-Checking**: Structures comparative reviews between contractor clarification letters and baseline developer specifications, surfacing concealed omissions, proprietary substitutions, and conditional qualifications.
-- **Configurable BCA PQM Scoring Engine**: Computes weighted price/quality composite scores aligned with the administrative BCA Price-Quality Method (PQM) framework under the procuring agency's configured price/quality weightage policies (such as 40/60 to 70/30 depending on project complexity), generating defensible, audit-ready tender evaluation matrices.
+- **Evidence-Driven Decision-Support (Anti-Black-Box Governance)**: Rather than presenting an opaque AI score or autonomous recommendation, S02 functions as an evidence-driven decision-support system. Every assessment, qualification flag, and rate variance is anchored in verifiable contract clauses and mathematical benchmarks before human tender boards make an authoritative commitment.
+- **Forensic BOQ Rate-Leveling Drill-Down Drawer**: Provides granular line-by-line rate leveling across all 18 BOQ items and 8 trade packages. Reviewers can click any contractor row to open a slide-over audit drawer, filter pricing outliers (≥35% vs Pre-Tender Estimate), inspect substructure front-loading distributions, and export leveling data directly to CSV.
+- **Front-Loading & Unearned Cash-Flow Distortion Detection**: Evaluates unit rate curves between early substructure works (Demolition, ERSS, Diaphragm Walls) and late-stage packages (MEP Chillers) against the Employer's Pre-Tender Estimate (PTE) to calculate the Front-Loading Rate Index (FLRI) and quantify unearned working capital extraction risk.
+- **Verbatim Scope-Exclusion Ambush Audit**: Scans contractor qualification schedules and addenda letters for concealed exclusions (such as burying medical gas exclusions under Clause QUAL-14.2 on page 38), estimating employer cost exposure and generating formal statutory clarification notices (CL-01, CL-02, CL-03).
+- **Statutory BCA PQM Scoring & Abnormally Low Tender (ALT) Guard**: Computes dual-envelope Price-Quality Method (PQM) composite scores (50% Price / 50% Quality) while enforcing statutory BCA ALT dumping triggers (<-20% vs PTE) and MOM safety demerit caps.
 
 #### 🛠️ Technical Stack & Architectural Mechanics
 
-- **Data Ingestion & Analytical Store**: DuckDB columnar analytical engine paired with Polars (Rust-accelerated columnar DataFrames) via an Apache Arrow pipeline with minimal-copy feature ingestion into scikit-learn anomaly detectors and statistical rate-leveling estimators.
-- **Orchestration & Verification**: FastMCP tool endpoints standardizing deterministic rate-leveling queries, coordinated by a LangGraph agentic loop that cross-examines contractor qualification addenda against the Employer's Requirements for human tender board review.
-- **Hybrid Visualization Cockpit**: Panel (HoloViz) core analytical application supporting fine-grained reactive cross-filtering across complex BOQs, paired with an embedded Rust Leptos WebAssembly (WASM) component delivering sub-millisecond real-time rate sensitivity analysis.
+- **Data Ingestion & Analytical Store**: DuckDB embedded columnar analytical engine with multi-project storage, managing contractors, projects, trades, BOQ items, and line-item rate submissions with sub-millisecond query execution.
+- **Orchestration & Verification**: FastMCP tool endpoints standardizing deterministic rate-leveling queries, qualification audits, and multi-agent consensus reporting across Forensic QS Auditor, Commercial & Contracts Counsel, and Tender Board Chairman roles.
+- **Interactive Executive Analytical Cockpit**: Single-page executive decision workstation served on port 8085, featuring dynamic PQM scoring, Front-Loading Rate Index (FLRI) distribution charts, multi-agent consensus evidence trails, and the interactive forensic BOQ rate-leveling drill-down drawer.
+
+![S02 Executive Analytical Cockpit](S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/images/s02_dashboard_local_8085_light_mode.png)
+
+![S02 Forensic BOQ Rate-Leveling Drill-Down Drawer](S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/images/s02_dashboard_forensic_drawer_light_mode.png)
+
+#### 🚀 Four Progressive Implementation Approaches
+
+To provide engineering and procurement teams maximum flexibility based on their data confidentiality requirements and cloud maturity, S02 is structured across four progressive implementation pathways:
+
+- **Approach 1: Local / Air-Gapped Sovereign Deployment (Zero Cloud / API Incurred Cost)**: Runs 100% offline on a standard workstation using local open-weight models (such as Llama 3.1 8B via Ollama), FastMCP rate-leveling tools, embedded DuckDB multi-project store, and the Executive Cockpit on port 8085 with zero external data egress.
+- **Approach 2: Hybrid Testing Sandbox (Local Application + Managed Cloud AI APIs)**: Executes application orchestration and DuckDB analytics locally while connecting directly to enterprise managed cloud model endpoints (Amazon Bedrock Claude 3.5 Sonnet, Azure OpenAI GPT-4o, or GCP Vertex AI Gemini 1.5 Pro) with zero local GPU requirements.
+- **Approach 3: Cloud Workload Direct Provisioning (Single-Project / Dedicated Cloud Environment)**: Containerized deployment provisioned via Terraform across AWS (ECS Fargate + Application Load Balancer), Azure (Container Apps + Azure Container Registry), or GCP (Cloud Run v2 + Artifact Registry), connected to cloud object storage (S3 / ADLS / GCS) and the DuckDB analytical store.
+- **Approach 4: Enterprise Landing Zone & Sovereign Governance Blueprint (Top-Down Multi-Account Architecture)**: Institutional multi-account landing zone architecture (AWS Control Tower, Azure Management Groups, or GCP Organization Nodes) featuring centralized transit networking, strict IAM boundaries, and dedicated environment segregation (Dev, UAT, Production).
+
+#### 📚 Documentation & Technical Guides
+- 📄 **[Go to S02 Business Problem Statement & Case Studies](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/BUSINESS_PROBLEM_STATEMENT.md)**
+- 🛠️ **[Go to S02 Implementation Guide & Technical Runbook](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/README.md)**
 
 ---
 
@@ -403,7 +421,20 @@ For deep architectural, statutory, deployment, and operational inquiries—inclu
 
 ---
 
-## <span id="licensing"></span><span style="color:red">📄 5. Open Source Governance & Licensing</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+## <span id="delivery-playbook"></span><span style="color:red">⏱️ 5. Project Execution, Velocity & Delivery Playbook</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+
+To support continuous productivity improvements and benchmark project delivery timelines for future enterprise AI initiatives, consult our detailed **[Project Execution, Velocity & Delivery Playbook](DELIVERY_PLAYBOOK_AND_METRICS.md)**. 
+
+It documents:
+- Empirical time-tracking metrics comparing S01 baseline vs S02 acceleration.
+- Scope evolution history from single-module prototype to 7-stage full-lifecycle platform.
+- Product positioning and narrative packaging playbooks (e.g. anti-hype hooks, the six-word architectural punchline).
+- Singapore statutory framework grounding and synthetic data realism benchmarks.
+- A standardized 8-step execution checklist for future modules.
+
+---
+
+## <span id="licensing"></span><span style="color:red">📄 6. Open Source Governance & Licensing</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
 The Agentic Construction Intelligence Platform (ACIP) is released as an open reference architecture and research Proof of Concept under the **Apache License 2.0**.
 

@@ -1,0 +1,118 @@
+{
+  "tender_id": "TND-WHC-2026-001",
+  "bidder_id": "B03",
+  "bidder_name": "Starlight Urban Infrastructure Pte Ltd",
+  "uen": "201500888F",
+  "total_bid_sum": 76059987.75,
+  "line_items": [
+    {
+      "item_code": "01.01",
+      "submitted_unit_rate": 45.1,
+      "submitted_total_amount": 2029500.0,
+      "variance_pct": -18.0
+    },
+    {
+      "item_code": "01.02",
+      "submitted_unit_rate": 454.32,
+      "submitted_total_amount": 840492.0,
+      "variance_pct": -18.0
+    },
+    {
+      "item_code": "02.01",
+      "submitted_unit_rate": 28.7,
+      "submitted_total_amount": 4018000.0,
+      "variance_pct": -18.0
+    },
+    {
+      "item_code": "02.02",
+      "submitted_unit_rate": 1230.0,
+      "submitted_total_amount": 2952000.0,
+      "variance_pct": -18.0
+    },
+    {
+      "item_code": "03.01",
+      "submitted_unit_rate": 512.5,
+      "submitted_total_amount": 8200000.0,
+      "variance_pct": -18.0
+    },
+    {
+      "item_code": "03.02",
+      "submitted_unit_rate": 410.0,
+      "submitted_total_amount": 3280000.0,
+      "variance_pct": -18.0
+    },
+    {
+      "item_code": "04.01",
+      "submitted_unit_rate": 196.0,
+      "submitted_total_amount": 6860000.0,
+      "variance_pct": -30.0
+    },
+    {
+      "item_code": "04.02",
+      "submitted_unit_rate": 1050.0,
+      "submitted_total_amount": 8925000.0,
+      "variance_pct": -30.0
+    },
+    {
+      "item_code": "04.03",
+      "submitted_unit_rate": 34.5,
+      "submitted_total_amount": 2415000.0,
+      "variance_pct": -30.0
+    },
+    {
+      "item_code": "05.01",
+      "submitted_unit_rate": 377.0,
+      "submitted_total_amount": 6786000.0,
+      "variance_pct": -42.0
+    },
+    {
+      "item_code": "05.02",
+      "submitted_unit_rate": 87.0,
+      "submitted_total_amount": 3654000.0,
+      "variance_pct": -42.0
+    },
+    {
+      "item_code": "06.01",
+      "submitted_unit_rate": 5510000.0,
+      "submitted_total_amount": 5510000.0,
+      "variance_pct": -42.0
+    },
+    {
+      "item_code": "06.02",
+      "submitted_unit_rate": 75846.15,
+      "submitted_total_amount": 4929999.75,
+      "variance_pct": -42.0
+    },
+    {
+      "item_code": "06.03",
+      "submitted_unit_rate": 5800000.0,
+      "submitted_total_amount": 5800000.0,
+      "variance_pct": -42.0
+    },
+    {
+      "item_code": "07.01",
+      "submitted_unit_rate": 145.0,
+      "submitted_total_amount": 4060000.0,
+      "variance_pct": -42.0
+    },
+    {
+      "item_code": "07.02",
+      "submitted_unit_rate": 3411.76,
+      "submitted_total_amount": 2899996.0,
+      "variance_pct": -42.0
+    },
+    {
+      "item_code": "08.01",
+      "submitted_unit_rate": 104.4,
+      "submitted_total_amount": 1670400.0,
+      "variance_pct": -42.0
+    },
+    {
+      "item_code": "08.02",
+      "submitted_unit_rate": 116.0,
+      "submitted_total_amount": 1229600.0,
+      "variance_pct": -42.0
+    }
+  ],
+  "qualifications": []
+}

@@ -1,0 +1,118 @@
+{
+  "tender_id": "TND-WHC-2026-001",
+  "bidder_id": "B05",
+  "bidder_name": "Titan Piling & Civil Engineering Pte Ltd",
+  "uen": "201000333E",
+  "total_bid_sum": 128800003.1,
+  "line_items": [
+    {
+      "item_code": "01.01",
+      "submitted_unit_rate": 61.6,
+      "submitted_total_amount": 2772000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "01.02",
+      "submitted_unit_rate": 620.54,
+      "submitted_total_amount": 1147999.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "02.01",
+      "submitted_unit_rate": 39.2,
+      "submitted_total_amount": 5488000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "02.02",
+      "submitted_unit_rate": 1680.0,
+      "submitted_total_amount": 4032000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "03.01",
+      "submitted_unit_rate": 700.0,
+      "submitted_total_amount": 11200000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "03.02",
+      "submitted_unit_rate": 560.0,
+      "submitted_total_amount": 4480000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "04.01",
+      "submitted_unit_rate": 313.6,
+      "submitted_total_amount": 10976000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "04.02",
+      "submitted_unit_rate": 1680.0,
+      "submitted_total_amount": 14280000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "04.03",
+      "submitted_unit_rate": 55.2,
+      "submitted_total_amount": 3864000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "05.01",
+      "submitted_unit_rate": 728.0,
+      "submitted_total_amount": 13104000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "05.02",
+      "submitted_unit_rate": 168.0,
+      "submitted_total_amount": 7056000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "06.01",
+      "submitted_unit_rate": 10640000.0,
+      "submitted_total_amount": 10640000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "06.02",
+      "submitted_unit_rate": 146461.54,
+      "submitted_total_amount": 9520000.1,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "06.03",
+      "submitted_unit_rate": 11200000.0,
+      "submitted_total_amount": 11200000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "07.01",
+      "submitted_unit_rate": 280.0,
+      "submitted_total_amount": 7840000.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "07.02",
+      "submitted_unit_rate": 6588.24,
+      "submitted_total_amount": 5600004.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "08.01",
+      "submitted_unit_rate": 201.6,
+      "submitted_total_amount": 3225600.0,
+      "variance_pct": 12.0
+    },
+    {
+      "item_code": "08.02",
+      "submitted_unit_rate": 224.0,
+      "submitted_total_amount": 2374400.0,
+      "variance_pct": 12.0
+    }
+  ],
+  "qualifications": []
+}

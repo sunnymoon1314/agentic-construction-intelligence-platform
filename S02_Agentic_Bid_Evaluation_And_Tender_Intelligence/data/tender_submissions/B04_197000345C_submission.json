@@ -1,0 +1,126 @@
+{
+  "tender_id": "TND-WHC-2026-001",
+  "bidder_id": "B04",
+  "bidder_name": "GemStone Building Contractors Pte Ltd",
+  "uen": "197000345C",
+  "total_bid_sum": 105149742.25,
+  "line_items": [
+    {
+      "item_code": "01.01",
+      "submitted_unit_rate": 53.9,
+      "submitted_total_amount": 2425500.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "01.02",
+      "submitted_unit_rate": 542.97,
+      "submitted_total_amount": 1004494.5,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "02.01",
+      "submitted_unit_rate": 34.3,
+      "submitted_total_amount": 4802000.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "02.02",
+      "submitted_unit_rate": 1470.0,
+      "submitted_total_amount": 3528000.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "03.01",
+      "submitted_unit_rate": 612.5,
+      "submitted_total_amount": 9800000.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "03.02",
+      "submitted_unit_rate": 490.0,
+      "submitted_total_amount": 3920000.0,
+      "variance_pct": -2.0
+    },
+    {
+      "item_code": "04.01",
+      "submitted_unit_rate": 273.0,
+      "submitted_total_amount": 9555000.0,
+      "variance_pct": -2.5
+    },
+    {
+      "item_code": "04.02",
+      "submitted_unit_rate": 1462.5,
+      "submitted_total_amount": 12431250.0,
+      "variance_pct": -2.5
+    },
+    {
+      "item_code": "04.03",
+      "submitted_unit_rate": 48.05,
+      "submitted_total_amount": 3363500.0,
+      "variance_pct": -2.51
+    },
+    {
+      "item_code": "05.01",
+      "submitted_unit_rate": 630.5,
+      "submitted_total_amount": 11349000.0,
+      "variance_pct": -3.0
+    },
+    {
+      "item_code": "05.02",
+      "submitted_unit_rate": 145.5,
+      "submitted_total_amount": 6111000.0,
+      "variance_pct": -3.0
+    },
+    {
+      "item_code": "06.01",
+      "submitted_unit_rate": 9215000.0,
+      "submitted_total_amount": 9215000.0,
+      "variance_pct": -3.0
+    },
+    {
+      "item_code": "06.02",
+      "submitted_unit_rate": 126846.15,
+      "submitted_total_amount": 8244999.75,
+      "variance_pct": -3.0
+    },
+    {
+      "item_code": "06.03",
+      "submitted_unit_rate": 9700000.0,
+      "submitted_total_amount": 9700000.0,
+      "variance_pct": -3.0
+    },
+    {
+      "item_code": "07.01",
+      "submitted_unit_rate": 0.0,
+      "submitted_total_amount": 0.0,
+      "variance_pct": -100.0
+    },
+    {
+      "item_code": "07.02",
+      "submitted_unit_rate": 5705.88,
+      "submitted_total_amount": 4849998.0,
+      "variance_pct": -3.0
+    },
+    {
+      "item_code": "08.01",
+      "submitted_unit_rate": 174.6,
+      "submitted_total_amount": 2793600.0,
+      "variance_pct": -3.0
+    },
+    {
+      "item_code": "08.02",
+      "submitted_unit_rate": 194.0,
+      "submitted_total_amount": 2056400.0,
+      "variance_pct": -3.0
+    }
+  ],
+  "qualifications": [
+    {
+      "clause_id": "QUAL-14.2",
+      "page_nr": 38,
+      "clause_text": "Item 07.01 Degreased medical copper pipeline distribution is deemed excluded from base lump sum and shall be procured under Client Direct Nominated Subcontract (NSC).",
+      "omitted_item": "07.01",
+      "omitted_amount": 6790000.0
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+name: acip_mcp_framework
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      # Core Model Context Protocol & Data Validation
+      - "mcp<2"
+      - pydantic
+      - python-dotenv
+      - requests
+      - rich
+      # Columnar In-Process Analytics & High-Performance Pipelines (S02, S03, S07)
+      - "duckdb>=1.1.0"
+      - polars
+      - pyarrow
+      - numpy
+      - pandas
+      # Agentic Orchestration & Graph Workflows
+      - langchain>=0.3.0
+      - langchain-community>=0.3.0
+      - langgraph>=0.2.0
+      # Multi-Cloud & LLM Provider Connectors
+      - langchain-ollama>=0.2.0
+      - langchain-aws
+      - langchain-google-vertexai
+      - langchain-openai
+      - azure-identity
+      # API Serving & Interactive Web Dashboards
+      - fastapi
+      - uvicorn
