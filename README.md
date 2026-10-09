@@ -1,7 +1,7 @@
 # <span style="color:red">🏗️ Agentic Construction Intelligence Platform (ACIP)</span>
 
-- **Go to Business Problem Statement & Case Studies:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/BUSINESS_PROBLEM_STATEMENT.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/BUSINESS_PROBLEM_STATEMENT.md)
-- **Go to Implementation Guide & Technical Runbook:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/README.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/README.md)
+- **Go to Business Problem Statement & Case Studies:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/BUSINESS_PROBLEM_STATEMENT.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/BUSINESS_PROBLEM_STATEMENT.md), [S03](./S03_Agentic_Cost_And_Commercial_Control_Intelligence/BUSINESS_PROBLEM_STATEMENT.md)
+- **Go to Implementation Guide & Technical Runbook:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/README.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/README.md), [S03](./S03_Agentic_Cost_And_Commercial_Control_Intelligence/README.md)
 
 ---
 
@@ -62,7 +62,7 @@ In the sections that follow, we dive deeper into the ACIP architecture and explo
   - [3.0 ACIP Architectural Control Plane & Authority Matrix](#control-plane)
   - [3.1 S01: Agentic Contractor PQQ & Compliance Intelligence (Active Reference Implementation)](#s01-pqq)
   - [3.2 S02: Agentic Bid Evaluation & Tender Intelligence (Active Reference Implementation)](#s02-tender)
-  - [3.3 S03: Agentic Cost & Commercial Control Intelligence (Planned)](#s03-cost)
+  - [3.3 S03: Agentic Cost & Commercial Control Intelligence (Active Reference Implementation)](#s03-cost)
   - [3.4 S04: Agentic Progress & Delay Intelligence (Planned)](#s04-progress)
   - [3.5 S05: Agentic Quality & Defect Intelligence (Planned)](#s05-quality)
   - [3.6 S06: Agentic Contract & Claims Intelligence (Planned)](#s06-claims)
@@ -141,7 +141,7 @@ The ACIP modular portfolio spans seven specialized, interoperable modules coveri
 ├──────────────┼─────────────────────────────────────┼───────────────────┼───────────────┤
 │ S01          │ Contractor PQQ & Compliance Intel   │ Solvency & MOM    │ Reference Impl│
 │ S02          │ Bid Evaluation & Tender Intel       │ PQM & Drill-Down  │ Reference Impl│
-│ S03          │ Cost & Commercial Control Intel     │ 5D BIM & VOs      │ Planned       │
+│ S03          │ Cost & Commercial Control Intel     │ 5D BIM & VOs      │ Reference Impl│
 │ S04          │ Progress & Delay Intelligence       │ SCL Delay & 4D    │ Planned       │
 │ S05          │ Quality & Defect Intelligence       │ CONQUAS Defect QA │ Planned       │
 │ S06          │ Contract & Claims Intelligence      │ SOPA Defense & EOT│ Planned       │
@@ -283,7 +283,7 @@ To provide engineering and procurement teams maximum flexibility based on their 
 
 ---
 
-### <span id="s03-cost"></span>💰 3.3 S03: Agentic Cost & Commercial Control Intelligence (Planned) <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+### <span id="s03-cost"></span>💰 3.3 S03: Agentic Cost & Commercial Control Intelligence (Active Reference Implementation) <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
 #### 🎯 Core Business Problem & Industry Risk
 
@@ -306,6 +306,14 @@ In Singapore, this commercial tension is governed by strict statutory rules and 
 
 - **5D BIM Model Parsing**: `IfcOpenShell` cost and quantity takeoff (QTO) utilities extracting spatial quantities and property sets directly from openBIM IFC4 models, with data-quality validation on authoring-tool exports.
 - **Analytical Ledger & Rule Gates**: DuckDB analytical cost commitments ledger with deterministic Python calculation gates enforcing Singapore SIA and PSSCOC contract validation rules, with mandatory human Quantity Surveyor (QS) certification authority.
+- **Approach 1: Pure Local Sovereign Deployment & Testing (Zero Cost)**: Runs 100% offline on a standard workstation using in-process DuckDB columnar store with Apache Parquet lakehouse partitions, FastMCP deterministic calculation tools, multi-agent deliberation, and the interactive web cockpit on port 8086 with zero external data egress.
+- **Approach 2: Hybrid Testing Sandbox (Local Application + Cloud LLM APIs)**: Couples local deterministic FastMCP computation and DuckDB OLAP analytics with enterprise managed cloud model endpoints (Amazon Bedrock, Azure OpenAI, GCP Vertex AI, or Local Sovereign engine) for qualitative dispute narrative synthesis.
+- **Approach 3: Cloud Workload Direct Provisioning (Multi-Cloud Terraform Deployments)**: Stateless containerized cockpits provisioned via Terraform across AWS (ECS Fargate + ALB on port 8086), Azure (Container Apps + Blob Lakehouse), or GCP (Cloud Run v2 + GCS Lakehouse) executing zero-copy HTTP range requests via DuckDB httpfs.
+- **Approach 4: Reference Enterprise Deployment Pattern & Sovereign Governance**: Institutional multi-cloud landing zone architecture featuring dedicated sovereign commercial enclaves, zero-egress lakehouse storage, RBAC audit trails, and statutory adjudication defense archiving.
+
+#### 📚 Documentation & Technical Guides
+- 📄 **[Go to S03 Business Problem Statement & Case Studies](./S03_Agentic_Cost_And_Commercial_Control_Intelligence/BUSINESS_PROBLEM_STATEMENT.md)**
+- 🛠️ **[Go to S03 Implementation Guide & Technical Runbook](./S03_Agentic_Cost_And_Commercial_Control_Intelligence/README.md)**
 
 ---
 

@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACIP S03: Agentic Cost & Commercial Control Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --border-color: rgba(15, 23, 42, 0.10);
+      --border-accent: rgba(37, 99, 235, 0.35);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent-blue: #2563eb;
+      --accent-green: #059669;
+      --accent-amber: #d97706;
+      --accent-red: #dc2626;
+      --accent-purple: #7c3aed;
+      --status-green-bg: rgba(5, 150, 105, 0.10);
+      --status-amber-bg: rgba(217, 119, 6, 0.12);
+      --status-red-bg: rgba(220, 38, 38, 0.10);
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: #141c2e;
+      --bg-card-hover: #1e293b;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(59, 130, 246, 0.35);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+      --status-green-bg: rgba(16, 185, 129, 0.16);
+      --status-amber-bg: rgba(245, 158, 11, 0.16);
+      --status-red-bg: rgba(239, 68, 68, 0.16);
+      --card-shadow: none;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.35;
+      font-size: 12px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-viewport {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 8px 14px;
+      gap: 8px;
+    }
+
+    /* ---------------------------------------------------------
+       1. Top Header Bar (Stacked: Title on top, Project list below)
+       --------------------------------------------------------- */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 12px;
+      box-shadow: var(--card-shadow);
+      flex-shrink: 0;
+      gap: 12px;
+    }
+
+    .header-main-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon-box {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 7px;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .brand-text-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+      line-height: 1.15;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .brand-acip-tag {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-left: 2px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .brand-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.1px;
+      line-height: 1.15;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .project-toolbar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .header-actions {
+      display: grid;
+      grid-template-columns: minmax(160px, auto) minmax(118px, auto);
+      grid-template-rows: 24px 24px;
+      gap: 3px 6px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    #sopaCountdownPill {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    #sreHealthPill {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .config-status {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    #themeToggleBtn {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    /* Project Dropdown Selector */
+    .project-selector-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .project-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .project-select {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      max-width: 380px;
+    }
+
+    .meta-chip {
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      height: 24px;
+      box-sizing: border-box;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    /* Engine Status Indicator (Point 4: Local Engine / AWS / Azure / GCP) */
+    .config-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 2px 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      height: 24px;
+      box-sizing: border-box;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+    }
+
+    .config-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #16a34a;
+      display: inline-block;
+      box-shadow: 0 0 4px rgba(22, 163, 74, 0.6);
+      animation: pulse-dot 2.2s infinite;
+    }
+    @keyframes pulse-dot {
+      0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+      70% { box-shadow: 0 0 0 4px rgba(22, 163, 74, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      height: 24px;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+    .status-pill.green { background: var(--status-green-bg); color: var(--accent-green); border: 1px solid rgba(5,150,105,0.3); }
+    .status-pill.amber { background: var(--status-amber-bg); color: var(--accent-amber); border: 1px solid rgba(217,119,6,0.3); }
+    .status-pill.red { background: var(--status-red-bg); color: var(--accent-red); border: 1px solid rgba(220,38,38,0.3); }
+    .status-pill.flashing {
+      animation: flash-red 1s infinite alternate;
+    }
+    @keyframes flash-red {
+      from { background: var(--status-red-bg); border-color: var(--accent-red); }
+      to { background: rgba(220, 38, 38, 0.4); border-color: #ff0000; box-shadow: 0 0 8px rgba(220,38,38,0.6); }
+    }
+
+    .btn-action {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-action:hover {
+      background: var(--border-color);
+      transform: translateY(-1px);
+    }
+    .btn-action.primary {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-blue);
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+    }
+    .btn-action.primary:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+    }
+
+    /* Statutory Warning Banner */
+    .warning-banner {
+      background: var(--status-amber-bg);
+      border: 1px solid var(--accent-amber);
+      border-radius: 6px;
+      padding: 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+      flex-shrink: 0;
+      animation: pulse-border 2.5s infinite;
+    }
+    .warning-banner.critical {
+      background: var(--status-red-bg);
+      border-color: var(--accent-red);
+    }
+    .banner-btn {
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .banner-btn:hover {
+      background: #b91c1c;
+      transform: translateY(-1px);
+    }
+    @keyframes pulse-border {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.35); }
+      70% { box-shadow: 0 0 0 4px rgba(220, 38, 38, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
+
+    /* KPI Summary Strip (Point 3: Clickable Cues with Colored Left Borders & Elevation) */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .kpi-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .kpi-card::after {
+      content: "↗";
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      opacity: 0.35;
+      transition: all 0.2s;
+    }
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.10);
+      border-color: var(--accent-blue);
+    }
+    .kpi-card:hover::after {
+      opacity: 1;
+      color: var(--accent-blue);
+      transform: translate(2px, -2px);
+    }
+    .kpi-title { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .kpi-value { font-size: 15px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-primary); }
+    .kpi-sub { font-size: 10px; color: var(--text-muted); }
+
+    /* Nav Tabs (Point 2: Conspicuous, Shaded & Interactive Floating Effect) */
+    .tab-nav {
+      display: flex;
+      gap: 6px;
+      border-bottom: 2px solid var(--border-color);
+      padding: 6px 8px 0 8px;
+      flex-shrink: 0;
+      background: var(--bg-card);
+      border-radius: 8px 8px 0 0;
+      position: relative;
+    }
+    [data-theme="dark"] .tab-nav {
+      background: rgba(30, 41, 59, 0.45);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+    .tab-btn {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      border-bottom: none;
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      position: relative;
+      margin-bottom: -2px;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    .tab-icon {
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tab-btn:hover .tab-icon {
+      transform: scale(1.18);
+    }
+    .tab-label {
+      white-space: nowrap;
+    }
+    .tab-btn .info-btn {
+      margin-left: 2px;
+      font-size: 8.5px;
+      width: 13px;
+      height: 13px;
+      opacity: 0.65;
+      transition: all 0.15s ease;
+    }
+    .tab-btn:hover .info-btn {
+      opacity: 1;
+    }
+    /* Floating effect when mouse hovers on tab label */
+    .tab-btn:hover {
+      color: var(--accent-blue);
+      background: var(--bg-primary);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px -2px rgba(37, 99, 235, 0.18), 0 2px 4px rgba(0, 0, 0, 0.06);
+      border-color: rgba(37, 99, 235, 0.45);
+      z-index: 2;
+    }
+    /* Active Tab: Conspicuous Raised State with Blue Accent */
+    .tab-btn.active {
+      color: var(--accent-blue);
+      background: var(--bg-primary);
+      font-weight: 700;
+      border-color: var(--border-color);
+      border-bottom: 3px solid var(--accent-blue);
+      box-shadow: 0 -2px 8px rgba(37, 99, 235, 0.10), 0 2px 4px rgba(0, 0, 0, 0.04);
+      transform: translateY(-1px);
+      z-index: 3;
+    }
+    .tab-btn.active:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px -2px rgba(37, 99, 235, 0.24);
+    }
+
+    /* Workstation Center */
+    .main-workstation {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: var(--card-shadow);
+    }
+    .tab-content { display: none; height: 100%; flex-direction: column; overflow: hidden; padding: 10px; }
+    .tab-content.active { display: flex; }
+
+    /* Tables */
+    .table-container { flex: 1; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11.5px; }
+    thead { position: sticky; top: 0; background: var(--bg-card-hover); z-index: 10; }
+    th { padding: 8px 10px; font-weight: 700; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+    td { padding: 7px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-primary); }
+    tbody tr:hover { background: var(--bg-card-hover); cursor: pointer; }
+    .cell-mono { font-family: 'JetBrains Mono', monospace; }
+    .badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-block; white-space: nowrap; }
+    .badge-green { background: var(--status-green-bg); color: var(--accent-green); }
+    .badge-amber { background: var(--status-amber-bg); color: var(--accent-amber); }
+    .badge-red { background: var(--status-red-bg); color: var(--accent-red); }
+    .badge-blue { background: rgba(37, 99, 235, 0.12); color: var(--accent-blue); }
+    .badge-purple { background: rgba(147, 51, 234, 0.12); color: var(--accent-purple); }
+
+    /* EVM Radar View */
+    .evm-grid { display: grid; grid-template-columns: 320px 1fr; gap: 12px; height: 100%; overflow: hidden; }
+    .evm-controls { display: flex; flex-direction: column; gap: 10px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; overflow-y: auto; }
+    .evm-chart-card { display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; position: relative; }
+    .slider-wrap { display: flex; flex-direction: column; gap: 4px; }
+    .slider-wrap label { font-size: 11px; font-weight: 600; color: var(--text-secondary); display: flex; justify-content: space-between; }
+    .slider-wrap input { width: 100%; accent-color: var(--accent-blue); }
+
+    /* Financial Verification Simulator (Chancellor Benchmark) */
+    .sim-container { display: flex; flex-direction: column; height: 100%; gap: 10px; overflow-y: auto; }
+    .sim-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--card-shadow);
+    }
+    .sim-header-row { display: flex; justify-content: space-between; align-items: flex-start; }
+    .sim-headline-wrap { display: flex; flex-direction: column; gap: 2px; }
+    .sim-kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 10px 0; text-align: center; }
+    .sim-chart-box { height: 260px; position: relative; width: 100%; }
+    .sim-controls-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 4px; }
+
+    /* Markdown Dossier View */
+    .dossier-view { flex: 1; overflow-y: auto; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; white-space: pre-wrap; line-height: 1.45; }
+
+    /* Bottom Consensus Stream */
+    .consensus-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      flex-shrink: 0;
+      height: 90px;
+    }
+    .agent-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .agent-card:hover { border-color: var(--accent-blue); }
+    .agent-header { display: flex; justify-content: space-between; align-items: center; }
+    .agent-name { font-size: 11px; font-weight: 700; color: var(--accent-blue); }
+    .agent-finding { font-size: 10.5px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+    /* ---------------------------------------------------------
+       Context-Aware Non-Modal Floating Drawer (Point 6)
+       --------------------------------------------------------- */
+    .drawer-overlay {
+      display: none !important;
+      pointer-events: none !important;
+    }
+    .drawer {
+      position: fixed;
+      top: 10px;
+      right: 12px;
+      width: 530px;
+      max-width: calc(100vw - 30px);
+      height: calc(100vh - 20px);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: -8px 8px 32px rgba(0, 0, 0, 0.22), 0 0 1px rgba(0, 0, 0, 0.15);
+      z-index: 500;
+      transform: translateX(calc(100% + 25px));
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      pointer-events: auto;
+    }
+    .drawer.open {
+      transform: translateX(0);
+    }
+    .drawer-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      border-radius: 8px 8px 0 0;
+    }
+    .drawer-title { font-size: 13.5px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
+    .drawer-close {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      color: var(--text-muted);
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .drawer-close:hover {
+      background: var(--accent-red);
+      color: #fff;
+      border-color: var(--accent-red);
+    }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .drawer-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .drawer-card-title { font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+
+    /* ---------------------------------------------------------
+       Dynamic Info Tooltips (Point 5)
+       --------------------------------------------------------- */
+    .info-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 5px;
+      margin-right: 0;
+      position: relative;
+      user-select: none;
+      transition: all 0.15s ease;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
+    .info-btn:hover {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+
+    /* Hide static inline tooltips to prevent clipping; handled by #acipGlobalTooltip */
+    .info-btn .acip-tooltip {
+      display: none !important;
+    }
+
+    /* Floating Global Tooltip */
+    .acip-global-tooltip {
+      position: fixed;
+      z-index: 999999;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.45;
+      max-width: 350px;
+      box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      text-transform: none;
+      letter-spacing: normal;
+      white-space: normal;
+      text-align: left;
+    }
+
+    [data-theme="dark"] .acip-global-tooltip {
+      background: #1e293b;
+      color: #f1f5f9;
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .acip-global-tooltip::after {
+      content: "";
+      position: absolute;
+      left: var(--arrow-left, 50%);
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+    }
+
+    .acip-global-tooltip.pos-below::after {
+      bottom: 100%;
+      border-bottom-color: #0f172a;
+    }
+
+    [data-theme="dark"] .acip-global-tooltip.pos-below::after {
+      border-bottom-color: #1e293b;
+    }
+
+    .acip-global-tooltip.pos-above::after {
+      top: 100%;
+      border-top-color: #0f172a;
+    }
+
+    [data-theme="dark"] .acip-global-tooltip.pos-above::after {
+      border-top-color: #1e293b;
+    }
+
+    /* Pulse Highlight for Section 11 Review (Point 7) */
+    @keyframes pulseHighlight {
+      0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); border-color: var(--accent-blue); }
+      50% { box-shadow: 0 0 16px 4px rgba(37, 99, 235, 0.4); border-color: var(--accent-blue); }
+      100% { box-shadow: none; }
+    }
+    .pulse-highlight {
+      animation: pulseHighlight 1.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-viewport">
+    <!-- Top Navigation Bar (Points 1, 2, 3, 4) -->
+    <header class="top-bar">
+      <div class="header-main-col">
+        <!-- Row 1: Brand Icon Box + Flush Title/Subtitle Stack -->
+        <div class="brand-container">
+          <div class="brand-icon-box">🏛️</div>
+          <div class="brand-text-stack">
+            <h1 class="brand-title">
+              <span>Agentic Cost &amp; Commercial Control Intelligence</span>
+              <span class="brand-acip-tag">(ACIP S03 <span class="info-btn" id="infoPlatformBtn">ℹ<span class="acip-tooltip tooltip-align-left" style="width: 330px; font-weight: 500; line-height: 1.45;">ACIP is an evidence-centric Agentic Construction Intelligence Platform that combines deterministic engineering computation, construction-domain knowledge, AI reasoning and human professional authority across the project lifecycle.</span></span>)</span>
+            </h1>
+            <span class="brand-sub">
+              Executive Post-Contract Commercial &amp; Statutory SOPA Cockpit
+              <span class="info-btn" id="infoCockpitBtn">ℹ<span class="acip-tooltip" id="tipCockpit">⚡ <strong>S03 Executive Cockpit:</strong> Deterministic 5D openBIM progress claim verification, 4-tier PSSCOC Clause 19 VO valuation waterfall, statutory SOPA Section 11 Payment Response governance, and predictive earned value contingency depletion radar.</span></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Row 2: Project List shifted below the Title with Project Description Meta Chips -->
+        <div class="project-toolbar-row">
+          <div class="project-selector-wrapper">
+            <span>📁</span>
+            <span class="project-label">Project:</span>
+            <select id="projectSelect" class="project-select" onchange="onProjectChange(this.value)">
+              <option value="PRJ-T5-003">Changi Airport Terminal 5 — Substructure &amp; Tunnels (S$145M)</option>
+              <option value="PRJ-JID-ATP-004">Jurong Innovation District Advanced Tech Park (S$68.5M)</option>
+              <option value="PRJ-TWRP-002">Tuas Water Reclamation Plant — Biosolids Facility (S$78.5M)</option>
+              <option value="PRJ-WHC-COM-001" selected>Woodlands Health Campus Commercial Annex (S$55M)</option>
+            </select>
+            <span class="info-btn" id="infoProjectBtn">ℹ<span class="acip-tooltip" id="tipProject">Post-contract commercial &amp; statutory audit profile</span></span>
+          </div>
+
+          <div class="meta-chip">
+            <span id="headerSectorIcon">🏥</span>
+            <span id="headerSector">Healthcare Infrastructure</span>
+            <span class="info-btn" id="infoSectorBtn">ℹ<span class="acip-tooltip">Target infrastructure classification and client risk profile</span></span>
+          </div>
+
+          <div class="meta-chip">
+            <span>📜</span>
+            <span id="headerContractForm">PSSCOC 2025</span>
+            <span class="info-btn" id="infoContractBtn">ℹ<span class="acip-tooltip">Standard Conditions of Contract governing valuation, variations, and dispute mechanisms</span></span>
+          </div>
+
+          <div class="meta-chip">
+            <span>🏢</span>
+            <span id="headerContractor">WinningPine Construction</span>
+            <span class="info-btn" id="infoContractorBtn">ℹ<span class="acip-tooltip">Contractor identity and statutory payment claim tracking</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Column 1, Row 1: SOPA Pill (stacked on top of SRE) -->
+        <div id="sopaCountdownPill" class="status-pill green" onclick="openSOPADrawer()">
+          <span>⏱️ SOPA: 9 Days Remaining</span>
+          <span class="info-btn" id="infoSopaPillBtn">ℹ<span class="acip-tooltip">Building and Construction Industry Security of Payment Act (SOPA) Section 11(1) mandatory response timeline. Click to open statutory breakdown.</span></span>
+        </div>
+        <!-- Column 2, Row 1: Local Engine (stacked on top of Light/Dark Mode) -->
+        <div class="config-status">
+          <span class="config-item">
+            <span class="status-dot"></span>
+            <span id="engineBadge">Local Engine</span>
+          </span>
+          <span class="info-btn" id="infoEngineBtn">ℹ<span class="acip-tooltip">Runtime execution engine: Local/AWS/Azure/GCP.</span></span>
+        </div>
+
+        <!-- Column 1, Row 2: SRE Health Pill -->
+        <div id="sreHealthPill" class="status-pill green" onclick="openSREDrawer()">
+          <span>🟢 SRE: 99.98% System Healthy</span>
+          <span class="info-btn" id="infoSrePillBtn">ℹ<span class="acip-tooltip">Stateless DuckDB OLAP engine &amp; Apache Parquet Lakehouse telemetry health status. Click to open SRE diagnostics.</span></span>
+        </div>
+        <!-- Column 2, Row 2: Light / Dark Mode Toggle Button with i-icon -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
+          <span style="display:inline-flex; align-items:center; gap:5px;">
+            <span id="themeIcon">🌙</span>
+            <span id="themeText">Dark Mode</span>
+          </span>
+          <span class="info-btn" id="infoThemeBtn" onclick="event.stopPropagation()">ℹ<span class="acip-tooltip">Visual theme toggle: Light Mode (default) / Dark Mode across all analytics cockpits, forensic charts, and statutory panels.</span></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Real-Time Contingency Warning Banner (Point 7) -->
+    <div id="statutoryWarningBanner" class="warning-banner" style="display:none;">
+      <div>
+        <span style="font-weight:800; color:var(--accent-red);">🚨 STATUTORY CONTINGENCY BREACH WARNING:</span>
+        <span id="warningBannerText">Contractor's cumulative claim exceeds approved base contract sum + contingency allocation! Mandatory withholding notice required under SOPA Section 11 to avoid default adjudication liability.</span>
+      </div>
+      <button class="banner-btn" onclick="reviewSection11Withholdings()">Review Section 11 Withholdings</button>
+    </div>
+
+    <!-- Top KPI Strip (With Mini-Icons & S02-Parity Forensic Metric Drawer) -->
+    <section class="kpi-strip">
+      <div class="kpi-card" id="cardBaseContract" style="border-left: 3px solid var(--accent-blue);" onclick="openMetricDrawer('base_contract')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="kpi-title"><span style="margin-right: 5px;">🏛️</span>Base Contract Sum</span>
+          <span class="info-btn" id="infoKpiBaseBtn" onclick="event.stopPropagation(); openMetricDrawer('base_contract');">ℹ</span>
+        </div>
+        <span id="kpiBaseContract" class="kpi-value">S$ 52,380,952</span>
+        <span id="kpiEmployerName" class="kpi-sub">Employer: MOH Holdings</span>
+      </div>
+
+      <div class="kpi-card" id="cardApprovedBudget" style="border-left: 3px solid var(--accent-purple);" onclick="openMetricDrawer('approved_budget')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="kpi-title"><span style="margin-right: 5px;">💰</span>Approved Budget</span>
+          <span class="info-btn" id="infoKpiBudgetBtn" onclick="event.stopPropagation(); openMetricDrawer('approved_budget');">ℹ</span>
+        </div>
+        <span id="kpiApprovedBudget" class="kpi-value">S$ 55,000,000</span>
+        <span id="kpiContingency" class="kpi-sub">Contingency: S$ 2.62M</span>
+      </div>
+
+      <div class="kpi-card" id="cardInterimClaim" style="border-left: 3px solid var(--accent-amber);" onclick="openMetricDrawer('interim_claim')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="kpi-title"><span style="margin-right: 5px;">📋</span>Interim Claim Gross</span>
+          <span class="info-btn" id="infoKpiGrossBtn" onclick="event.stopPropagation(); openMetricDrawer('interim_claim');">ℹ</span>
+        </div>
+        <span id="kpiGrossClaimed" class="kpi-value" style="color: var(--accent-amber);">S$ 4,850,000</span>
+        <span id="kpiClaimIdSub" class="kpi-sub">CLM-WHC-008 Claimed</span>
+      </div>
+
+      <div class="kpi-card" id="cardVerifiedGross" style="border-left: 3px solid var(--accent-blue);" onclick="openMetricDrawer('openbim_verified')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="kpi-title"><span style="margin-right: 5px;">📐</span>openBIM Verified Gross</span>
+          <span class="info-btn" id="infoKpiBimBtn" onclick="event.stopPropagation(); openMetricDrawer('openbim_verified');">ℹ</span>
+        </div>
+        <span id="kpiVerifiedGross" class="kpi-value" style="color: var(--accent-blue);">S$ 3,687,500</span>
+        <span id="kpiOverClaimDisallowed" class="kpi-sub" style="color: var(--accent-red); font-weight: 600;">Disallowed: -S$ 1.16M</span>
+      </div>
+
+      <div class="kpi-card" id="cardStatutoryDeductions" style="border-left: 3px solid var(--accent-red);" onclick="openMetricDrawer('statutory_deductions')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="kpi-title"><span style="margin-right: 5px;">⚖️</span>Statutory Deductions</span>
+          <span class="info-btn" id="infoKpiDeductionsBtn" onclick="event.stopPropagation(); openMetricDrawer('statutory_deductions');">ℹ</span>
+        </div>
+        <span id="kpiStatutoryDeductions" class="kpi-value" style="color: var(--accent-red);">-S$ 55,000</span>
+        <span class="kpi-sub">MOM SWO, SDP & Penalties</span>
+      </div>
+
+      <div class="kpi-card" id="cardNetPayable" style="border-left: 3px solid var(--accent-green);" onclick="openMetricDrawer('net_payable')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="kpi-title"><span style="margin-right: 5px;">✅</span>Net Certified Payable</span>
+          <span class="info-btn" id="infoKpiNetBtn" onclick="event.stopPropagation(); openMetricDrawer('net_payable');">ℹ</span>
+        </div>
+        <span id="kpiNetPayable" class="kpi-value" style="color: var(--accent-green);">S$ 3,632,500</span>
+        <span class="kpi-sub">Authorised for Certificate</span>
+      </div>
+    </section>
+
+    <!-- Tab Navigation (Point 2: Conspicuous, Shaded & Interactive Floating Effect with Mini-Icons & i-Tooltips) -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('tab-takeoff', this)">
+        <span class="tab-icon">📐</span>
+        <span class="tab-label">5D openBIM Takeoff Reconciler</span>
+        <span class="info-btn" id="infoTabTakeoffBtn">ℹ<span class="acip-tooltip">Deterministic 5D openBIM element volume reconciliation cross-examining contractor claimed progress against physical IFC reality-capture models.</span></span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-vos', this)">
+        <span class="tab-icon">🔍</span>
+        <span class="tab-label">Variation Orders &amp; 4-Tier Waterfall</span>
+        <span class="info-btn" id="infoTabVosBtn">ℹ<span class="acip-tooltip">Enforcing PSSCOC Clause 19.1 28-day notice timebars and baseline Schedule of Rates (SOR) hierarchy to prevent unearned markup front-ramping.</span></span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-eac', this)">
+        <span class="tab-icon">📈</span>
+        <span class="tab-label">Predictive EVM Contingency Radar</span>
+        <span class="info-btn" id="infoTabEacBtn">ℹ<span class="acip-tooltip">Predictive cost-to-complete (EAC) forecasting and contingency exhaustion velocity radar using real-time earned value metrics.</span></span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-sopa', this)">
+        <span class="tab-icon">📑</span>
+        <span class="tab-label">Formal SOPA Section 11 Dossier</span>
+        <span class="info-btn" id="infoTabSopaBtn">ℹ<span class="acip-tooltip">Statutory Payment Response notice with strict Zero-LLM Document Guard against unverified model deductions or narrative tampering.</span></span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-simulator', this)">
+        <span class="tab-icon">📊</span>
+        <span class="tab-label">Financial Recovery &amp; Debt Amortization Simulator</span>
+        <span class="info-btn" id="infoTabSimBtn">ℹ<span class="acip-tooltip">Interactive 25-year debt payoff, cash-flow breakeven, and capital expenditure amortization simulator with live parameter sensitivity.</span></span>
+      </button>
+    </nav>
+
+    <!-- Main Workstation -->
+    <main class="main-workstation">
+      <!-- Tab 1: openBIM Takeoff Reconciler -->
+      <div id="tab-takeoff" class="tab-content active">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div>
+            <h3 style="font-size: 13px; font-weight: 700;">Interim Progress Claim vs openBIM Physical Takeoff</h3>
+            <span style="font-size: 11px; color: var(--text-muted);">Cross-examining contractor claimed percentage completion against IFC element volume reality-capture</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="btn-action primary" onclick="openTakeoffDrawer(currentData?.openbim_takeoff_items?.[0])">
+              <span>📐</span> openBIM Inspector
+            </button>
+            <span id="takeoffDisallowanceBadge" class="badge badge-red" style="font-size: 11px; padding: 4px 8px;">Over-Certification Disallowance: S$ 1,162,500.00</span>
+          </div>
+        </div>
+        <div class="table-container">
+          <table id="takeoffTable">
+            <thead>
+              <tr>
+                <th>Item Code</th>
+                <th>Trade Package Description</th>
+                <th>SOR Rate</th>
+                <th>Claimed Cumulative Qty</th>
+                <th>Claimed %</th>
+                <th>openBIM Verified Qty</th>
+                <th>Verified %</th>
+                <th>Valuation Adjustment / Disallowance</th>
+                <th>Forensic Audit Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="cell-mono" style="font-weight:700;">STR-02-004</td>
+                <td>Supply and cast Grade 40 ready-mixed concrete in columns</td>
+                <td class="cell-mono">S$ 240.00</td>
+                <td class="cell-mono">7,800</td>
+                <td class="cell-mono">91.8%</td>
+                <td class="cell-mono" style="font-weight:700; color:var(--accent-blue);">6,500</td>
+                <td class="cell-mono">76.5%</td>
+                <td class="cell-mono" style="color:var(--accent-red); font-weight:700;">-S$ 312,000</td>
+                <td><span class="badge badge-red">FLAGGED_OVER_CERTIFICATION</span></td>
+              </tr>
+              <tr>
+                <td class="cell-mono" style="font-weight:700;">CIV-01-001</td>
+                <td>Excavation in soft material not exceeding 2.0m deep</td>
+                <td class="cell-mono">S$ 45.50</td>
+                <td class="cell-mono">12,000</td>
+                <td class="cell-mono">100.0%</td>
+                <td class="cell-mono" style="font-weight:700; color:var(--accent-blue);">11,850</td>
+                <td class="cell-mono">98.8%</td>
+                <td class="cell-mono" style="color:var(--accent-amber, #d97706); font-weight:700;">-S$ 6,825<br><span style="font-size:9.5px; font-weight:normal; color:var(--text-muted);">Withheld Pending Joint Survey</span></td>
+                <td><span class="badge" style="background:rgba(217,119,6,0.12); color:#d97706; border:1px solid #d97706;">WITHIN_TOLERANCE (ADJUSTED)</span></td>
+              </tr>
+              <tr>
+                <td class="cell-mono" style="font-weight:700;">MNE-07-003</td>
+                <td>Medical gas copper piping distribution</td>
+                <td class="cell-mono">S$ 310.00</td>
+                <td class="cell-mono">2,450</td>
+                <td class="cell-mono">87.5%</td>
+                <td class="cell-mono" style="font-weight:700; color:var(--accent-blue);">1,720</td>
+                <td class="cell-mono">61.4%</td>
+                <td class="cell-mono" style="color:var(--accent-red); font-weight:700;">-S$ 226,300</td>
+                <td><span class="badge badge-red">FLAGGED_OVER_CERTIFICATION</span></td>
+              </tr>
+              <tr>
+                <td class="cell-mono" style="font-weight:700;">MNE-06-012</td>
+                <td>500RT water-cooled centrifugal chiller</td>
+                <td class="cell-mono">S$ 185000.00</td>
+                <td class="cell-mono">3</td>
+                <td class="cell-mono">75.0%</td>
+                <td class="cell-mono" style="font-weight:700; color:var(--accent-blue);">2</td>
+                <td class="cell-mono">50.0%</td>
+                <td class="cell-mono" style="color:var(--accent-red); font-weight:700;">-S$ 185,000</td>
+                <td><span class="badge badge-red">FLAGGED_OVER_CERTIFICATION</span></td>
+              </tr>
+              <tr>
+                <td class="cell-mono" style="font-weight:700;">ARC-04-002</td>
+                <td>Architectural drywall partition & acoustic ceiling assemblies</td>
+                <td class="cell-mono">S$ 150.00</td>
+                <td class="cell-mono">7,450</td>
+                <td class="cell-mono">89.8%</td>
+                <td class="cell-mono" style="font-weight:700; color:var(--accent-blue);">4,567.5</td>
+                <td class="cell-mono">55.0%</td>
+                <td class="cell-mono" style="color:var(--accent-red); font-weight:700;">-S$ 432,375</td>
+                <td><span class="badge badge-red">FLAGGED_OVER_CERTIFICATION</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Variation Orders & 4-Tier Waterfall -->
+      <div id="tab-vos" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div>
+            <h3 style="font-size: 13px; font-weight: 700;">Variation Orders (VO) Forensic Valuation Waterfall</h3>
+            <span style="font-size: 11px; color: var(--text-muted);">Enforcing PSSCOC Clause 19.1 28-day notice timebars and baseline Schedule of Rates (SOR) hierarchy</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="btn-action primary" onclick="openVODrawer(currentData?.variation_orders?.[0])">
+              <span>🔍</span> VO Audit Inspector
+            </button>
+            <span id="voSummaryBadge" class="badge badge-amber" style="font-size: 11px; padding: 4px 8px;">12 VOs Analyzed | 3 Timebars Waived</span>
+          </div>
+        </div>
+        <div class="table-container">
+          <table id="vosTable">
+            <thead>
+              <tr>
+                <th>VO ID</th>
+                <th>Instruction Ref</th>
+                <th>Description</th>
+                <th>Notice Days</th>
+                <th>Timebar Status</th>
+                <th>Proposed Tier</th>
+                <th>Contractor Rate</th>
+                <th>Applied Tier</th>
+                <th>Certified Sum</th>
+                <th>Disallowed Sum</th>
+                <th>Anti-Fraud Flag</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Predictive Cost-to-Complete Radar -->
+      <div id="tab-eac" class="tab-content">
+        <div class="evm-grid">
+          <div class="evm-controls">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <h4 style="font-size: 12px; font-weight: 700; color: var(--accent-blue);">Earned Value Management (EVM)</h4>
+              <button class="btn-action primary" style="padding: 2px 8px; font-size: 10px;" onclick="openSREDrawer()">
+                <span>⚡</span> SRE Diagnostics
+              </button>
+            </div>
+            <div class="drawer-card">
+              <span class="drawer-card-title">Budget at Completion (BAC)</span>
+              <span id="evmBAC" class="cell-mono" style="font-weight: 700;">S$ 52,380,952.38</span>
+            </div>
+            <div class="drawer-card">
+              <span class="drawer-card-title">Cost Performance Index (CPI)</span>
+              <span id="evmCPI" class="cell-mono" style="font-weight: 700; color: var(--accent-amber);">0.9436</span>
+              <span style="font-size: 10px; color: var(--text-muted);">CPI &lt; 1.0 indicates cost overrun</span>
+            </div>
+            <div class="drawer-card">
+              <span class="drawer-card-title">Risk-Adjusted EAC</span>
+              <span id="evmEAC" class="cell-mono" style="font-weight: 800; color: var(--accent-red);">S$ 56,795,528.79</span>
+            </div>
+            <div class="drawer-card">
+              <span class="drawer-card-title">Projected Budget Overrun</span>
+              <span id="evmOverrun" class="cell-mono" style="font-weight: 800; color: var(--accent-red);">+S$ 1,795,528.79</span>
+            </div>
+            <div class="slider-wrap" style="margin-top: 6px;">
+              <label>Pending VO Approval Simulation: <span id="voApprovalRatioLabel">50%</span></label>
+              <input type="range" id="voSlider" min="0" max="100" value="50" oninput="updateEACSimulation(this.value)">
+            </div>
+            <div style="background: var(--status-red-bg); border: 1px solid var(--accent-red); border-radius: 6px; padding: 8px; margin-top: 4px;">
+              <span style="font-size: 10.5px; font-weight: 700; color: var(--accent-red);">🚨 Macro Early Warning:</span>
+              <p id="evmWarningText" style="font-size: 10px; color: var(--text-primary); margin-top: 2px;">Contingency will hit S$0 at Month 10!</p>
+            </div>
+          </div>
+          <div class="evm-chart-card">
+            <h4 style="font-size: 12px; font-weight: 700; margin-bottom: 6px;">Projected Contingency Depletion Velocity vs Approved Baseline</h4>
+            <div style="flex: 1; position: relative;">
+              <canvas id="eacChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Statutory SOPA Section 11 Dossier -->
+      <div id="tab-sopa" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div>
+            <h3 style="font-size: 13px; font-weight: 700;">Formal Statutory Payment Response (SOPA Section 11)</h3>
+            <span style="font-size: 11px; color: var(--text-muted);">Strict Zero-LLM Document Guard: raw FastMCP statutory deductions rendered directly without model rewriting</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-action primary" onclick="openDisputeMemoModal()">⚖️ Draft Legal Dispute Memo</button>
+            <button class="btn-action" onclick="openExecutiveMemoModal()">💼 C-Suite Briefing Memo</button>
+            <button class="btn-action" onclick="copyDossier()">📋 Copy Statutory Dossier</button>
+          </div>
+        </div>
+        <div id="dossierContent" class="dossier-view">Loading formal statutory response notice...</div>
+      </div>
+
+      <!-- Tab 5: Live Pre-Deployment Financial Verification Simulator -->
+      <div id="tab-simulator" class="tab-content">
+        <div class="sim-container">
+          <div class="sim-card">
+            <div class="sim-header-row">
+              <div class="sim-headline-wrap">
+                <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; display: flex; align-items: center; gap: 4px;">
+                  Financial feasibility status
+                  <span class="info-btn" id="infoSimulatorBaselineBtn">ℹ<span class="acip-tooltip">Financial Baseline: The benchmark capital underwriting profile ($50M capex, $8.5M/yr net operating revenue, 6.5% loan rate) yielding a 6-year capital breakeven and +$162.5M 25-year Net NPV. Use sliders below to stress-test financial variations against this baseline.</span></span>
+                </span>
+                <div style="font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                  <span id="simStatusHeadline">Capital recovered in 6 years</span>
+                  <span id="simStatusBadge" class="badge badge-green" style="font-size: 11px; padding: 3px 8px;">Optimal return</span>
+                </div>
+              </div>
+              <button class="btn-action" onclick="resetSimulatorDefaults()" style="display:inline-flex; align-items:center; gap:6px;">
+                <span>🔄 Reset to Baseline</span>
+                <span class="info-btn" id="infoResetBaselineBtn" onclick="event.stopPropagation()">ℹ<span class="acip-tooltip">Reset to Baseline: Restores capital construction cost ($50M), annual revenue ($8.5M/yr), and financing interest rate (6.5%) back to benchmark underwriting baseline values.</span></span>
+              </button>
+            </div>
+
+            <div class="sim-kpi-row">
+              <div>
+                <span class="kpi-title">Initial debt</span><br>
+                <b id="simInitialDebt" class="cell-mono" style="font-size: 16px;">$50M</b>
+              </div>
+              <div>
+                <span class="kpi-title">Annual service</span><br>
+                <b id="simAnnualService" class="cell-mono" style="font-size: 16px;">$4.5M/yr</b>
+              </div>
+              <div>
+                <span class="kpi-title">Net NPV (25yr)</span><br>
+                <b id="simNetNPV" class="cell-mono" style="font-size: 16px; color: var(--accent-green);">+$162.5M</b>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+              <div style="display:flex; gap:16px; font-size:11px;">
+                <span style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; border-radius:50%; background:#10b981; display:inline-block;"></span> Cumulative operational revenue</span>
+                <span style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:3px; background:#ef4444; display:inline-block;"></span> <span id="simDebtLegendLabel">Amortized loan balance ($50M)</span></span>
+              </div>
+              <span id="simBreakevenBadge" class="badge badge-blue">Breakeven: Yr 6</span>
+            </div>
+
+            <div class="sim-chart-box">
+              <canvas id="simulatorChart"></canvas>
+            </div>
+
+            <div class="sim-controls-grid">
+              <div class="slider-wrap">
+                <label>Capital construction cost: <b id="simCostLabel">$50M</b></label>
+                <input type="range" id="simCostSlider" min="10" max="150" value="50" oninput="updateFinancialSimulator()">
+              </div>
+              <div class="slider-wrap">
+                <label>Project annual net revenue: <b id="simRevLabel">$8.5M</b></label>
+                <input type="range" id="simRevSlider" min="1" max="25" step="0.5" value="8.5" oninput="updateFinancialSimulator()">
+              </div>
+              <div class="slider-wrap">
+                <label>Financing interest rate: <b id="simRateLabel">6.5%</b></label>
+                <input type="range" id="simRateSlider" min="1" max="15" step="0.5" value="6.5" oninput="updateFinancialSimulator()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Multi-Agent Deliberation Console -->
+    <footer class="consensus-strip">
+      <div class="agent-card" onclick="openTakeoffDrawer(currentData?.openbim_takeoff_items[0])">
+        <div class="agent-header">
+          <span class="agent-name">📐 Forensic QS Auditor</span>
+          <span class="badge badge-red">CRITICAL</span>
+        </div>
+        <p id="agentFindingQS" class="agent-finding">STR-02-004 column casting over-claimed by 1,300 m3 (S$312k). Disallowance enforced to protect cash flow against front-ramping.</p>
+      </div>
+      <div class="agent-card" onclick="openDisputeMemoModal()">
+        <div class="agent-header">
+          <span class="agent-name">⚖️ Contracts &amp; Claims Counsel</span>
+          <span class="badge badge-amber">WARNING</span>
+        </div>
+        <p id="agentFindingCounsel" class="agent-finding">VO-WHC-005, 007, and 012 served past 28-day notice under PSSCOC Cl 19.1. Statutory waiver applied. S$114.5k disallowed.</p>
+      </div>
+      <div class="agent-card" onclick="openExecutiveMemoModal()">
+        <div class="agent-header">
+          <span class="agent-name">💼 Commercial Director</span>
+          <span class="badge badge-green">ACTIONABLE</span>
+        </div>
+        <p id="agentFindingDirector" class="agent-finding">SOPA Section 11 notice prepared certifying Net S$3,632,500.00. Early warning issued: Contingency burns out at Month 10.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Context-Aware Surgical Drawers -->
+  <div id="drawerOverlay" class="drawer-overlay" onclick="closeAllDrawers()"></div>
+
+  <!-- Drawer 1: VO Forensic Drawer -->
+  <div id="voDrawer" class="drawer">
+    <div class="drawer-header">
+      <span id="voDrawerTitle" class="drawer-title">VO Forensic Audit</span>
+      <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+    </div>
+    <div id="voDrawerBody" class="drawer-body"></div>
+  </div>
+
+  <!-- Drawer 2: 5D BIM Takeoff Reconciler Drawer -->
+  <div id="takeoffDrawer" class="drawer">
+    <div class="drawer-header">
+      <span id="takeoffDrawerTitle" class="drawer-title">5D openBIM Takeoff Reconciler</span>
+      <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+    </div>
+    <div id="takeoffDrawerBody" class="drawer-body"></div>
+  </div>
+
+  <!-- Drawer 3: SOPA Statutory Grounds Drawer -->
+  <div id="sopaDrawer" class="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">SOPA Section 11 Statutory Defense</span>
+      <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+    </div>
+    <div id="sopaDrawerBody" class="drawer-body"></div>
+  </div>
+
+  <!-- Drawer 4: SRE Diagnostics Drawer -->
+  <div id="sreDrawer" class="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">SRE Observability Diagnostics</span>
+      <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+    </div>
+    <div id="sreDrawerBody" class="drawer-body"></div>
+  </div>
+
+  <!-- Drawer 5: Legal Dispute & Executive Briefing Memo Drawer -->
+  <div id="memoDrawer" class="drawer">
+    <div class="drawer-header">
+      <span id="memoDrawerTitle" class="drawer-title">Legal Dispute Memorandum</span>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <button class="btn-action" onclick="copyMemo()">📋 Copy Memo</button>
+        <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+      </div>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-card">
+        <span class="drawer-card-title">Cognitive Deliberation Engine</span>
+        <span style="font-size:11px; color:var(--text-muted);">Synthesized by Contracts &amp; Claims Counsel Agent and Commercial Director Agent based on FastMCP audit output.</span>
+      </div>
+      <div class="drawer-card" style="margin-top:4px;">
+        <pre id="memoContent" style="white-space:pre-wrap; word-break:break-word; font-family:var(--font-mono); font-size:11.5px; line-height:1.6; color:var(--text-primary); margin:0;"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drawer 6: Commercial Metric Forensic Drill-Down Drawer (S02 Parity) -->
+  <div id="metricDrawer" class="drawer">
+    <div class="drawer-header">
+      <span id="metricDrawerTitle" class="drawer-title">Forensic Metric Drill-Down</span>
+      <button class="drawer-close" onclick="closeAllDrawers()">×</button>
+    </div>
+    <div id="metricDrawerBody" class="drawer-body"></div>
+  </div>
+
+  <script>
+    let currentData = null;
+    let chartInstance = null;
+    let simChartInstance = null;
+
+    let currentTheme = localStorage.getItem('acip_s03_theme') || 'light';
+
+    // Theme Setup (Points 1 & S02 Alignment: Light Mode Default)
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const icon = document.getElementById('themeIcon');
+      const text = document.getElementById('themeText');
+      if (icon && text) {
+        if (theme === 'dark') {
+          icon.textContent = '☀️';
+          text.textContent = 'Light Mode';
+        } else {
+          icon.textContent = '🌙';
+          text.textContent = 'Dark Mode';
+        }
+      }
+      localStorage.setItem('acip_s03_theme', theme);
+      if (chartInstance) renderEACChart();
+      if (simChartInstance) renderSimulatorChart();
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(currentTheme);
+    }
+
+    // Tab Navigation
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+      if (tabId === 'tab-eac') renderEACChart();
+      if (tabId === 'tab-simulator') renderSimulatorChart();
+    }
+
+    // Load Project Analytics
+    async function loadProjectData(projectId = "PRJ-WHC-COM-001") {
+      try {
+        const res = await fetch(`/api/commercial-analytics?project_id=${projectId}`);
+        const data = await res.json();
+        currentData = data;
+        renderDashboard(data);
+      } catch (err) {
+        console.error("Failed to load project analytics:", err);
+      }
+    }
+
+    function onProjectChange(projectId) {
+      closeAllDrawers();
+      loadProjectData(projectId);
+    }
+
+    // Render Dashboard
+    function renderDashboard(data) {
+      const p = data.project;
+      const c = data.interim_claim;
+      const clock = data.sopa_countdown_clock;
+      const evm = data.predictive_eac.earned_value_metrics;
+      const radar = data.predictive_eac.contingency_velocity_radar;
+
+      // Update Header Project Meta Chips Dynamically
+      const sectorEl = document.getElementById('headerSector');
+      const sectorIconEl = document.getElementById('headerSectorIcon');
+      const contractEl = document.getElementById('headerContractForm');
+      const contractorEl = document.getElementById('headerContractor');
+
+      if (sectorEl) {
+        if (p.project_id === 'PRJ-WHC-COM-001') {
+          sectorEl.textContent = 'Healthcare Infrastructure';
+          if (sectorIconEl) sectorIconEl.textContent = '🏥';
+        } else if (p.project_id === 'PRJ-TWRP-002') {
+          sectorEl.textContent = 'Environmental Water Infrastructure';
+          if (sectorIconEl) sectorIconEl.textContent = '🌊';
+        } else if (p.project_id === 'PRJ-T5-003') {
+          sectorEl.textContent = 'Aviation Transit Substructure';
+          if (sectorIconEl) sectorIconEl.textContent = '✈️';
+        } else if (p.project_id === 'PRJ-JID-ATP-004') {
+          sectorEl.textContent = 'Advanced Manufacturing & Industrial';
+          if (sectorIconEl) sectorIconEl.textContent = '🏭';
+        } else {
+          sectorEl.textContent = 'Commercial Infrastructure';
+          if (sectorIconEl) sectorIconEl.textContent = '🏛️';
+        }
+      }
+      if (contractEl) {
+        contractEl.textContent = (p.contract_type || 'PSSCOC 2025').replace(/_/g, ' ');
+      }
+      if (contractorEl) {
+        contractorEl.textContent = p.main_contractor_name || 'WinningPine Construction';
+      }
+
+      // Sync Execution Engine Badge with hostname auto-detection
+      const urlParams = new URLSearchParams(window.location.search);
+      const host = window.location.hostname.toLowerCase();
+      let autoEngine = null;
+      if (host.includes('amazonaws.com') || host.includes('elb.')) {
+        autoEngine = 'AWS Engine';
+      } else if (host.includes('azurecontainerapps.io') || host.includes('azure')) {
+        autoEngine = 'Azure Engine';
+      } else if (host.includes('run.app') || host.includes('cloudrun')) {
+        autoEngine = 'GCP Engine';
+      }
+
+      if (!urlParams.get('engine')) {
+        const engineBadge = document.getElementById('engineBadge');
+        if (engineBadge) {
+          if (autoEngine) {
+            engineBadge.textContent = autoEngine;
+          } else if (data.engine) {
+            engineBadge.textContent = data.engine;
+          }
+        }
+      }
+
+      // KPIs
+      document.getElementById('kpiBaseContract').textContent = `S$ ${p.base_contract_sum.toLocaleString('en-US', {maximumFractionDigits:0})}`;
+      document.getElementById('kpiEmployerName').textContent = `Employer: ${p.employer_name}`;
+      document.getElementById('kpiApprovedBudget').textContent = `S$ ${p.total_approved_budget.toLocaleString('en-US', {maximumFractionDigits:0})}`;
+      document.getElementById('kpiContingency').textContent = `Contingency: S$ ${(p.contingency_allocation/1000000).toFixed(2)}M`;
+      document.getElementById('kpiGrossClaimed').textContent = `S$ ${(c.contractor_claimed_gross_this_period || 0).toLocaleString('en-US', {maximumFractionDigits:0})}`;
+      document.getElementById('kpiClaimIdSub').textContent = `${c.claim_id || 'Claim'} Claimed`;
+      document.getElementById('kpiVerifiedGross').textContent = `S$ ${(c.openbim_verified_gross_this_period || 0).toLocaleString('en-US', {maximumFractionDigits:0})}`;
+      document.getElementById('kpiOverClaimDisallowed').textContent = `Disallowed: -S$ ${((c.over_certification_disallowance || 0)/1000000).toFixed(2)}M`;
+      document.getElementById('kpiStatutoryDeductions').textContent = `-S$ ${(c.statutory_safety_set_off || 0).toLocaleString('en-US', {maximumFractionDigits:0})}`;
+      document.getElementById('kpiNetPayable').textContent = `S$ ${(c.net_payable_certified_this_period || 0).toLocaleString('en-US', {maximumFractionDigits:0})}`;
+
+      // Traffic-Light Statutory Clock per Chancellor Directives
+      // Solid GREEN at >= 4 days, AMBER at <= 3 days, Flashing RED with EXPIRED_STATUTORY_DEFAULT if <= 0
+      const pill = document.getElementById('sopaCountdownPill');
+      const bDays = clock && clock.countdown ? clock.countdown.business_days_remaining : 9;
+      const hours = clock && clock.countdown && clock.countdown.hours_remaining !== undefined ? clock.countdown.hours_remaining : (bDays * 24);
+      const sopaTipHtml = `<span class="info-btn" id="infoSopaPillBtn">ℹ<span class="acip-tooltip">Building and Construction Industry Security of Payment Act (SOPA) Section 11(1) mandatory response timeline. Click to open statutory breakdown.</span></span>`;
+      if (bDays >= 4) {
+        pill.className = 'status-pill green';
+        pill.innerHTML = `<span>⏱️ SOPA: ${bDays} Days (${hours} hrs)</span>${sopaTipHtml}`;
+      } else if (bDays > 0) {
+        pill.className = 'status-pill amber';
+        pill.innerHTML = `<span>⚠️ SOPA: ${bDays} Days Remaining</span>${sopaTipHtml}`;
+      } else {
+        pill.className = 'status-pill red flashing';
+        pill.innerHTML = `<span>🚨 EXPIRED_STATUTORY_DEFAULT: Action Overdue!</span>${sopaTipHtml}`;
+      }
+
+      // Real-Time Contingency Overrun Warning Banner
+      const warningBanner = document.getElementById('statutoryWarningBanner');
+      const warningText = document.getElementById('warningBannerText');
+      const budgetCap = p.total_approved_budget;
+      const isBreached = evm.budget_variance_overrun > 0 || (c.contractor_claimed_gross_this_period > p.base_contract_sum);
+      if (isBreached) {
+        warningBanner.style.display = 'flex';
+        warningBanner.className = evm.budget_variance_overrun > 1000000 ? 'warning-banner critical' : 'warning-banner';
+        warningText.innerHTML = `Projected Estimate at Completion (S$ ${(evm.risk_adjusted_eac/1000000).toFixed(2)}M) exceeds approved budget (S$ ${(budgetCap/1000000).toFixed(2)}M) by <b>S$ ${evm.budget_variance_overrun.toLocaleString('en-US', {maximumFractionDigits:2})}</b>. Contingency exhausted at <b>Month ${radar.forecasted_breach_month_index}</b>! Formal Section 11 deductions must be served.`;
+      } else {
+        warningBanner.style.display = 'none';
+      }
+
+      // Render Tables
+      renderTakeoffTable(data.openbim_takeoff_items);
+      renderVOsTable(data.variation_orders);
+
+      // Render EVM Controls
+      document.getElementById('evmBAC').textContent = `S$ ${evm.bac_budget_at_completion.toLocaleString('en-US', {maximumFractionDigits:2})}`;
+      document.getElementById('evmCPI').textContent = evm.cpi_cost_performance_index.toFixed(4);
+      document.getElementById('evmEAC').textContent = `S$ ${evm.risk_adjusted_eac.toLocaleString('en-US', {maximumFractionDigits:2})}`;
+      document.getElementById('evmOverrun').textContent = `${evm.budget_variance_overrun >= 0 ? '+' : ''}S$ ${evm.budget_variance_overrun.toLocaleString('en-US', {maximumFractionDigits:2})}`;
+      document.getElementById('evmWarningText').textContent = radar.forecasted_breach_month_index > 0 ?
+        `Contingency burns out at Month ${radar.forecasted_breach_month_index} (${radar.months_until_contingency_exhaustion} months left)!` :
+        `Contingency healthy. No budget breach projected across lifecycle.`;
+
+      // Update Badges
+      const totalTakeoffDisallow = data.openbim_takeoff_items.reduce((acc, it) => acc + (it.discrepancy_amount || 0), 0);
+      document.getElementById('takeoffDisallowanceBadge').textContent = `Over-Certification Disallowance: S$ ${totalTakeoffDisallow.toLocaleString('en-US', {maximumFractionDigits:2})}`;
+      const waivedCount = data.variation_orders.filter(v => v.timebar_status.includes('WAIVED')).length;
+      document.getElementById('voSummaryBadge').textContent = `${data.variation_orders.length} VOs Analyzed | ${waivedCount} Timebars Waived`;
+
+      // Render Dossier (Strict Zero-LLM Document Guard: raw string direct from tool)
+      document.getElementById('dossierContent').textContent = data.statutory_dossier_markdown;
+
+      // Update Agent Finding Stream
+      if (data.agent_deliberation) {
+        const findings = data.agent_deliberation.agent_findings;
+        if (findings && findings.length >= 3) {
+          if (findings[0].findings[0]) document.getElementById('agentFindingQS').textContent = findings[0].findings[0].observation;
+          if (findings[1].findings[0]) document.getElementById('agentFindingCounsel').textContent = findings[1].findings[0].observation;
+          if (findings[2].executive_recommendations[0]) document.getElementById('agentFindingDirector').textContent = findings[2].executive_recommendations[0];
+        }
+      }
+
+      renderEACChart();
+      updateFinancialSimulator();
+    }
+
+    // Render openBIM Table
+    function renderTakeoffTable(items) {
+      const tbody = document.querySelector('#takeoffTable tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!items || items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:24px; color:var(--text-muted); font-size:11.5px;">No openBIM physical takeoff items recorded for this interim valuation cycle.</td></tr>';
+        return;
+      }
+      items.forEach(item => {
+        const isTolerance = item.discrepancy_status === 'WITHIN_TOLERANCE';
+        const isOver = item.discrepancy_status === 'FLAGGED_OVER_CERTIFICATION';
+        const badgeStyle = isTolerance
+          ? 'style="background:rgba(217,119,6,0.12); color:#d97706; border:1px solid #d97706;"'
+          : '';
+        const badgeClass = isTolerance ? 'badge' : (isOver ? 'badge-red' : 'badge-green');
+        const badgeText = isTolerance ? 'WITHIN_TOLERANCE (ADJUSTED)' : item.discrepancy_status;
+        const disallowColor = isTolerance ? 'color:var(--accent-amber, #d97706);' : (isOver ? 'color:var(--accent-red);' : 'color:var(--text-muted);');
+        const disallowSubtext = isTolerance ? '<br><span style="font-size:9.5px; font-weight:normal; color:var(--text-muted);">Withheld Pending Joint Survey</span>' : '';
+        const tr = document.createElement('tr');
+        tr.onclick = () => openTakeoffDrawer(item);
+        const rate = typeof item.contract_unit_rate === 'number' ? item.contract_unit_rate.toFixed(2) : (item.contract_unit_rate || '0.00');
+        const claimedQty = item.contractor_claimed_cumulative_qty != null ? Number(item.contractor_claimed_cumulative_qty).toLocaleString() : '0';
+        const claimedPct = item.contractor_claimed_pct != null ? Number(item.contractor_claimed_pct).toFixed(1) : '0.0';
+        const bimQty = item.ifc_openbim_verified_qty != null ? Number(item.ifc_openbim_verified_qty).toLocaleString() : '0';
+        const bimPct = item.ifc_openbim_verified_pct != null ? Number(item.ifc_openbim_verified_pct).toFixed(1) : '0.0';
+        const disallow = item.discrepancy_amount != null ? Number(item.discrepancy_amount) : 0;
+        tr.innerHTML = `
+          <td class="cell-mono" style="font-weight:700;">${item.item_code}</td>
+          <td>${item.description}</td>
+          <td class="cell-mono">S$ ${rate}</td>
+          <td class="cell-mono">${claimedQty}</td>
+          <td class="cell-mono">${claimedPct}%</td>
+          <td class="cell-mono" style="font-weight:700;">${bimQty}</td>
+          <td class="cell-mono" style="font-weight:700;">${bimPct}%</td>
+          <td class="cell-mono" style="${disallowColor} font-weight:700;">
+            ${disallow > 0 ? '-S$ ' + disallow.toLocaleString('en-US', {maximumFractionDigits:0}) + disallowSubtext : 'S$ 0'}
+          </td>
+          <td><span class="${badgeClass}" ${badgeStyle}>${badgeText}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Render VOs Table
+    function renderVOsTable(vos) {
+      const tbody = document.querySelector('#vosTable tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!vos || vos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:24px; color:var(--text-muted); font-size:11.5px;">No Variation Orders recorded for this project baseline.</td></tr>';
+        return;
+      }
+      vos.forEach(vo => {
+        const isWaived = (vo.timebar_status || '').includes('WAIVED');
+        const isFraud = vo.fraud_flag === 'RATE_DUPLICATION_DETECTED';
+        const tr = document.createElement('tr');
+        tr.onclick = () => openVODrawer(vo);
+        const propRate = vo.contractor_proposed_rate != null ? Number(vo.contractor_proposed_rate).toFixed(2) : '0.00';
+        const certSum = vo.certified_amount != null ? Number(vo.certified_amount).toLocaleString('en-US', {maximumFractionDigits:0}) : '0';
+        const disallowSum = vo.deduction_disallowed != null ? Number(vo.deduction_disallowed) : 0;
+        tr.innerHTML = `
+          <td class="cell-mono" style="font-weight:700;">${vo.vo_id}</td>
+          <td class="cell-mono">${vo.instruction_reference}</td>
+          <td style="max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${vo.description}</td>
+          <td class="cell-mono">${vo.days_elapsed_notice}d</td>
+          <td><span class="badge ${isWaived ? 'badge-red' : 'badge-green'}">${vo.timebar_status}</span></td>
+          <td><span class="badge badge-amber">${vo.proposed_valuation_tier}</span></td>
+          <td class="cell-mono">S$ ${propRate}</td>
+          <td><span class="badge badge-blue">${(vo.action_taken || '').includes('FALLBACK') ? 'TIER_1_SOR' : vo.proposed_valuation_tier}</span></td>
+          <td class="cell-mono" style="font-weight:700;">S$ ${certSum}</td>
+          <td class="cell-mono" style="color: ${disallowSum > 0 ? 'var(--accent-red)' : 'var(--text-muted)'}; font-weight:700;">
+            ${disallowSum > 0 ? '-S$ ' + disallowSum.toLocaleString('en-US', {maximumFractionDigits:0}) : 'S$ 0'}
+          </td>
+          <td><span class="badge ${isFraud ? 'badge-red' : (vo.fraud_flag === 'NONE_VALID' ? 'badge-green' : 'badge-amber')}">${vo.fraud_flag}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // EVM Chart
+    function renderEACChart() {
+      const ctx = document.getElementById('eacChart');
+      if (!ctx || !currentData) return;
+      if (chartInstance) chartInstance.destroy();
+
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const textColor = isDark ? '#cbd5e1' : '#334155';
+      const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+      const pid = currentData.project.project_id;
+      const budgetM = (currentData.project.total_approved_budget / 1000000).toFixed(1);
+
+      let months = ['M01', 'M03', 'M05', 'M07', 'M08 (Current)', 'M09', 'M10 (Breach)', 'M11', 'M14'];
+      let approvedBudget = [55, 55, 55, 55, 55, 55, 55, 55, 55];
+      let actualForecast = [4.5, 12.8, 21.0, 28.5, 30.15, 42.5, 55.0, 56.0, 56.8];
+      let contingencyLeft = [2.62, 2.35, 1.80, 1.15, 0.77, 0.35, 0.0, -1.0, -1.8];
+
+      if (pid === 'PRJ-TWRP-002') {
+        months = ['M02', 'M04', 'M06', 'M07 (Current)', 'M08', 'M09 (Breach)', 'M11'];
+        approvedBudget = [78.5, 78.5, 78.5, 78.5, 78.5, 78.5, 78.5];
+        actualForecast = [9.5, 23.0, 38.2, 45.1, 58.0, 78.5, 82.4];
+        contingencyLeft = [3.9, 3.2, 2.1, 1.15, 0.45, 0.0, -1.2];
+      } else if (pid === 'PRJ-T5-003') {
+        months = ['M03', 'M06', 'M10', 'M14 (Current)', 'M18', 'M22 (Breach)', 'M26', 'M30'];
+        approvedBudget = [145, 145, 145, 145, 145, 145, 145, 145];
+        actualForecast = [18.0, 42.0, 71.0, 94.5, 118.0, 145.0, 151.2, 154.6];
+        contingencyLeft = [7.25, 6.4, 4.8, 3.1, 1.6, 0.0, -1.8, -2.5];
+      } else if (pid === 'PRJ-JID-ATP-004') {
+        months = ['M02', 'M06', 'M10', 'M12', 'M14 (Current)', 'M15', 'M16 (Breach)', 'M18'];
+        approvedBudget = [68.5, 68.5, 68.5, 68.5, 68.5, 68.5, 68.5, 68.5];
+        actualForecast = [8.0, 22.0, 39.0, 47.0, 52.6, 59.0, 68.5, 71.3];
+        contingencyLeft = [3.4, 3.1, 2.2, 1.3, 0.52, 0.2, 0.0, -0.7];
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [
+            {
+              label: `Approved Budget (S$ ${budgetM}M)`,
+              data: approvedBudget,
+              borderColor: '#dc2626',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              fill: false
+            },
+            {
+              label: 'Forecasted Actual Outturn / EAC (S$M)',
+              data: actualForecast,
+              borderColor: '#2563eb',
+              backgroundColor: 'rgba(37,99,235,0.1)',
+              borderWidth: 2.5,
+              tension: 0.25,
+              fill: true
+            },
+            {
+              label: 'Contingency Remaining (S$M)',
+              data: contingencyLeft,
+              borderColor: '#059669',
+              borderWidth: 2,
+              tension: 0.2,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: textColor, font: { size: 10 } } }
+          },
+          scales: {
+            x: { ticks: { color: textColor }, grid: { color: gridColor } },
+            y: { ticks: { color: textColor }, grid: { color: gridColor }, title: { display: true, text: 'Millions (SGD)', color: textColor } }
+          }
+        }
+      });
+    }
+
+    function updateEACSimulation(val) {
+      document.getElementById('voApprovalRatioLabel').textContent = `${val}%`;
+      const baseEAC = currentData.predictive_eac.earned_value_metrics.base_eac;
+      const simulatedEAC = baseEAC + (val / 100) * 1250000;
+      document.getElementById('evmEAC').textContent = `S$ ${simulatedEAC.toLocaleString('en-US', {maximumFractionDigits:2})}`;
+      const overrun = simulatedEAC - currentData.project.total_approved_budget;
+      document.getElementById('evmOverrun').textContent = `${overrun >= 0 ? '+' : ''}S$ ${overrun.toLocaleString('en-US', {maximumFractionDigits:2})}`;
+    }
+
+    // =========================================================================
+    // Financial Verification Simulator (Chancellor Benchmark Widget)
+    // =========================================================================
+    function resetSimulatorDefaults() {
+      const costEl = document.getElementById('simCostSlider');
+      const revEl = document.getElementById('simRevSlider');
+      const rateEl = document.getElementById('simRateSlider');
+      if (costEl) costEl.value = 50;
+      if (revEl) revEl.value = 8.5;
+      if (rateEl) rateEl.value = 6.5;
+      updateFinancialSimulator();
+    }
+
+    function updateFinancialSimulator() {
+      const cost = parseFloat(document.getElementById('simCostSlider').value); // $M
+      const annualRev = parseFloat(document.getElementById('simRevSlider').value); // $M
+      const rate = parseFloat(document.getElementById('simRateSlider').value); // %
+
+      document.getElementById('simCostLabel').textContent = `$${cost}M`;
+      document.getElementById('simRevLabel').textContent = `$${annualRev.toFixed(1)}M`;
+      document.getElementById('simRateLabel').textContent = `${rate.toFixed(1)}%`;
+
+      document.getElementById('simInitialDebt').textContent = `$${cost}M`;
+      const annualService = cost * (rate / 100) + (cost / 20); // rough debt service
+      document.getElementById('simAnnualService').textContent = `$${annualService.toFixed(1)}M/yr`;
+
+      // 25-Year Projection Arrays
+      const years = [];
+      const revenueCurve = [];
+      const debtCurve = [];
+      let currentDebt = cost;
+      let breakevenYear = 25;
+      let foundBreakeven = false;
+
+      for (let y = 0; y <= 25; y += 5) {
+        years.push(`Yr ${y}`);
+      }
+
+      // Compute precise breakeven
+      let cumRev = 0;
+      let remainingDebt = cost;
+      for (let y = 0; y <= 25; y++) {
+        cumRev = y * annualRev;
+        const interest = remainingDebt * (rate / 100);
+        const principalPay = Math.max(0, annualRev - interest);
+        remainingDebt = Math.max(0, remainingDebt - principalPay);
+
+        if (cumRev >= cost && !foundBreakeven) {
+          breakevenYear = y;
+          foundBreakeven = true;
+        }
+      }
+
+      // Net NPV calculation at 5% discount rate
+      let npv = -cost;
+      for (let y = 1; y <= 25; y++) {
+        npv += annualRev / Math.pow(1 + 0.05, y);
+      }
+      document.getElementById('simNetNPV').textContent = `+$${npv.toFixed(1)}M`;
+
+      // Update Headline & Badge
+      const headline = document.getElementById('simStatusHeadline');
+      const badge = document.getElementById('simStatusBadge');
+      const breakevenBadge = document.getElementById('simBreakevenBadge');
+
+      if (foundBreakeven && breakevenYear <= 8) {
+        headline.textContent = `Capital recovered in ${breakevenYear} years`;
+        badge.className = 'badge badge-green';
+        badge.textContent = 'Optimal return';
+      } else if (foundBreakeven && breakevenYear <= 14) {
+        headline.textContent = `Capital recovered in ${breakevenYear} years`;
+        badge.className = 'badge badge-amber';
+        badge.textContent = 'Moderate return';
+      } else {
+        headline.textContent = foundBreakeven ? `Capital recovered in ${breakevenYear} years` : `Unrecoverable within 25 years`;
+        badge.className = 'badge badge-red';
+        badge.textContent = 'High financial risk';
+      }
+      breakevenBadge.textContent = foundBreakeven ? `Breakeven: Yr ${breakevenYear}` : `No Breakeven`;
+
+      renderSimulatorChart(cost, annualRev, rate, breakevenYear);
+    }
+
+    function renderSimulatorChart(cost = 50, annualRev = 8.5, rate = 6.5, breakevenYear = 6) {
+      const ctx = document.getElementById('simulatorChart');
+      if (!ctx) return;
+      if (simChartInstance) simChartInstance.destroy();
+
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const textColor = isDark ? '#cbd5e1' : '#334155';
+      const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+      const labels = ['Yr 0', 'Yr 5', 'Yr 10', 'Yr 15', 'Yr 20', 'Yr 25'];
+      const revenueData = [];
+      const debtData = [];
+
+      for (let y = 0; y <= 25; y += 5) {
+        revenueData.push(y * annualRev);
+        // debt balance decays
+        const debtRem = Math.max(0, cost * Math.pow(1 - (annualRev / (cost * 1.5)), y / 5));
+        debtData.push(debtRem);
+      }
+
+      const debtLeg = document.getElementById('simDebtLegendLabel');
+      if (debtLeg) debtLeg.textContent = `Amortized loan balance ($${cost}M)`;
+
+      simChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Cumulative operational revenue',
+              data: revenueData,
+              borderColor: '#10b981',
+              backgroundColor: isDark ? 'rgba(16, 185, 129, 0.18)' : 'rgba(16, 185, 129, 0.12)',
+              fill: true,
+              borderWidth: 2,
+              tension: 0.1,
+              pointRadius: (ctx) => (ctx.dataIndex === 1 ? 5 : 2),
+              pointBackgroundColor: '#2563eb'
+            },
+            {
+              label: 'Amortized loan balance',
+              data: debtData,
+              borderColor: '#ef4444',
+              borderWidth: 2.2,
+              tension: 0.25,
+              fill: false,
+              pointRadius: (ctx) => (ctx.dataIndex === 0 ? 5 : 2),
+              pointBackgroundColor: '#ef4444'
+            }
+          ]
+        },
+        plugins: [
+          {
+            id: 'debtLineBadge',
+            afterDatasetsDraw(chart) {
+              const meta = chart.getDatasetMeta(1);
+              if (meta && meta.data && meta.data[0]) {
+                const pt = meta.data[0];
+                const ctx2 = chart.ctx;
+                ctx2.save();
+                const labelText = `$${cost}M`;
+                ctx2.font = 'bold 11px Inter, -apple-system, sans-serif';
+                const textWidth = ctx2.measureText(labelText).width;
+                const padX = 6;
+                const badgeW = textWidth + padX * 2;
+                const badgeH = 18;
+                const x = pt.x + 8;
+                const y = Math.max(pt.y - 14, 12);
+
+                // Red Pill background
+                ctx2.fillStyle = '#ef4444';
+                ctx2.beginPath();
+                if (ctx2.roundRect) {
+                  ctx2.roundRect(x, y - badgeH / 2, badgeW, badgeH, 4);
+                } else {
+                  ctx2.rect(x, y - badgeH / 2, badgeW, badgeH);
+                }
+                ctx2.fill();
+
+                // Text
+                ctx2.fillStyle = '#ffffff';
+                ctx2.textAlign = 'center';
+                ctx2.textBaseline = 'middle';
+                ctx2.fillText(labelText, x + badgeW / 2, y);
+                ctx2.restore();
+              }
+            }
+          }
+        ],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: $${ctx.raw.toFixed(1)}M`
+              }
+            }
+          },
+          scales: {
+            x: { ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } },
+            y: { ticks: { color: textColor, font: { size: 10 }, callback: (v) => `$${v}M` }, grid: { color: gridColor } }
+          }
+        }
+      });
+    }
+
+    // Context-Aware Surgical Drawers
+    function openVODrawer(vo) {
+      document.getElementById('voDrawerTitle').textContent = `VO Audit: ${vo.vo_id}`;
+      const body = document.getElementById('voDrawerBody');
+      body.innerHTML = `
+        <div class="drawer-card">
+          <span class="drawer-card-title">Instruction Reference</span>
+          <span class="cell-mono" style="font-weight:700;">${vo.instruction_reference} (Date: ${vo.instruction_date})</span>
+          <p style="font-size:11px; margin-top:4px;">${vo.description}</p>
+        </div>
+        <div class="drawer-card">
+          <span class="drawer-card-title">PSSCOC Clause 19.1 Timebar Status</span>
+          <span class="cell-mono" style="color: ${vo.timebar_status.includes('WAIVED') ? 'var(--accent-red)' : 'var(--accent-green)'}; font-weight:700;">
+            ${vo.timebar_status} (${vo.days_elapsed_notice} days elapsed vs 28d limit)
+          </span>
+          <span style="font-size:10.5px; color:var(--text-muted);">Formal notice served on ${vo.claim_notice_date}</span>
+        </div>
+        <div class="drawer-card">
+          <span class="drawer-card-title">4-Tier Valuation Waterfall Breakdown</span>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:4px;">
+            <div><span style="color:var(--text-muted); font-size:10px;">Proposed Rate:</span><br><b>S$ ${vo.contractor_proposed_rate.toFixed(2)}</b> (${vo.proposed_valuation_tier})</div>
+            <div><span style="color:var(--text-muted); font-size:10px;">Authoritative Rate:</span><br><b>S$ ${vo.authoritative_rate_applied.toFixed(2)}</b></div>
+          </div>
+          <span style="font-size:10.5px; color:var(--text-muted); margin-top:4px;">Action: ${vo.action_taken}</span>
+        </div>
+        <div class="drawer-card" style="border-left: 3px solid var(--accent-red);">
+          <span class="drawer-card-title">Financial Summary & Deductions</span>
+          <div style="display:flex; justify-content:space-between; margin-top:4px;">
+            <span>Contractor Claimed:</span>
+            <b class="cell-mono">S$ ${vo.contractor_claimed_amount.toLocaleString('en-US', {maximumFractionDigits:2})}</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Certified Payable:</span>
+            <b class="cell-mono" style="color:var(--accent-green);">S$ ${vo.certified_amount.toLocaleString('en-US', {maximumFractionDigits:2})}</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Disallowed / Trimmed:</span>
+            <b class="cell-mono" style="color:var(--accent-red);">-S$ ${vo.deduction_disallowed.toLocaleString('en-US', {maximumFractionDigits:2})}</b>
+          </div>
+        </div>
+      `;
+      openDrawer('voDrawer');
+    }
+
+    function openTakeoffDrawer(item) {
+      if (!item) return;
+      document.getElementById('takeoffDrawerTitle').textContent = `5D openBIM Takeoff: ${item.item_code}`;
+      const body = document.getElementById('takeoffDrawerBody');
+      body.innerHTML = `
+        <div class="drawer-card">
+          <span class="drawer-card-title">Trade Item Specification</span>
+          <span class="cell-mono" style="font-weight:700;">${item.item_code}</span>
+          <p style="font-size:11px; margin-top:4px;">${item.description}</p>
+          <span class="cell-mono" style="color:var(--text-muted); font-size:10.5px;">Contract SOR Rate: S$ ${item.contract_unit_rate.toFixed(2)} / unit</span>
+        </div>
+        <div class="drawer-card">
+          <span class="drawer-card-title">Physical openBIM IFC Element Volume Audit</span>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:4px;">
+            <div><span style="color:var(--text-muted); font-size:10px;">Claimed Progress:</span><br><b>${item.contractor_claimed_pct.toFixed(1)}%</b> (${item.contractor_claimed_cumulative_qty.toLocaleString()} units)</div>
+            <div><span style="color:var(--text-muted); font-size:10px;">openBIM Verified:</span><br><b>${item.ifc_openbim_verified_pct.toFixed(1)}%</b> (${item.ifc_openbim_verified_qty.toLocaleString()} units)</div>
+          </div>
+        </div>
+        ${item.discrepancy_status === 'WITHIN_TOLERANCE' ? `
+        <div class="drawer-card" style="border-left: 3px solid var(--accent-amber, #d97706);">
+          <span class="drawer-card-title">Interim Valuation Adjustment (Survey Tolerance)</span>
+          <div style="display:flex; justify-content:space-between; margin-top:4px;">
+            <span>Quantity Withheld Pending Survey (150 m³):</span>
+            <b class="cell-mono" style="color:var(--accent-amber, #d97706);">-S$ ${item.discrepancy_amount.toLocaleString('en-US', {maximumFractionDigits:2})}</b>
+          </div>
+          <span style="font-size:10.5px; color:var(--text-muted); margin-top:6px; display:block; line-height:1.4;">
+            Status: <b>WITHIN_TOLERANCE (1.27% <= 2.0% surveying limit)</b>.<br>
+            Under PSSCOC Clause 32.1, only physically verified quantities (11,850 m³) are certified in Interim Claim 8. The 150 m³ difference is temporarily withheld pending a joint topographical survey, <b>not a punitive penalty or front-ramping disallowance</b>.
+          </span>
+        </div>` : `
+        <div class="drawer-card" style="border-left: 3px solid var(--accent-red);">
+          <span class="drawer-card-title">Over-Certification Disallowance</span>
+          <div style="display:flex; justify-content:space-between; margin-top:4px;">
+            <span>Over-Claim Discrepancy:</span>
+            <b class="cell-mono" style="color:var(--accent-red);">-S$ ${item.discrepancy_amount.toLocaleString('en-US', {maximumFractionDigits:2})}</b>
+          </div>
+          <span style="font-size:10.5px; color:var(--text-muted); margin-top:4px;">Status: <b>${item.discrepancy_status}</b>. Uninstalled quantities barred under PSSCOC Cl. 32.1 Over-Certification Guard.</span>
+        </div>`}
+      `;
+      openDrawer('takeoffDrawer');
+    }
+
+    function openSOPADrawer() {
+      const clock = currentData.sopa_countdown_clock;
+      const safety = currentData.safety_incidents;
+      const body = document.getElementById('sopaDrawerBody');
+      body.innerHTML = `
+        <div class="drawer-card">
+          <span class="drawer-card-title">SOPA Section 11(1) Statutory Clock</span>
+          <span class="cell-mono" style="font-size:13px; font-weight:700;">Deadline: ${clock.statutory_response_deadline}</span>
+          <span style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">
+            ${clock.countdown.business_days_remaining} business days remaining (Sundays & ${clock.statutory_rule.sundays_and_holidays_omitted_count} Public Holidays omitted)
+          </span>
+        </div>
+        <div class="drawer-card">
+          <span class="drawer-card-title">MOM Safety Infraction Set-Offs</span>
+          <div style="display:flex; justify-content:space-between; margin-top:4px;">
+            <span>MOM Stop-Work Order (${safety.swo_idle_days || 0} idle days):</span>
+            <b class="cell-mono">-S$ ${(safety.swo_deduction || 0).toLocaleString('en-US', {maximumFractionDigits:2})}</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Demerit Points (${safety.mom_demerit_points || 0} pts):</span>
+            <b class="cell-mono">-S$ ${(safety.sdp_deduction || 0).toLocaleString('en-US', {maximumFractionDigits:2})}</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Unremediated Fines (+15% markup):</span>
+            <b class="cell-mono">-S$ ${(safety.fines_deduction || 0).toLocaleString('en-US', {maximumFractionDigits:2})}</b>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border-color); padding-top:4px; margin-top:4px;">
+            <b>Total Statutory Safety Set-Off:</b>
+            <b class="cell-mono" style="color:var(--accent-red);">-S$ ${(safety.total_safety_set_off || 0).toLocaleString('en-US', {maximumFractionDigits:2})}</b>
+          </div>
+        </div>
+      `;
+      openDrawer('sopaDrawer');
+    }
+
+    function openSREDrawer() {
+      const body = document.getElementById('sreDrawerBody');
+      body.innerHTML = `
+        <div class="drawer-card">
+          <span class="drawer-card-title">Compute & Storage Topology</span>
+          <div style="display:flex; justify-content:space-between; margin-top:4px;">
+            <span>Engine:</span><b>DuckDB OLAP Columnar</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Lakehouse Storage:</span><b>Apache Parquet (ZSTD)</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Approach 3 State Mode:</span><b>Stateless httpfs Parquet Lakehouse</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>FastMCP Deterministic Tools:</span><b>6 Active Strictly Typed Tools</b>
+          </div>
+        </div>
+      `;
+      openDrawer('sreDrawer');
+    }
+
+    // Modal / Drawer for Legal Dispute Memo
+    function openDisputeMemoModal() {
+      const titleEl = document.getElementById('memoDrawerTitle');
+      if (titleEl) titleEl.textContent = `Legal Dispute Memorandum & Adjudication Brief`;
+      const memo = currentData?.agent_deliberation?.dispute_narrative || "No dispute narrative synthesized.";
+      const contentEl = document.getElementById('memoContent');
+      if (contentEl) contentEl.textContent = memo;
+      openDrawer('memoDrawer');
+    }
+
+    function openExecutiveMemoModal() {
+      const titleEl = document.getElementById('memoDrawerTitle');
+      if (titleEl) titleEl.textContent = `Executive Briefing Memorandum (C-Suite)`;
+      const memo = currentData?.agent_deliberation?.executive_memo || "No executive memo synthesized.";
+      const contentEl = document.getElementById('memoContent');
+      if (contentEl) contentEl.textContent = memo;
+      openDrawer('memoDrawer');
+    }
+
+    // Non-Modal Floating Drawer Handlers (Point 6)
+    function openDrawer(id) {
+      closeAllDrawers();
+      const el = document.getElementById(id);
+      if (el) el.classList.add('open');
+      const overlay = document.getElementById('drawerOverlay');
+      if (overlay) overlay.classList.add('open');
+    }
+
+    function closeAllDrawers() {
+      document.querySelectorAll('.drawer').forEach(d => d.classList.remove('open'));
+      const overlay = document.getElementById('drawerOverlay');
+      if (overlay) overlay.classList.remove('open');
+    }
+
+    // Forensic Metric Drill-Down Drawer (S02 Parity with Color Coding Explanations)
+    function openMetricDrawer(metricKey) {
+      if (!currentData) return;
+      const p = currentData.project;
+      const c = currentData.interim_claim;
+      const evm = currentData.predictive_eac.earned_value_metrics;
+      const radar = currentData.predictive_eac.contingency_velocity_radar;
+      const drawer = document.getElementById('metricDrawer');
+      const titleEl = document.getElementById('metricDrawerTitle');
+      const bodyEl = document.getElementById('metricDrawerBody');
+
+      let metricConfig = null;
+
+      if (metricKey === 'interim_claim') {
+        metricConfig = {
+          icon: '📋',
+          title: 'Interim Claim Gross Forensic Analysis',
+          value: `S$ ${(c.contractor_claimed_gross_this_period || 0).toLocaleString('en-US', {maximumFractionDigits: 0})}`,
+          sub: `${c.claim_id || 'Claim'} submitted by ${p.main_contractor_name}`,
+          statusBadge: 'UNVERIFIED PROGRESS CLAIM',
+          badgeClass: 'badge-amber',
+          cardAccent: 'var(--accent-amber)',
+          explanation: `<strong>Statutory Progress Claim Governance:</strong><br>
+Interim progress claims served by the contractor represent <strong>unverified, asserted amounts</strong> submitted prior to independent quantity surveying. Under Singapore SOPA Section 11 and PSSCOC Clause 19, the employer has a strict 14-day statutory timeline to evaluate and issue a formal Payment Response. This sum remains <strong>unverified and pending audit</strong>, and must not be certified without independent 5D openBIM reality capture verification and variation order validation.`,
+          breakdownTitle: 'Forensic Claim Deductions Applied',
+          breakdownItems: [
+            { label: 'Contractor Gross Claimed This Period', val: `S$ ${(c.contractor_claimed_gross_this_period || 0).toLocaleString('en-US')}` },
+            { label: '5D openBIM Physical Over-Certification Disallowed', val: `-S$ ${(c.over_certification_disallowance || 0).toLocaleString('en-US')}`, alert: true },
+            { label: 'Statutory Safety Set-Off (MOM Penalties)', val: `-S$ ${(c.statutory_safety_set_off || 0).toLocaleString('en-US')}`, alert: true },
+            { label: 'Net Legally Authorised for Certification', val: `S$ ${(c.net_payable_certified_this_period || 0).toLocaleString('en-US')}`, ok: true }
+          ],
+          actionLabel: '🔍 Inspect Variation Orders & Claims',
+          actionTab: 'tab-vos'
+        };
+      } else if (metricKey === 'base_contract') {
+        metricConfig = {
+          icon: '🏛️',
+          title: 'Base Contract Sum Baseline Analysis',
+          value: `S$ ${p.base_contract_sum.toLocaleString('en-US', {maximumFractionDigits: 0})}`,
+          sub: `Awarded under ${(p.contract_type || 'PSSCOC 2025').replace(/_/g, ' ')} to ${p.main_contractor_name}`,
+          statusBadge: 'AUTHORITATIVE CONTRACT BASELINE',
+          badgeClass: 'badge-blue',
+          cardAccent: 'var(--accent-blue)',
+          explanation: `<strong>Commercial Baseline & Contract Anchor:</strong><br>
+The Base Contract Sum is the statutorily awarded contract amount under PSSCOC 2025 Clause 19. It serves as the authoritative, immutable commercial benchmark against which all cumulative progress claims, 5D openBIM reality captures, and variation orders are governed.`,
+          breakdownTitle: 'Baseline Procurement Context',
+          breakdownItems: [
+            { label: 'Employer / Client', val: p.employer_name },
+            { label: 'Main Contractor', val: p.main_contractor_name },
+            { label: 'Contract Form', val: (p.contract_type || 'PSSCOC 2025').replace(/_/g, ' ') },
+            { label: 'Statutory Response Ceiling', val: `${p.contract_response_days_ceiling || 14} Calendar Days (SOPA)` }
+          ],
+          actionLabel: '⚡ Open SRE System Diagnostics',
+          actionDrawer: 'sre'
+        };
+      } else if (metricKey === 'approved_budget') {
+        metricConfig = {
+          icon: '💰',
+          title: 'Approved Budget & Contingency Allocation',
+          value: `S$ ${p.total_approved_budget.toLocaleString('en-US', {maximumFractionDigits: 0})}`,
+          sub: `Includes S$ ${(p.contingency_allocation/1000000).toFixed(2)}M Client Contingency Buffer`,
+          statusBadge: 'EXECUTIVE CAPITAL CEILING',
+          badgeClass: 'badge-purple',
+          cardAccent: 'var(--accent-purple)',
+          explanation: `<strong>Executive Capital Cap & Contingency Allocation:</strong><br>
+The Approved Budget represents the total project capital expenditure ceiling approved by the Employer / Project Steering Committee, combining the base contract sum with statutory contingency allocation (S$ ${(p.contingency_allocation/1000000).toFixed(2)}M). This represents the ultimate financial boundary beyond which any projected cost overrun triggers an immediate statutory governance alert.`,
+          breakdownTitle: 'Budget Allocation Breakdown',
+          breakdownItems: [
+            { label: 'Base Contract Sum', val: `S$ ${p.base_contract_sum.toLocaleString('en-US')}` },
+            { label: 'Client Contingency Allocation', val: `S$ ${p.contingency_allocation.toLocaleString('en-US')}` },
+            { label: 'Forecasted EAC', val: `S$ ${(evm.risk_adjusted_eac || 0).toLocaleString('en-US')}` },
+            { label: 'Projected Budget Variance / Overrun', val: `${evm.budget_variance_overrun >= 0 ? '+' : ''}S$ ${(evm.budget_variance_overrun || 0).toLocaleString('en-US')}`, alert: evm.budget_variance_overrun > 0 }
+          ],
+          actionLabel: '📈 View Predictive EVM Contingency Radar',
+          actionTab: 'tab-eac'
+        };
+      } else if (metricKey === 'openbim_verified') {
+        metricConfig = {
+          icon: '📐',
+          title: 'openBIM Verified Gross Physical Takeoff',
+          value: `S$ ${(c.openbim_verified_gross_this_period || 0).toLocaleString('en-US', {maximumFractionDigits: 0})}`,
+          sub: `Disallowed Over-Certification: -S$ ${(c.over_certification_disallowance || 0).toLocaleString('en-US')}`,
+          statusBadge: '5D OPENBIM VERIFIED GROSS',
+          badgeClass: 'badge-blue',
+          cardAccent: 'var(--accent-blue)',
+          explanation: `<strong>Physical IFC Reality Capture Verification:</strong><br>
+Independent 5D BIM reality capture quantifies physical IFC elements verified on site, priced strictly against the contract Schedule of Rates (SOR). Disallowance deductions (<strong>-S$ ${(c.over_certification_disallowance || 0).toLocaleString('en-US')}</strong>) enforce immediate commercial protection against unauthorized front-ramping and unverified contractor progress claims.`,
+          breakdownTitle: 'Takeoff Reconciliation Summary',
+          breakdownItems: [
+            { label: 'Contractor Claimed Gross', val: `S$ ${(c.contractor_claimed_gross_this_period || 0).toLocaleString('en-US')}` },
+            { label: 'Physical IFC BIM Verified Gross', val: `S$ ${(c.openbim_verified_gross_this_period || 0).toLocaleString('en-US')}`, ok: true },
+            { label: 'Disallowed Progress Over-Claim', val: `-S$ ${(c.over_certification_disallowance || 0).toLocaleString('en-US')}`, alert: true },
+            { label: 'Forensic Audit Confidence', val: '100% Deterministic (Zero-LLM Math)' }
+          ],
+          actionLabel: '📐 Launch 5D openBIM Takeoff Inspector',
+          actionDrawer: 'takeoff'
+        };
+      } else if (metricKey === 'statutory_deductions') {
+        metricConfig = {
+          icon: '⚖️',
+          title: 'Statutory Safety Deductions (MOM Set-Offs)',
+          value: `-S$ ${(c.statutory_safety_set_off || 0).toLocaleString('en-US', {maximumFractionDigits: 0})}`,
+          sub: 'Deductions pursuant to contract terms and Singapore SOPA Section 11(1) & 11(3)',
+          statusBadge: 'STATUTORY SAFETY SET-OFF',
+          badgeClass: 'badge-red',
+          cardAccent: 'var(--accent-red)',
+          explanation: `<strong>Contractual Set-Offs & Statutory Withholding Grounds:</strong><br>
+Singapore SOPA Section 11(1) and 11(3) mandate that employers itemize all reasons for withholding payment and contractual set-offs directly within the formal payment response. These entries establish the employer's formal withholding grounds for Ministry of Manpower (MOM) safety violations, demerit points, and unrectified site safety notices under the governing contract.`,
+          breakdownTitle: 'MOM Safety Deductions Breakdown',
+          breakdownItems: [
+            { label: 'Stop-Work Order (SWO) Site Idle Costs (3 Days @ S$12,500/day)', val: '-S$ 37,500' },
+            { label: 'Safety Demerit Points (SDP) Surcharge (4 Points @ S$1,500/pt)', val: '-S$ 6,000' },
+            { label: 'Unremediated Statutory Safety Fines (+15% Admin Markup)', val: '-S$ 11,500' },
+            { label: 'Total Protected Statutory Set-Off', val: `-S$ ${(c.statutory_safety_set_off || 0).toLocaleString('en-US')}`, alert: true }
+          ],
+          actionLabel: '⏱️ Open SOPA Statutory Defense Drawer',
+          actionDrawer: 'sopa'
+        };
+      } else if (metricKey === 'net_payable') {
+        metricConfig = {
+          icon: '✅',
+          title: 'Net Certified Payable (Payment Response)',
+          value: `S$ ${(c.net_payable_certified_this_period || 0).toLocaleString('en-US', {maximumFractionDigits: 0})}`,
+          sub: 'Authorised for Interim Payment Certificate under SOPA Section 11',
+          statusBadge: 'LEGALLY CERTIFIED PAYABLE',
+          badgeClass: 'badge-green',
+          cardAccent: 'var(--accent-green)',
+          explanation: `<strong>Statutory Payment Certification:</strong><br>
+This is the legally authorized interim certification sum calculated after deducting 5D openBIM physical over-claims and statutory MOM safety set-offs from the contractor claim. This amount is legally binding upon service in the formal SOPA Section 11 Payment Response.`,
+          breakdownTitle: 'Certification Equation',
+          breakdownItems: [
+            { label: 'openBIM Verified Gross', val: `S$ ${(c.openbim_verified_gross_this_period || 0).toLocaleString('en-US')}` },
+            { label: 'Less: Statutory Safety Deductions', val: `-S$ ${(c.statutory_safety_set_off || 0).toLocaleString('en-US')}`, alert: true },
+            { label: 'Net Statutory Certified Payable', val: `S$ ${(c.net_payable_certified_this_period || 0).toLocaleString('en-US')}`, ok: true },
+            { label: 'Statutory Response Deadline', val: c.statutory_response_deadline || '2026-10-15' }
+          ],
+          actionLabel: '📄 Review Formal SOPA Section 11 Dossier',
+          actionTab: 'tab-sopa'
+        };
+      }
+
+      if (!metricConfig) return;
+
+      titleEl.innerHTML = `${metricConfig.icon} ${metricConfig.title}`;
+      bodyEl.innerHTML = `
+        <div class="drawer-card" style="border-left: 3px solid ${metricConfig.cardAccent || 'var(--accent-blue)'};">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="drawer-card-title">Metric Value</span>
+            <span class="badge ${metricConfig.badgeClass || 'badge-blue'}" style="font-size:10px;">${metricConfig.statusBadge}</span>
+          </div>
+          <div style="font-size:22px; font-weight:800; font-family:'JetBrains Mono',monospace; margin-top:6px;">${metricConfig.value}</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${metricConfig.sub}</div>
+        </div>
+
+        <div class="drawer-card" style="background:var(--bg-card); border-left: 3px solid ${metricConfig.cardAccent || 'var(--accent-blue)'};">
+          <span class="drawer-card-title" style="color:var(--text-primary);">⚖️ Statutory & Commercial Meaning</span>
+          <div style="font-size:11.5px; line-height:1.55; color:var(--text-secondary); margin-top:6px;">${metricConfig.explanation}</div>
+        </div>
+
+        <div class="drawer-card">
+          <span class="drawer-card-title">${metricConfig.breakdownTitle}</span>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+            ${metricConfig.breakdownItems.map(it => `
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; padding:4px 0; border-bottom:1px solid var(--border-color);">
+                <span style="color:var(--text-secondary);">${it.label}:</span>
+                <span style="font-weight:700; font-family:'JetBrains Mono',monospace; color:${it.alert ? 'var(--accent-red)' : (it.ok ? 'var(--accent-green)' : 'var(--text-primary)')};">${it.val}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <button class="btn-action primary" style="width:100%; justify-content:center; padding:8px 12px; font-size:12px;" onclick="handleMetricDrawerAction('${metricConfig.actionTab || ''}', '${metricConfig.actionDrawer || ''}')">
+            ${metricConfig.actionLabel}
+          </button>
+        </div>
+      `;
+
+      closeAllDrawers();
+      const overlay = document.getElementById('drawerOverlay');
+      if (overlay) overlay.classList.add('open');
+      drawer.classList.add('open');
+    }
+
+    function handleMetricDrawerAction(tabId, drawerId) {
+      closeAllDrawers();
+      if (tabId) {
+        const btn = document.querySelector(`[onclick*="${tabId}"]`);
+        if (btn) switchTab(tabId, btn);
+      } else if (drawerId === 'sre') {
+        openSREDrawer();
+      } else if (drawerId === 'takeoff') {
+        openTakeoffDrawer(currentData?.openbim_takeoff_items?.[0]);
+      } else if (drawerId === 'sopa') {
+        openSOPADrawer();
+      }
+    }
+
+    // Interactive Review Section 11 Withholdings (Point 7)
+    function reviewSection11Withholdings() {
+      const tabBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick')?.includes('tab-sopa'));
+      if (tabBtn) {
+        switchTab('tab-sopa', tabBtn);
+      }
+      openSOPADrawer();
+      const dossier = document.getElementById('dossierContent');
+      if (dossier) {
+        dossier.classList.remove('pulse-highlight');
+        void dossier.offsetWidth; // trigger reflow
+        dossier.classList.add('pulse-highlight');
+      }
+    }
+
+    // Dynamic Floating Tooltip Initializer (Point 5)
+    function initGlobalTooltips() {
+      // Remove all native title attributes to permanently prevent browser white popup tooltips
+      const stripAllTitles = () => {
+        document.querySelectorAll("[title]").forEach(el => el.removeAttribute("title"));
+      };
+      stripAllTitles();
+
+      let tipEl = document.getElementById("acipGlobalTooltip");
+      if (!tipEl) {
+        tipEl = document.createElement("div");
+        tipEl.id = "acipGlobalTooltip";
+        tipEl.className = "acip-global-tooltip";
+        document.body.appendChild(tipEl);
+      }
+
+      let activeBtn = null;
+
+      document.addEventListener("mouseover", (e) => {
+        // Strip any dynamically added title attributes from target and ancestors
+        let node = e.target;
+        while (node && node !== document.body) {
+          if (node.hasAttribute && node.hasAttribute("title")) {
+            node.removeAttribute("title");
+          }
+          node = node.parentElement;
+        }
+
+        const btn = e.target.closest(".info-btn");
+        if (!btn) return;
+        if (btn.closest(".kpi-card")) return; // KPI cards use forensic drill-down drawer
+        if (btn === activeBtn) return;
+        activeBtn = btn;
+
+        const innerTip = btn.querySelector(".acip-tooltip");
+        const text = innerTip ? innerTip.innerHTML.trim() : btn.getAttribute("data-tooltip");
+        if (!text) return;
+
+        tipEl.innerHTML = text;
+        tipEl.style.visibility = "hidden";
+        tipEl.style.opacity = "0";
+        tipEl.style.display = "block";
+
+        const rect = btn.getBoundingClientRect();
+        const tipRect = tipEl.getBoundingClientRect();
+        const tipWidth = tipRect.width;
+
+        let left = rect.left + rect.width / 2 - tipWidth / 2;
+        if (left < 12) left = 12;
+        if (left + tipWidth > window.innerWidth - 12) {
+          left = window.innerWidth - tipWidth - 12;
+        }
+
+        const arrowLeft = Math.max(12, Math.min(tipWidth - 12, rect.left + rect.width / 2 - left));
+        tipEl.style.setProperty("--arrow-left", `${arrowLeft}px`);
+
+        if (rect.top < 160) {
+          tipEl.style.top = `${rect.bottom + 8}px`;
+          tipEl.style.bottom = "auto";
+          tipEl.className = "acip-global-tooltip pos-below";
+        } else {
+          tipEl.style.bottom = `${window.innerHeight - rect.top + 8}px`;
+          tipEl.style.top = "auto";
+          tipEl.className = "acip-global-tooltip pos-above";
+        }
+
+        tipEl.style.left = `${left}px`;
+        tipEl.style.visibility = "visible";
+        tipEl.style.opacity = "1";
+      }, true);
+
+      document.addEventListener("mouseout", (e) => {
+        const btn = e.target.closest(".info-btn");
+        if (btn) {
+          if (e.relatedTarget && btn.contains(e.relatedTarget)) {
+            return;
+          }
+          activeBtn = null;
+          tipEl.style.opacity = "0";
+          tipEl.style.visibility = "hidden";
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (e.target.closest(".info-btn")) {
+          e.stopPropagation();
+        }
+      }, true);
+    }
+
+    function copyDossier() {
+      const txt = document.getElementById('dossierContent').textContent;
+      navigator.clipboard.writeText(txt).then(() => {
+        alert("Statutory SOPA Section 11 Payment Response dossier copied to clipboard!");
+      });
+    }
+
+    function copyMemo() {
+      const contentEl = document.getElementById('memoContent');
+      const titleEl = document.getElementById('memoDrawerTitle');
+      const txt = contentEl ? contentEl.textContent : '';
+      const name = titleEl ? titleEl.textContent : 'Memorandum';
+      if (!txt) return;
+      navigator.clipboard.writeText(txt).then(() => {
+        alert(`${name} copied to clipboard!`);
+      });
+    }
+
+    // Initialize Dashboard
+    window.addEventListener('DOMContentLoaded', () => {
+      applyTheme(currentTheme);
+      initGlobalTooltips();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const themeParam = urlParams.get('theme');
+      if (themeParam) {
+        applyTheme(themeParam);
+      }
+      // Auto-detect engine from URL hostname or query param
+      const engineParam = urlParams.get('engine');
+      const host = window.location.hostname.toLowerCase();
+      let autoEngine = null;
+      if (host.includes('amazonaws.com') || host.includes('elb.')) {
+        autoEngine = 'AWS Engine';
+      } else if (host.includes('azurecontainerapps.io') || host.includes('azure')) {
+        autoEngine = 'Azure Engine';
+      } else if (host.includes('run.app') || host.includes('cloudrun')) {
+        autoEngine = 'GCP Engine';
+      }
+
+      const badge = document.getElementById('engineBadge');
+      if (engineParam) {
+        const engineMap = {
+          'aws': 'AWS Engine',
+          'azure': 'Azure Engine',
+          'gcp': 'GCP Engine',
+          'local': 'Local Engine'
+        };
+        if (badge) badge.textContent = engineMap[engineParam.toLowerCase()] || (engineParam.toUpperCase() + ' Engine');
+      } else if (autoEngine && badge) {
+        badge.textContent = autoEngine;
+      }
+      const projectParam = urlParams.get('project') || 'PRJ-WHC-COM-001';
+      const selector = document.getElementById('projectSelect');
+      if (selector) selector.value = projectParam;
+      loadProjectData(projectParam);
+
+      const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
+      if (tabParam) {
+        setTimeout(() => {
+          const btn = document.querySelector(`[onclick*="${tabParam}"]`);
+          if (btn) switchTab(tabParam, btn);
+        }, 350);
+      }
+
+      const drawerParam = urlParams.get('drawer');
+      if (drawerParam) {
+        setTimeout(() => {
+          if (drawerParam === 'memo') openDisputeMemoModal();
+          else if (drawerParam === 'vo' && currentData?.variation_orders?.length) openVODrawer(currentData.variation_orders[0]);
+          else if (drawerParam === 'takeoff' && currentData?.openbim_takeoff_items?.length) openTakeoffDrawer(currentData.openbim_takeoff_items[0]);
+          else if (drawerParam === 'sopa') openSOPADrawer();
+          else if (drawerParam === 'sre') openSREDrawer();
+          else if (drawerParam.startsWith('metric')) {
+            const key = drawerParam.replace('metric_', '') || 'interim_claim';
+            openMetricDrawer(key);
+          }
+        }, 500);
+      }
+    });
+  </script>
+</body>
+</html>

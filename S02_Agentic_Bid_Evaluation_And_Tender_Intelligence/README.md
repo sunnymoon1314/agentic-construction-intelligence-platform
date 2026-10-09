@@ -36,7 +36,7 @@
   - [5.3 AWS Deployment (ECS Fargate + Amazon Bedrock)](#terraform-aws)
   - [5.4 Azure Deployment (Azure Container Apps + Azure OpenAI)](#terraform-azure)
   - [5.5 Google Cloud Deployment (Google Cloud Run + Vertex AI)](#terraform-gcp)
-- [6. Approach 4: Enterprise Multi-Account Landing Zone & Sovereign Governance](#enterprise-landing-zone)
+- [6. Approach 4: Enterprise Multi-Account Landing Zone & Sovereign Governance (Planned)](#enterprise-landing-zone)
   - [6.1 Dedicated Sovereign Tender Enclaves & Network Isolation](#tender-enclaves)
   - [6.2 Audit Trails, RBAC & Statutory Tender Board Compliance](#audit-rbac)
 - [7. Automated Testing & Verification](#automated-testing)
@@ -703,11 +703,11 @@ open ${CLOUD_RUN_URL}
 
 ---
 
-## <span id="enterprise-landing-zone"></span><span style="color:red">🏢 6. Approach 4: Enterprise Multi-Account Landing Zone & Sovereign Governance</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+## <span id="enterprise-landing-zone"></span><span style="color:red">🏢 6. Approach 4: Enterprise Multi-Account Landing Zone & Sovereign Governance (Planned)</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
 ![Approach 4: Enterprise Multi-Account Landing Zone](./images/approach_4_enterprise_landing_zone.png)
 
-For public sector healthcare and major commercial infrastructure developments, tender evaluations involve commercially sensitive pricing and intellectual property that cannot be hosted on shared infrastructure.
+Approach 4 represents an architectural design blueprint and reference enterprise governance pattern rather than executable code in this repository. While Approaches 1, 2, and 3 provide working code, automated test suites, and deployable Terraform scripts, Approach 4 documents the target enterprise landing-zone topology (multi-account hierarchy, organizational guardrails, centralized hub-and-spoke networking, and sovereign CISO controls) for institutional and public-sector procurement environments. For public sector healthcare and major commercial infrastructure developments, tender evaluations involve commercially sensitive pricing and intellectual property that cannot be hosted on shared infrastructure.
 
 ```mermaid
 graph TD

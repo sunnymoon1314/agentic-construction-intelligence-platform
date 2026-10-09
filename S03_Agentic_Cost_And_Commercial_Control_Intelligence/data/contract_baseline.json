@@ -1,0 +1,87 @@
+{
+  "project_id": "PRJ-WHC-COM-001",
+  "project_name": "Woodlands Health Campus Commercial Annex",
+  "contract_type": "PSSCOC_2025",
+  "employer_name": "MOH Holdings Pte Ltd",
+  "main_contractor_uen": "198900123C",
+  "main_contractor_name": "WinningPine Construction Pte Ltd",
+  "currency": "SGD",
+  "financials": {
+    "base_contract_sum": 52380952.38,
+    "contingency_allocation": 2619047.62,
+    "total_approved_budget": 55000000.0,
+    "retention_max_cap_pct": 5.0,
+    "retention_limit_sgd": 1000000.0,
+    "contract_response_days_ceiling": 14,
+    "retention_release_stages": [
+      {
+        "milestone": "PRACTICAL_COMPLETION",
+        "release_percentage": 50.0,
+        "description": "50% of accumulated retention released upon issuance of Substantial Completion Certificate"
+      },
+      {
+        "milestone": "FINAL_ACCOUNT_EXPIRY_DLP",
+        "release_percentage": 50.0,
+        "description": "Remaining 50% released upon Defects Liability Certificate (12 months post-PC)"
+      }
+    ]
+  },
+  "schedule_of_rates": [
+    {
+      "item_code": "CIV-01-001",
+      "trade_id": "TRD-01",
+      "description": "Excavation in soft material not exceeding 2.0m deep",
+      "unit": "m3",
+      "contract_sor_rate": 45.5,
+      "max_allowable_quantity": 12000.0
+    },
+    {
+      "item_code": "STR-02-004",
+      "trade_id": "TRD-02",
+      "description": "Supply and cast Grade 40 ready-mixed concrete in columns",
+      "unit": "m3",
+      "contract_sor_rate": 240.0,
+      "max_allowable_quantity": 8500.0
+    },
+    {
+      "item_code": "STR-02-005",
+      "trade_id": "TRD-02",
+      "description": "High tensile steel reinforcement bars (rebar) up to 25mm dia",
+      "unit": "TON",
+      "contract_sor_rate": 1680.0,
+      "max_allowable_quantity": 950.0
+    },
+    {
+      "item_code": "FIN-05-008",
+      "trade_id": "TRD-05",
+      "description": "Standard 12mm gypsum drywall partitioning with acoustic insulation",
+      "unit": "m2",
+      "contract_sor_rate": 95.0,
+      "max_allowable_quantity": 4200.0
+    },
+    {
+      "item_code": "MNE-06-012",
+      "trade_id": "TRD-06",
+      "description": "Supply, install, test and commission 500RT water-cooled centrifugal chiller",
+      "unit": "SET",
+      "contract_sor_rate": 185000.0,
+      "max_allowable_quantity": 4.0
+    },
+    {
+      "item_code": "MNE-07-003",
+      "trade_id": "TRD-07",
+      "description": "Medical gas copper piping distribution and terminal terminal units",
+      "unit": "m",
+      "contract_sor_rate": 310.0,
+      "max_allowable_quantity": 2800.0
+    },
+    {
+      "item_code": "ARC-04-002",
+      "trade_id": "TRD-04",
+      "description": "Architectural drywall partition & acoustic ceiling assemblies",
+      "unit": "m2",
+      "contract_sor_rate": 150.0,
+      "max_allowable_quantity": 9000.0
+    }
+  ]
+}

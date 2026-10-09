@@ -1,0 +1,3 @@
+azure_location = "southeastasia"
+environment    = "prod"
+app_port       = 8086
