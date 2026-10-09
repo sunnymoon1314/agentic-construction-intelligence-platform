@@ -1,0 +1,93 @@
+{
+  "claim_id": "CLM-WHC-008",
+  "project_id": "PRJ-WHC-COM-001",
+  "valuation_month": "2026-10",
+  "date_served": "2026-10-01",
+  "statutory_response_deadline": "2026-10-17",
+  "cumulative_accounting": {
+    "previous_cumulative_certified_gross": 24200000.0,
+    "contractor_claimed_gross_this_period": 4850000.0,
+    "contractor_claimed_cumulative_gross": 29050000.0,
+    "openbim_verified_gross_this_period": 3687500.0,
+    "openbim_verified_cumulative_gross": 27887500.0,
+    "over_certification_disallowance_this_period": 1162500.0,
+    "retention_accumulated_to_date": 1000000.0,
+    "retention_cap_reached": true,
+    "retention_deduction_this_period": 0.0,
+    "statutory_safety_set_off": 55000.0,
+    "net_payable_certified_this_period": 3632500.0
+  },
+  "claimed_items": [
+    {
+      "item_code": "STR-02-004",
+      "description": "Supply and cast Grade 40 ready-mixed concrete in columns",
+      "contract_unit_rate": 240.0,
+      "contractor_claimed_cumulative_qty": 7800.0,
+      "contractor_claimed_pct": 91.76,
+      "contractor_claimed_cumulative_amount": 1872000.0,
+      "ifc_openbim_verified_qty": 6500.0,
+      "ifc_openbim_verified_pct": 76.47,
+      "ifc_openbim_verified_amount": 1560000.0,
+      "discrepancy_amount": 312000.0,
+      "discrepancy_status": "FLAGGED_OVER_CERTIFICATION"
+    },
+    {
+      "item_code": "CIV-01-001",
+      "description": "Excavation in soft material not exceeding 2.0m deep",
+      "contract_unit_rate": 45.5,
+      "contractor_claimed_cumulative_qty": 12000.0,
+      "contractor_claimed_pct": 100.0,
+      "contractor_claimed_cumulative_amount": 546000.0,
+      "ifc_openbim_verified_qty": 11850.0,
+      "ifc_openbim_verified_pct": 98.75,
+      "ifc_openbim_verified_amount": 539175.0,
+      "discrepancy_amount": 6825.0,
+      "discrepancy_status": "WITHIN_TOLERANCE"
+    },
+    {
+      "item_code": "MNE-07-003",
+      "description": "Medical gas copper piping distribution",
+      "contract_unit_rate": 310.0,
+      "contractor_claimed_cumulative_qty": 2450.0,
+      "contractor_claimed_pct": 87.5,
+      "contractor_claimed_cumulative_amount": 759500.0,
+      "ifc_openbim_verified_qty": 1720.0,
+      "ifc_openbim_verified_pct": 61.43,
+      "ifc_openbim_verified_amount": 533200.0,
+      "discrepancy_amount": 226300.0,
+      "discrepancy_status": "FLAGGED_OVER_CERTIFICATION"
+    },
+    {
+      "item_code": "MNE-06-012",
+      "description": "500RT water-cooled centrifugal chiller",
+      "contract_unit_rate": 185000.0,
+      "contractor_claimed_cumulative_qty": 3.0,
+      "contractor_claimed_pct": 75.0,
+      "contractor_claimed_cumulative_amount": 555000.0,
+      "ifc_openbim_verified_qty": 2.0,
+      "ifc_openbim_verified_pct": 50.0,
+      "ifc_openbim_verified_amount": 370000.0,
+      "discrepancy_amount": 185000.0,
+      "discrepancy_status": "FLAGGED_OVER_CERTIFICATION"
+    },
+    {
+      "item_code": "ARC-04-002",
+      "description": "Architectural drywall partition & acoustic ceiling assemblies",
+      "contract_unit_rate": 150.0,
+      "contractor_claimed_cumulative_qty": 7450.0,
+      "contractor_claimed_pct": 89.76,
+      "contractor_claimed_cumulative_amount": 1117500.0,
+      "ifc_openbim_verified_qty": 4567.5,
+      "ifc_openbim_verified_pct": 55.03,
+      "ifc_openbim_verified_amount": 685125.0,
+      "discrepancy_amount": 432375.0,
+      "discrepancy_status": "FLAGGED_OVER_CERTIFICATION"
+    }
+  ],
+  "site_safety_incidents": {
+    "mom_demerit_points_accumulated_this_month": 4,
+    "mom_stop_work_order_days": 3,
+    "mcm_stop_work_order_days": 3,
+    "unremediated_safety_fines": 10000.0
+  }
+}
