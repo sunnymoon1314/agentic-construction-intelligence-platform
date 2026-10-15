@@ -1,0 +1,10 @@
+# ACIP S04: Pinned Dependency Lockfile for Independent Verification
+# Generated: 2026-10-09
+# Python Version: 3.11.17
+
+duckdb==1.5.6
+pandas==3.0.6
+pyarrow==23.0.1
+numpy==2.4.6
+python-dateutil==2.9.0.post0
+six==1.17.0

@@ -436,7 +436,7 @@ def generate_sopa_response(
 
     net_certified_current_period = round(verified_gross - total_safety_set_off - retention_deduction_period, 2)
 
-    # Render Statutory Markdown Notice Dossier (The Chancellor's Standard Template)
+    # Render Statutory Markdown Notice Dossier (Canonical Standard Template)
     dossier_markdown = f"""================================================================================
                     FORMAL STATUTORY PAYMENT RESPONSE
      UNDER SECTION 11 OF THE BUILDING & CONSTRUCTION INDUSTRY SOPA (CAP. 30B)

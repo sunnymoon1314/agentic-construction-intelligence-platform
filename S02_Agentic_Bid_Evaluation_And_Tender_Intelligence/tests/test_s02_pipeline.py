@@ -121,7 +121,7 @@ class TestS02BidEvaluationPipeline(unittest.TestCase):
         self.assertIn("GemStone Building Contractors Pte Ltd", recipients)
 
     def test_07_price_score_monotonicity_across_boundary(self):
-        """Closing evidence for AI Council Finding 1: Assert strict monotonicity of commercial price score across ratio 1.05 boundary."""
+        """Assert strict monotonicity of commercial price score across ratio 1.05 boundary."""
         # Test ratios from 1.00 to 1.30 in steps of 0.01
         prev_score = 100.0
         for step in range(100, 131):
@@ -140,7 +140,7 @@ class TestS02BidEvaluationPipeline(unittest.TestCase):
         self.assertEqual(score_at_105_lower, score_at_105_upper)
 
     def test_08_scope_exclusion_equalized_sum_impact(self):
-        """Closing evidence for AI Council Finding 2: Assert B04 submitted bid S$105.15M is equalized by S$6.79M exposure to S$111.94M."""
+        """Assert B04 submitted bid S$105.15M is equalized by S$6.79M exposure to S$111.94M."""
         res = evaluate_pqm_score(DB_PATH)
         b04 = next(b for b in res["pqm_leaderboard"] if b["bidder_id"] == "B04")
         self.assertAlmostEqual(b04["submitted_bid_sum"], 105149742.25, places=2)
@@ -149,7 +149,7 @@ class TestS02BidEvaluationPipeline(unittest.TestCase):
         self.assertEqual(b04["pqm_rank"], 2)
 
     def test_09_multi_tender_validation(self):
-        """Closing evidence for DeepSeek Finding: Dynamic tender parameter routing and validation."""
+        """Assert dynamic tender parameter routing and negative validation."""
         from mcp_server.server import list_tenders
         tenders_res = list_tenders(DB_PATH)
         self.assertEqual(tenders_res["status"], "SUCCESS")

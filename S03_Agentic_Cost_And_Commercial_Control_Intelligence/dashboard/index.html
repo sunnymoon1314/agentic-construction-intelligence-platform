@@ -565,7 +565,7 @@
     .slider-wrap label { font-size: 11px; font-weight: 600; color: var(--text-secondary); display: flex; justify-content: space-between; }
     .slider-wrap input { width: 100%; accent-color: var(--accent-blue); }
 
-    /* Financial Verification Simulator (Chancellor Benchmark) */
+    /* Financial Verification Simulator (Standard Benchmark) */
     .sim-container { display: flex; flex-direction: column; height: 100%; gap: 10px; overflow-y: auto; }
     .sim-card {
       background: var(--bg-card);
@@ -1445,7 +1445,7 @@
       document.getElementById('kpiStatutoryDeductions').textContent = `-S$ ${(c.statutory_safety_set_off || 0).toLocaleString('en-US', {maximumFractionDigits:0})}`;
       document.getElementById('kpiNetPayable').textContent = `S$ ${(c.net_payable_certified_this_period || 0).toLocaleString('en-US', {maximumFractionDigits:0})}`;
 
-      // Traffic-Light Statutory Clock per Chancellor Directives
+      // Traffic-Light Statutory Clock per SOPA Statutory Directives
       // Solid GREEN at >= 4 days, AMBER at <= 3 days, Flashing RED with EXPIRED_STATUTORY_DEFAULT if <= 0
       const pill = document.getElementById('sopaCountdownPill');
       const bDays = clock && clock.countdown ? clock.countdown.business_days_remaining : 9;
@@ -1682,7 +1682,7 @@
     }
 
     // =========================================================================
-    // Financial Verification Simulator (Chancellor Benchmark Widget)
+    // Financial Verification Simulator (Standard Benchmark Widget)
     // =========================================================================
     function resetSimulatorDefaults() {
       const costEl = document.getElementById('simCostSlider');

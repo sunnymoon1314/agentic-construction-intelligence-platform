@@ -1,30 +1,46 @@
 # Unreleased Architecture Modules (Future Releases)
-S04_Agentic_Progress_And_Delay_Intelligence/
 S05_Agentic_Quality_And_Defect_Intelligence/
 S06_Agentic_Contract_And_Claims_Intelligence/
 S07_Agentic_Regulatory_And_Code_Intelligence/
+portal/
+**/portal/
 
 # Backup & Archival Directories
 backup_old/
 **/backup_old/
+internal/
+**/internal/
+*.zip
+**/*.zip
 terraform_destroy.txt
 **/terraform_destroy.txt
 CASE_STUDY_ENTERPRISE_ARCHITECTURE.md
 **/CASE_STUDY_ENTERPRISE_ARCHITECTURE.md
 scratch/
 **/scratch/
+audit_history/
+**/audit_history/
+*.log
+**/*.log
 
-# Internal Delivery Playbook & Metrics
+# Internal Delivery Playbook & Metrics & Logbooks
 DELIVERY_PLAYBOOK_AND_METRICS.md
 **/DELIVERY_PLAYBOOK_AND_METRICS.md
+ACIP_MASTER_ACTIVITY_LOGBOOK.md
+**/ACIP_MASTER_ACTIVITY_LOGBOOK.md
+*LOGBOOK*.md
+**/*LOGBOOK*.md
 
-# Internal AI Council Review Documents
+# Internal AI Council & CJ Review Documents
 ACIP_S02_AI_COUNCIL_REVIEW_DOSSIER.md
 **/ACIP_S02_AI_COUNCIL_REVIEW_DOSSIER.md
 COUNCIL_REVIEW_RESPONSE_MATRIX.md
 **/COUNCIL_REVIEW_RESPONSE_MATRIX.md
 ACIP_S03_AI_COUNCIL_REVIEW_DOSSIER.md
 **/ACIP_S03_AI_COUNCIL_REVIEW_DOSSIER.md
+*CJ_Review*/
+**/*CJ_Review*/**
+
 
 # Rust Build Artifacts
 target/

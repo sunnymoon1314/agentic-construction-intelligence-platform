@@ -1,0 +1,18 @@
+{
+  "package_id": "PKG-S05-HANDSHAKE-20261015195223",
+  "handshake_target": "ACIP_S05_QUALITY",
+  "schema_version": "1.0",
+  "source_table": "schedule_activities.parquet",
+  "source_content_sha256": "d4c3b66d965785ed4e6675f1928399b74ccfabf6bf3091afb1732b32e8abfbd8",
+  "record_count": 6,
+  "records_emitted": 6,
+  "producer_module": "ACIP_S04",
+  "producer_service_version": "1.0.0",
+  "created_at_utc": "2026-10-15T19:52:23.451995+00:00",
+  "validation_status": "PRE_FLIGHT_EMITTED",
+  "package_sha256": "a6c9553bfc2fe53d62c0391215ae7bb242a9db6599d6900058be8ab11de4d784",
+  "output_package_sha256": "a6c9553bfc2fe53d62c0391215ae7bb242a9db6599d6900058be8ab11de4d784",
+  "package_file": "quality_inspection_schedule_links.parquet",
+  "lifecycle_status": "POST_VALIDATION_CERTIFIED",
+  "receipt_timestamp_utc": "2026-10-15T19:52:23.468379+00:00"
+}

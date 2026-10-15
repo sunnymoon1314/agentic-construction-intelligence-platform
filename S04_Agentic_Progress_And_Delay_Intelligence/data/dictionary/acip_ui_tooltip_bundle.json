@@ -1,0 +1,337 @@
+{
+  "dictionary_version": "1.1.0",
+  "by_id": {
+    "ACIP-S04-CPM-TOTAL_FLOAT": {
+      "display_label": "Total Float (TF)",
+      "short_tooltip": "The amount of time an activity can be delayed from its early start date without delaying the overall project completion date.",
+      "plain_english_definition": "Total Float represents the schedule cushion or buffer available for a specific task. If a task has 5 working days of Total Float, it can start up to 5 working days late without pushing back the final project completion deadline.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Under the SCL Delay Protocol, Total Float is considered a shared project buffer available on a first-come, first-served basis. When float reaches zero, the activity joins the critical path, meaning any further day of delay immediately pushes back project completion and creates liquidated damages liability.",
+      "calculation_rule": "TF = LS - ES = LF - EF (Computed via backward and forward passes across working calendar intervals)",
+      "limitations": "Float calculations depend strictly on logic ties entered in the schedule. Missing dependency links, artificial constraints (e.g. 'Must Finish On'), or incorrect calendar assignments produce misleading float values.",
+      "action": "If Total Float on an ongoing activity drops below 5 working days, issue an early variance notice to the package manager and review predecessor resource commitments."
+    },
+    "ACIP-S04-CPM-FREE_FLOAT": {
+      "display_label": "Free Float (FF)",
+      "short_tooltip": "The amount of time an activity can be delayed without delaying the early start date of any immediate successor activity.",
+      "plain_english_definition": "Free Float is the buffer an activity has before it directly disrupts the very next task linked to it. Unlike Total Float, which measures impact on the final project deadline, Free Float measures impact only on immediate downstream activities.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Free Float identifies task delays that can be absorbed entirely without affecting neighboring subcontractor trades. Consuming Free Float does not impact the overall project completion date, but it reduces flexibility for successor trades.",
+      "calculation_rule": "FF = min(Early_Start of Successors) - Early_Finish of Activity",
+      "limitations": "Free Float can only be calculated accurately when all successor relationships are correctly populated with appropriate link types and calendar shifts.",
+      "action": "Monitor tasks where Free Float is zero but Total Float is positive; any slip will immediately compress successor trade mobilization windows."
+    },
+    "ACIP-S04-CPM-CRITICAL_PATH": {
+      "display_label": "Critical Path",
+      "short_tooltip": "The longest continuous sequence of dependent activities through the project network that dictates the earliest possible project completion date.",
+      "plain_english_definition": "The critical path is the chain of interconnected tasks with zero Total Float. Any single day of delay to any activity on this path will immediately push back the completion date of the entire project by one day.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Under delay protocols (SCL Core Principle 1), only events that delay activities on the critical path at the time the event occurred can grant entitlement to an Extension of Time (EOT). Non-critical delays do not extend completion.",
+      "calculation_rule": "Set of activities where Total_Float <= 0 on the longest continuous path from project start to completion.",
+      "limitations": "The critical path is dynamic and changes as actual progress is recorded or logic revisions occur. Historical critical paths must be evaluated contemporaneously, not with hindsight bias.",
+      "action": "Prioritize site resources, labor gangs, and plant inspections strictly for active activities lying on the critical path."
+    },
+    "ACIP-S04-CPM-DRIVING_RELATIONSHIP": {
+      "display_label": "Driving Logic Link",
+      "short_tooltip": "A relationship link between two activities that controls the early start or early finish of the successor activity.",
+      "plain_english_definition": "A driving link is the specific predecessor connection that actually forces the successor task to start or finish when it does. If a task has three predecessors, the one that finishes latest and dictates the start of the task is the driving predecessor.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Identifying driving relationships is essential to trace the exact cause-and-effect chain in delay fragnet insertions. Non-driving relationships have slack and do not transmit delay to successor tasks.",
+      "calculation_rule": "Driving = TRUE when Predecessor_Early_Finish + Lag == Successor_Early_Start (for FS links)",
+      "limitations": "Complex link types (e.g. SS with lag, FF with lag, SF) must calculate driving dates according to their respective start or finish boundaries on specific calendar shifts.",
+      "action": "Inspect driving relationship chains when evaluating fragnet delay impact to confirm whether the delay genuinely drives the project milestone."
+    },
+    "ACIP-S04-CPM-EARLY_START": {
+      "display_label": "Early Start (ES)",
+      "short_tooltip": "The earliest possible calendar date and time an activity can commence based on predecessor logic and calendar availability.",
+      "plain_english_definition": "The earliest point in time an activity can begin, assuming all previous dependent activities finish as early as possible and work calendar working hours permit.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Early Start serves as the baseline target for project execution. Starting activities at their Early Start preserves Total Float buffers against unforeseen site risks.",
+      "calculation_rule": "Computed via forward pass: ES = max(Predecessor Early Finish + Lag) adjusted for activity work calendar.",
+      "limitations": "Subject to prerequisite external constraints, permits, and predecessor actual progress reporting.",
+      "action": "Verify subcontractor site mobilization readiness against scheduled Early Start dates 14 days in advance."
+    },
+    "ACIP-S04-CPM-EARLY_FINISH": {
+      "display_label": "Early Finish (EF)",
+      "short_tooltip": "The earliest possible calendar date and time an activity can complete based on its Early Start and working duration.",
+      "plain_english_definition": "The earliest date an activity can finish if it starts on its Early Start date and executes according to its estimated duration without disruption.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Calculates the earliest handover milestone to successor trades and informs procurement delivery dates.",
+      "calculation_rule": "EF = ES + Activity_Duration (stepped forward through the activity calendar working intervals)",
+      "limitations": "Assumes standard production rates without adverse weather or resource bottleneck adjustments.",
+      "action": "Compare actual progress percent complete against scheduled Early Finish milestones."
+    },
+    "ACIP-S04-CPM-LATE_START": {
+      "display_label": "Late Start (LS)",
+      "short_tooltip": "The latest possible calendar date an activity can begin without delaying the project completion date.",
+      "plain_english_definition": "The final deadline date by which an activity must commence before it begins consuming project buffer and pushes back the overall completion date.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Determines the absolute deadline for contractor site mobilization and procurement delivery before liquidated damages exposure occurs.",
+      "calculation_rule": "Computed via backward pass: LS = LF - Activity_Duration (stepped backward through working intervals)",
+      "limitations": "A late start calculation is only valid if project target completion constraints and successor dependencies are fully maintained.",
+      "action": "Flag activities where actual start date exceeds Late Start as critical delay warnings."
+    },
+    "ACIP-S04-CPM-LATE_FINISH": {
+      "display_label": "Late Finish (LF)",
+      "short_tooltip": "The latest possible calendar date an activity can complete without delaying the project completion date.",
+      "plain_english_definition": "The latest date an activity can finish without delaying the overall contractual completion date or any milestone constraint.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Defines the boundary beyond which activity duration overrun converts directly into project completion delay.",
+      "calculation_rule": "LF = min(Successor Late Starts) adjusted for relationship types and calendar shifts",
+      "limitations": "Requires rigorous network backward pass calculation across heterogeneous calendar models.",
+      "action": "Ensure all structural handover milestones complete on or before their calculated Late Finish dates."
+    },
+    "ACIP-S04-CPM-START_TO_FINISH": {
+      "display_label": "Start-to-Finish (SF) Link",
+      "short_tooltip": "A precedence relationship where the predecessor activity starting controls the finish date of the successor activity.",
+      "plain_english_definition": "A rare but critical schedule logic tie where Task B cannot finish until Task A starts. A common construction example is temporary site power: the temporary generator cannot be decommissioned (finish) until permanent municipal power is switched on (start).",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "SF links invert standard CPM forward/backward calculations and can produce confusing float values if calendar shifts are mixed. ACIP S04 incorporates explicit SF validation to ensure mathematical correctness.",
+      "calculation_rule": "Successor_Finish >= Predecessor_Start + Lag",
+      "limitations": "Must be used sparingly; overuse of SF links obfuscates project critical paths and complicates delay forensic assessments.",
+      "action": "Audit all SF links during schedule quality checks to confirm they represent genuine operational constraints (e.g. handover overlaps)."
+    },
+    "ACIP-CORE-EXTENSION_OF_TIME": {
+      "display_label": "Extension of Time (EOT)",
+      "short_tooltip": "A formal adjustment of the contractual completion date granting additional days to the contractor without financial deduction.",
+      "plain_english_definition": "An official adjustment that pushes back the contractual completion date of the project. It relieves the contractor from paying liquidated damages for delays caused by client changes, unforeseen site conditions, or force majeure events.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Prevents time from becoming 'at large' under common law and establishes a revised contractual date against which delay and liquidated damages are legally measured.",
+      "calculation_rule": "Revised_Completion_Date = Original_Completion_Date + Granted_EOT_Calendar_Days",
+      "limitations": "Only granted for qualifying delay events that impact the critical path. EOT awards require formal certification by the Superintending Officer or Architect.",
+      "action": "Submit contemporaneous Time Impact Analysis fragnet and evidence within the contractual notice period to support EOT assessment."
+    },
+    "ACIP-CORE-LIQUIDATED_DAMAGES": {
+      "display_label": "Liquidated Damages (LD)",
+      "short_tooltip": "A pre-agreed daily financial rate payable by the contractor to the employer for every day of unexcused project completion delay.",
+      "plain_english_definition": "A contractually agreed genuine pre-estimate of loss that the employer incurs if the project finishes late due to contractor fault. The contractor must pay this fixed amount for each day past the contractual completion date.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Enables the employer to recover delay costs without proving actual losses in court, creating a major commercial risk for contractors who face delay without valid EOT.",
+      "calculation_rule": "Total_LD = Net_Chargeable_Delay_Days * Contractual_Daily_LD_Rate",
+      "limitations": "Under common law, LD clauses must be a genuine pre-estimate of loss and not a penalty. Deductions require prior issuance of a formal Delay Certificate.",
+      "action": "Review unresolved delay claims and pending EOT applications before applying LD deductions to payment responses."
+    },
+    "ACIP-S04-COM-NET_CHARGEABLE_DELAY": {
+      "display_label": "Net Chargeable Delay (Days)",
+      "short_tooltip": "Net days of critical path project completion delay that remain the commercial liability of the contractor after deducting assessed Extension of Time.",
+      "plain_english_definition": "The final count of calendar or working delay days attributable to contractor default. It equals the gross overrun in project completion minus all legally recognized Extension of Time (EOT) days granted for employer risks or neutral force majeure.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "This metric determines the monetary liquidated damages (LD) deduction. Multiplying this number by the daily contractual liquidated damages rate gives the total financial deduction the client may claim from the contractor.",
+      "calculation_rule": "Net_Chargeable_Delay_Days = max(0, Gross_Completion_Delay_Days - Assessed_EOT_Days)",
+      "limitations": "This figure is strictly advisory until the designated Superintending Officer (SO) issues a formal Delay Certificate under PSSCOC Clause 24.1. S04 does not possess statutory authority to order financial deductions.",
+      "action": "Review unresolved Extension of Time claims under forensic assessment before issuing payment responses to prevent wrongful liquidated damages deductions under SOPA."
+    },
+    "ACIP-S04-DLY-TIME_IMPACT_ANALYSIS": {
+      "display_label": "Time Impact Analysis (TIA)",
+      "short_tooltip": "A forward-looking, prospective CPM delay methodology where fragnet models of delay events are inserted into an updated baseline schedule.",
+      "plain_english_definition": "The industry standard method (endorsed by the SCL Delay Protocol) for evaluating delay claims contemporaneously. It takes the actual schedule just before the delay occurred, inserts a mini-network of delay activities (fragnet), and calculates how much the project completion date shifts.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "TIA is the most widely accepted method in international arbitration and statutory adjudication because it measures delay impact contemporaneously without relying on distorted hindsight reconstruction.",
+      "calculation_rule": "Delay_Impact = Post_Fragnet_Completion_Date - Pre_Fragnet_Completion_Date",
+      "limitations": "TIA accuracy depends entirely on updating the schedule with actual progress right up to the day before the delay event occurred. Inserting fragnets into un-updated baselines produces erroneous results.",
+      "action": "Update all activity progress and status dates in the active schedule before executing fragnet insertion runs."
+    },
+    "ACIP-S04-DLY-CONCURRENT_DELAY": {
+      "display_label": "Concurrent Delay",
+      "short_tooltip": "A situation where two or more delay events arise at the same time, one being an employer risk and the other a contractor risk, each affecting completion.",
+      "plain_english_definition": "When two separate delays happen at the same time, where one is the client fault (e.g. late design drawing) and the other is the contractor fault (e.g. late equipment delivery), and both would have delayed the project completion date independently.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Under the SCL Delay Protocol Core Principle 10, the contractor is generally entitled to an Extension of Time for concurrent delay (relieving them of liquidated damages), but is not entitled to recover financial prolongation costs for that overlapping period.",
+      "calculation_rule": "Concurrency = TRUE when Employer_Event_Window intersects Contractor_Event_Window on parallel critical paths.",
+      "limitations": "Concurrency requires true contemporaneous impact on the project completion date. Delay on a non-critical path concurrent with critical delay is not legally concurrent.",
+      "action": "Isolate critical delay paths separately for employer and contractor events to substantiate EOT relief while segregating prolongation cost claims."
+    },
+    "ACIP-S04-DLY-EXCUSABLE_DELAY": {
+      "display_label": "Excusable Delay",
+      "short_tooltip": "A delay caused by an event outside the contractor control and recognized under the contract as qualifying for an Extension of Time.",
+      "plain_english_definition": "A delay caused by events for which the contractor is not contractually responsible, such as client-directed variations, late drawings, or exceptionally adverse weather. It excuses the contractor from liquidated damages.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Qualifies the contractor for an Extension of Time, shielding them from liquidated damages deductions for the delay duration.",
+      "calculation_rule": "Qualifies if event cause matches express contractual grounds (e.g. PSSCOC Clause 23.1(a)-(q)).",
+      "limitations": "Must impact the critical path to yield time relief; excusable non-critical delays do not result in completion date extensions.",
+      "action": "Verify contemporaneous notice compliance within contractual timebars to preserve excusable delay claims."
+    },
+    "ACIP-S04-DLY-COMPENSABLE_DELAY": {
+      "display_label": "Compensable Delay",
+      "short_tooltip": "An excusable delay caused solely by the employer or their agents that entitles the contractor to both time extension and financial compensation.",
+      "plain_english_definition": "A delay caused directly by the employer (such as late site possession or major design changes) where the contractor is entitled not only to extra time (EOT), but also to reimbursement for site overheads and prolongation expenses incurred.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Creates substantial financial liability for the employer, obligating payment of daily site preliminaries and head office overheads to the contractor.",
+      "calculation_rule": "Compensable = TRUE when Excusable = TRUE AND Event_Cause in (EMPLOYER_RISK, ARCHITECT_INSTRUCTION, SITE_ACCESS_DELAY)",
+      "limitations": "Neutral events (e.g. force majeure, weather) are typically excusable but non-compensable under standard forms like PSSCOC.",
+      "action": "Maintain strict daily prelim expenditure records and labor timesheets for all compensable delay periods."
+    },
+    "ACIP-S04-DLY-NON_EXCUSABLE_DELAY": {
+      "display_label": "Non-Excusable Delay",
+      "short_tooltip": "A delay caused entirely by contractor default, subcontractor failure, or inefficiency that gives no right to time extension or money.",
+      "plain_english_definition": "A delay resulting from causes within the contractor control or contractual risk allocation, such as poor labor management, plant breakdowns, or delayed material ordering. The contractor receives no extra time and no money.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Directly triggers contractor liability for liquidated damages if it results in project completion overrun past the contractual date.",
+      "calculation_rule": "Non_Excusable = TRUE when Delay_Category = CONTRACTOR_DEFAULT",
+      "limitations": "Contractor must bear full acceleration and mitigation costs to recover lost time on non-excusable delays.",
+      "action": "Develop and submit a formal recovery schedule showing revised trade sequencing and additional shifts."
+    },
+    "ACIP-S04-DLY-FRAGNET": {
+      "display_label": "Delay Fragnet",
+      "short_tooltip": "A sub-network of activities and logic ties representing the specific sequence, duration, and dependencies of a delay event.",
+      "plain_english_definition": "A mini-schedule that models how a specific delay event unfolds on site. It contains the delay activities, their durations, and the predecessor/successor links tying the delay directly into the main project schedule.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Provides the mathematical mechanism to perform Time Impact Analysis, proving exactly how and when a site event transmitted disruption into the critical path.",
+      "calculation_rule": "Discrete activity network with defined durations, calendars, and logic ties inserted into an updated baseline.",
+      "limitations": "Fragnets must reflect realistic contemporaneous site sequences rather than artificial lags designed to engineer artificial float consumption.",
+      "action": "Cross-check fragnet activity durations against daily clerk of works diaries before running impact analysis."
+    },
+    "ACIP-S04-DLY-DELAY_EVENT_REVISION": {
+      "display_label": "Delay Revision Version",
+      "short_tooltip": "Immutable cryptographically hashed snapshot of a delay claim revision that prevents post-submission alteration of facts.",
+      "plain_english_definition": "A tamper-evident versioning mechanism in ACIP S04 that locks a delay claim once submitted. Any modifications, recalculations, or evidence additions must be published as a new numbered revision, preserving an unalterable audit trail.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Guarantees forensic integrity for legal and adjudication scrutiny. Eliminates disputes over which version of a claim or schedule was reviewed at any given date.",
+      "calculation_rule": "Revision_Hash = SHA256(Event_Metadata + Manifest_Hash + Timestamp)",
+      "limitations": "Locked revisions cannot be overwritten. Corrections require formal publication of a subsequent revision with explicit supersession metadata.",
+      "action": "Verify the published revision hash against the audit manifest before citing figures in contractual correspondence."
+    },
+    "ACIP-S04-CON-PSSCOC_NOTICE_TIMEBAR": {
+      "display_label": "Notice Compliance (Clause 23.1)",
+      "short_tooltip": "Mandatory condition precedent requiring the contractor to give written notice of delay within 28 days of the initiating cause.",
+      "plain_english_definition": "A strict contractual rule under Singapore public sector construction contracts stating that if a contractor encounters a delay event, they must notify the Superintending Officer in writing within 28 calendar days. Failing to notify within this window may forfeit their legal right to claim an Extension of Time.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Enforces early warning and contemporary record preservation. Late notice deprives the employer of the opportunity to investigate site conditions contemporaneously or order mitigation measures, exposing the contractor to timebar rejection.",
+      "calculation_rule": "Is_Compliant = (Notice_Served_Date - Event_Start_Date) <= delay_notice_period_days (default 28)",
+      "limitations": "Whether a timebar clause acts as an absolute bar to relief is a matter of contractual construction and judicial precedent. ACIP flags the timeline status factually, leaving formal legal determination to legal counsel and appointed adjudicators.",
+      "action": "If an emerging site event is within 7 days of the 28-day notice threshold, immediately draft and serve a formal Clause 23.1 reservation of rights letter."
+    },
+    "ACIP-S04-CON-PSSCOC_CLAUSE_24": {
+      "display_label": "Delay Certificate (Clause 24.1)",
+      "short_tooltip": "Formal certificate issued by the Superintending Officer certifying that the contractor has failed to complete the works by the contractual date.",
+      "plain_english_definition": "Under Singapore PSSCOC contracts, the Superintending Officer must formally issue a written Delay Certificate before the employer is legally permitted to deduct liquidated damages from contractor payment certificates.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "The issuance of a Clause 24.1 certificate is a mandatory legal prerequisite for deducting liquidated damages. Deductions made without this certificate are unlawful under Singapore construction law.",
+      "calculation_rule": "Valid_For_Deduction = TRUE when Delay_Certificate_Date <= Payment_Response_Date AND Net_Delay > 0",
+      "limitations": "A Delay Certificate ceases to have effect if a subsequent Extension of Time is granted, requiring a revised certificate to be issued.",
+      "action": "Confirm that a formal Clause 24.1 certificate is on file and signed before applying any liquidated damages deduction in S03 payment certificates."
+    },
+    "ACIP-S04-CON-NEUTRAL_FORCE_MAJEURE": {
+      "display_label": "Neutral Event / Force Majeure",
+      "short_tooltip": "Unforeseeable, exceptional events beyond the control of both parties (e.g. pandemics, civil commotion, exceptional floods).",
+      "plain_english_definition": "Events that neither party caused and neither party could have reasonably prevented. In construction contracts, neutral events entitle the contractor to an Extension of Time (relief from liquidated damages), but each party bears their own financial costs.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Contractually segregates time entitlement from financial cost entitlement: the contractor gets extra days to finish, but no money for site preliminaries or overheads during the delayed period.",
+      "calculation_rule": "Entitlement: EOT = Granted; Prolongation_Costs = Zero",
+      "limitations": "Event must meet strict statutory or contract definitions of unforeseeability and exceptionality, supported by contemporaneous official records.",
+      "action": "Document official governmental directives, meteorological notices, and physical site stoppage records contemporaneously."
+    },
+    "ACIP-CORE-TIME_AT_LARGE": {
+      "display_label": "Time at Large",
+      "short_tooltip": "A legal condition where the employer prevents completion but the contract has no mechanism or fails to grant EOT, extinguishing liquidated damages.",
+      "plain_english_definition": "A common law legal doctrine where the fixed completion date is extinguished because the client delayed the project (act of prevention) and the contract either had no EOT clause or the contract administrator failed to operate it properly. The contractor only has to complete within a reasonable time, and liquidated damages can no longer be deducted.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "A catastrophic commercial outcome for employers. If time is set at large, the employer loses the right to deduct liquidated damages and must prove actual common law damages in court.",
+      "calculation_rule": "Contractual completion date replaced by 'reasonable time to complete' under common law.",
+      "limitations": "Time at large is a high-threshold legal defense evaluated exclusively by courts and arbitral tribunals.",
+      "action": "Ensure all valid contractor delay claims receive timely forensic assessment and determination to prevent prevention principle challenges."
+    },
+    "ACIP-S04-DAT-RAINFALL_STOPPAGE": {
+      "display_label": "Rainfall Stoppage (mm)",
+      "short_tooltip": "Direct physical record of rainfall precipitation (mm) and work stoppage hours captured in daily clerk of works diaries and weather sensors.",
+      "plain_english_definition": "Objective measurement of precipitation recorded at the project site during working hours, cross-referenced with recorded stoppages in trade activities (such as earthworks excavation or external facade painting).",
+      "category": "OBSERVED_SITE_EVIDENCE",
+      "why_it_matters": "Contractors frequently submit global inclement weather claims. Contemporaneous rain gauge records allow forensic planners to separate genuine unworkable weather periods from dry periods where work stopped due to plant breakdowns or labor shortages.",
+      "calculation_rule": "Recorded working hours lost during shift where rainfall_mm > threshold (e.g. 10.0 mm/hr)",
+      "limitations": "Rainfall measurements represent physical weather conditions, not automatic contractual entitlement. Under PSSCOC Clause 23.1(f), only exceptionally inclement weather beyond statistical historical norms qualifies as an eligible event.",
+      "action": "Cross-reference daily rain gauge logs against crawler crane and excavation telemetry before accepting weather delay diary submissions."
+    },
+    "ACIP-S04-AI-WEATHER_DISCREPANCY_FLAG": {
+      "display_label": "Site Evidence Discrepancy Flag",
+      "short_tooltip": "Advisory alert generated by AI agent cross-examining contractor delay narrative against biometric gate turnouts and sensor telemetry.",
+      "plain_english_definition": "An assistive diagnostic warning that occurs when an AI agent detects a contradiction between the contractor written delay claim narrative and physical site evidence (for example, claiming site-wide shutdown due to rain on a day when biometric logs show 45 workers active on the affected zone).",
+      "category": "AI_AGENTIC_INTERPRETATION",
+      "why_it_matters": "Identifies inflated or unverified claims early in the assessment process, focusing forensic planner investigation on specific contradictory calendar dates rather than requiring manual audit of hundreds of paper diaries.",
+      "calculation_rule": "Heuristic discrepancy rule: Flag = TRUE if Claimed_Stoppage = 'TOTAL_SHUTDOWN' AND (Biometric_Attendance > 80% OR Measured_Rainfall == 0.0mm)",
+      "limitations": "This indicator is strictly assistive and advisory. It highlights potential contradictions for human investigation and does not constitute a formal determination or legal accusation of misrepresentation.",
+      "action": "Click the indicator to view side-by-side evidence comparison and request clarification from the resident site supervisor for the flagged date."
+    },
+    "ACIP-S04-FOR-FORECAST_COMPLETION": {
+      "display_label": "Forecast Project Completion",
+      "short_tooltip": "Deterministic projection of final project completion date computed by forward pass CPM based on current progress and remaining durations.",
+      "plain_english_definition": "The predicted calendar date when all physical construction works will be finished, calculated by running the CPM scheduling engine on current actual progress and remaining task durations.",
+      "category": "FORECAST_PROJECTION",
+      "why_it_matters": "Provides client leadership and stakeholders with an early warning of completion slip, allowing proactive intervention before critical deadlines are breached.",
+      "calculation_rule": "Forecast_Completion = max(Early_Finish of all project terminal activities)",
+      "limitations": "A projection based on remaining duration estimates and logic ties. Does not account for unmodelled future events, weather disruptions, or contractor acceleration.",
+      "action": "Compare forecast completion against contractual completion date to evaluate whether acceleration or resequencing is required."
+    },
+    "ACIP-S04-UI-RUN_TIME_IMPACT_ANALYSIS": {
+      "display_label": "Run Time Impact Analysis",
+      "short_tooltip": "Triggers the deterministic CPM scheduling engine to insert the delay fragnet and calculate completion date shifts.",
+      "plain_english_definition": "A primary dashboard action button that instructs the system to insert the selected delay fragnet into the active schedule baseline, perform forward and backward CPM passes, and display the resulting variance in project completion.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Executes the core forensic delay assessment in seconds with zero manual calculation errors, producing mathematically verifiable delay figures.",
+      "calculation_rule": "Executes forward/backward CPM pass across all network activities and updates variance metrics.",
+      "limitations": "Requires a valid schedule baseline and populated fragnet logic ties. Running this action does not alter saved schedule data until explicitly saved.",
+      "action": "Ensure all fragnet predecessor and successor links are correctly selected before clicking this button."
+    },
+    "ACIP-S04-UI-SIMULATE_WEATHER_FRAGNET": {
+      "display_label": "Simulate Weather Fragnet",
+      "short_tooltip": "Simulates the critical path impact of rain stoppage days by inserting weather fragnet activities into affected outdoor trades.",
+      "plain_english_definition": "A dashboard action button that converts recorded rain stoppage days into schedule delay activities and automatically links them to weather-sensitive outdoor trades (e.g. excavation, roofing) to calculate project delay impact.",
+      "category": "DETERMINISTIC_CALCULATION",
+      "why_it_matters": "Transforms raw rainfall data into actionable schedule delay models instantly, proving whether inclement weather actually delayed project completion.",
+      "calculation_rule": "Maps site record rainfall stoppages to activity calendar exceptions and re-computes CPM completion date.",
+      "limitations": "Simulation assumes affected outdoor trades are completely shut down during qualifying rainfall hours. Does not simulate partial productivity losses.",
+      "action": "Verify that the rain gauge thresholds match the contractual specification before executing the simulation."
+    },
+    "ACIP-S04-UI-LOCK_DELAY_REVISION": {
+      "display_label": "Lock Delay Revision",
+      "short_tooltip": "Freezes the current delay claim revision, generates an immutable content hash, and prevents further direct edits.",
+      "plain_english_definition": "A governance action button that locks the current delay claim and its associated evidence into an immutable snapshot. Once locked, the revision cannot be modified, ensuring tamper-proof audit trails for contractual submissions.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Prevents accidental or unauthorized modifications to submitted delay claims, ensuring complete evidentiary integrity for legal and adjudication reviews.",
+      "calculation_rule": "Sets is_locked = TRUE and computes immutable SHA-256 manifest hash.",
+      "limitations": "Irreversible action. If updates are needed after locking, a new revision must be created.",
+      "action": "Conduct a thorough pre-submission review of all fragnet links and supporting documents before clicking Lock."
+    },
+    "ACIP-S04-UI-VERIFY_SIGNED_CONTRACT": {
+      "display_label": "Verify Signed Contract Particulars",
+      "short_tooltip": "Validates active schedule parameters against digitally signed contract particulars (e.g. completion date, LD rate).",
+      "plain_english_definition": "A dashboard verification action that cross-checks the baseline completion date, liquidated damages daily rate, and notice timebar periods used in schedule calculations against the signed contract particulars.",
+      "category": "CONSTRUCTION_DOMAIN_STANDARD",
+      "why_it_matters": "Ensures that all delay and liquidated damages calculations use legally binding contract parameters, preventing calculation errors based on obsolete draft values.",
+      "calculation_rule": "Asserts equality between schedule parameter values and signed contract document metadata.",
+      "limitations": "Verifies metadata match only. Does not replace formal legal interpretation of contract amendments.",
+      "action": "Execute this verification whenever contract addenda or formal EOT certificates are uploaded."
+    }
+  },
+  "by_label": {
+    "total float (tf)": "ACIP-S04-CPM-TOTAL_FLOAT",
+    "free float (ff)": "ACIP-S04-CPM-FREE_FLOAT",
+    "critical path": "ACIP-S04-CPM-CRITICAL_PATH",
+    "driving logic link": "ACIP-S04-CPM-DRIVING_RELATIONSHIP",
+    "early start (es)": "ACIP-S04-CPM-EARLY_START",
+    "early finish (ef)": "ACIP-S04-CPM-EARLY_FINISH",
+    "late start (ls)": "ACIP-S04-CPM-LATE_START",
+    "late finish (lf)": "ACIP-S04-CPM-LATE_FINISH",
+    "start-to-finish (sf) link": "ACIP-S04-CPM-START_TO_FINISH",
+    "extension of time (eot)": "ACIP-CORE-EXTENSION_OF_TIME",
+    "liquidated damages (ld)": "ACIP-CORE-LIQUIDATED_DAMAGES",
+    "net chargeable delay (days)": "ACIP-S04-COM-NET_CHARGEABLE_DELAY",
+    "time impact analysis (tia)": "ACIP-S04-DLY-TIME_IMPACT_ANALYSIS",
+    "concurrent delay": "ACIP-S04-DLY-CONCURRENT_DELAY",
+    "excusable delay": "ACIP-S04-DLY-EXCUSABLE_DELAY",
+    "compensable delay": "ACIP-S04-DLY-COMPENSABLE_DELAY",
+    "non-excusable delay": "ACIP-S04-DLY-NON_EXCUSABLE_DELAY",
+    "delay fragnet": "ACIP-S04-DLY-FRAGNET",
+    "delay revision version": "ACIP-S04-DLY-DELAY_EVENT_REVISION",
+    "notice compliance (clause 23.1)": "ACIP-S04-CON-PSSCOC_NOTICE_TIMEBAR",
+    "delay certificate (clause 24.1)": "ACIP-S04-CON-PSSCOC_CLAUSE_24",
+    "neutral event / force majeure": "ACIP-S04-CON-NEUTRAL_FORCE_MAJEURE",
+    "time at large": "ACIP-CORE-TIME_AT_LARGE",
+    "rainfall stoppage (mm)": "ACIP-S04-DAT-RAINFALL_STOPPAGE",
+    "site evidence discrepancy flag": "ACIP-S04-AI-WEATHER_DISCREPANCY_FLAG",
+    "forecast project completion": "ACIP-S04-FOR-FORECAST_COMPLETION",
+    "run time impact analysis": "ACIP-S04-UI-RUN_TIME_IMPACT_ANALYSIS",
+    "simulate weather fragnet": "ACIP-S04-UI-SIMULATE_WEATHER_FRAGNET",
+    "lock delay revision": "ACIP-S04-UI-LOCK_DELAY_REVISION",
+    "verify signed contract particulars": "ACIP-S04-UI-VERIFY_SIGNED_CONTRACT"
+  }
+}

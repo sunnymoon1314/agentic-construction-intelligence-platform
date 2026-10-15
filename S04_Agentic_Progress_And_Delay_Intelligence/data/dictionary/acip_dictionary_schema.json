@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ACIP_Data_And_Application_Dictionary_Entry",
+  "type": "object",
+  "required": [
+    "term_id",
+    "canonical_name",
+    "display_label",
+    "category",
+    "short_tooltip",
+    "plain_english_definition",
+    "why_it_matters",
+    "limitations_and_boundaries",
+    "recommended_user_action",
+    "module_scope",
+    "version",
+    "governing_owner"
+  ],
+  "properties": {
+    "term_id": {
+      "type": "string",
+      "pattern": "^ACIP-(CORE|S01|S02|S03|S04|S05|S06|S07)-[A-Z0-9_-]+$",
+      "description": "Stable immutable identifier used for programmatic binding (e.g. data-term-id)."
+    },
+    "canonical_name": {
+      "type": "string",
+      "description": "Official industry standard or platform concept name."
+    },
+    "display_label": {
+      "type": "string",
+      "description": "Exact text string as rendered on screen labels, table headers, or cards."
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "CONSTRUCTION_DOMAIN_STANDARD",
+        "DETERMINISTIC_CALCULATION",
+        "OBSERVED_SITE_EVIDENCE",
+        "FORECAST_PROJECTION",
+        "AI_AGENTIC_INTERPRETATION"
+      ],
+      "description": "Evidence-first taxonomy tier classifying the origin and mathematical authority of the concept."
+    },
+    "short_tooltip": {
+      "type": "string",
+      "maxLength": 260,
+      "description": "Concise 1-2 sentence plain-English explanation rendered inside the floating hover tooltip."
+    },
+    "plain_english_definition": {
+      "type": "string",
+      "description": "Comprehensive explanation of what the concept means, avoiding circular jargon."
+    },
+    "why_it_matters": {
+      "type": "string",
+      "description": "Commercial, legal, or operational impact on the project and stakeholder liabilities."
+    },
+    "calculation_rule": {
+      "type": "string",
+      "description": "Exact mathematical equation or deterministic business rule. NULL for non-calculated terms."
+    },
+    "data_lineage": {
+      "type": "object",
+      "properties": {
+        "source_tables": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "source_fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "limitations_and_boundaries": {
+      "type": "string",
+      "description": "Boundary guardrails defining what the metric does NOT prove, and statutory authority boundaries."
+    },
+    "recommended_user_action": {
+      "type": "string",
+      "description": "Practical next step for the user upon viewing this value or triggering this control."
+    },
+    "module_scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["CORE", "S01", "S02", "S03", "S04", "S05", "S06", "S07"]
+      }
+    },
+    "contextual_differences": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Module-specific operational differences."
+    },
+    "related_terms": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "governing_owner": {
+      "type": "string",
+      "description": "Designated professional authority responsible for this definition."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    }
+  }
+}

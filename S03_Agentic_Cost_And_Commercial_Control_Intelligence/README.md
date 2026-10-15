@@ -114,8 +114,6 @@ S03 bridges commercial intelligence and statutory construction law through four 
 <details>
 <summary><b>📐 Click to view Mermaid Architecture Diagram Source</b></summary>
 
-The complete Mermaid diagram source has been extracted to [s03_analytical_pillars_workflow.md](images/s03_analytical_pillars_workflow.md).
-
 </details>
 
 - **Pillar 1: 5D openBIM Quantity Reconciler & Medallion Lakehouse Engine**: Ingests multi-source commercial data across a 3-tier Medallion lakehouse pattern:
@@ -252,9 +250,9 @@ Approach 1 runs 100% locally on standard workstation hardware with zero external
 
 ### <span id="env-config"></span>⚙️ 3.1 Environment Configuration & Dependencies <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
-Because ACIP contains many modules (S01 to S07) sharing one Conda environment, every bash block in this README starts with `cd "${ACIP_MODULE_DEFAULT_FOLDER}"`. This guarantees commands run inside the S02 module folder no matter which terminal tab or folder you are currently in.
+Because ACIP contains many modules (S01 to S07) sharing one Conda environment, every bash block in this README starts with `cd "${ACIP_MODULE_DEFAULT_FOLDER}"`. This guarantees commands run inside the S03 module folder no matter which terminal tab or folder you are currently in.
 
-Step 1: Set the module folder once (open a terminal inside the S02 folder in your IDE, or if starting from the ACIP platform root, navigate into the S02 folder first):
+Step 1: Set the module folder once (open a terminal inside the S03 folder in your IDE, or if starting from the ACIP platform root, navigate into the S03 folder first):
 
 ```bash
 # If starting from the ACIP platform root:
@@ -366,7 +364,7 @@ python3 dashboard/server.py --port 8086
 ![Commercial Cockpit Server Launch Terminal Output](images/python_dashboard_server.png)
 
 Open your browser at `http://localhost:8086` to interact with:
-- **Standardized S02 Design System**: Two-row executive header with boxed brand icon, flush subtitle hierarchy, Light Mode by default, and `🌙 Dark Mode` toggle.
+- **Standardized S03 Design System**: Two-row executive header with boxed brand icon, flush subtitle hierarchy, Light Mode by default, and `🌙 Dark Mode` toggle.
 - **Dynamic Project Dropdown**: Switch seamlessly between all four scenario projects with reactive sector, contract form, and contractor meta chips.
 - **Global Evidence Tooltips**: Informational tooltips (ℹ️) across all KPI metrics, statutory deadline indicators, and table headers explaining domain mechanics without clipping.
 - **Live SOPA Countdown Widget**: Real-time traffic-light status powered by `serve_sopa_deadline_clock`.
@@ -833,12 +831,14 @@ cd terraform/gcp && terraform destroy -auto-approve -var="project_id=${GCP_PROJE
 
 ### <span id="reset-local"></span>🗑️ 8.2 Reset Local Database & Parquet Lakehouse <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
-To remove the local DuckDB database file and reset local lakehouse artifacts:
+To clear generated test outputs and reset the local DuckDB database and Parquet lakehouse to their clean authoritative baseline:
 
 ```bash
 # Ensure you are at the S03_Agentic_Cost_And_Commercial_Control_Intelligence module root folder before starting
+set -a; source .env; set +a
 rm -f data/commercial_control.duckdb
 rm -rf data/parquet/*.parquet
+python data/generate_commercial_data.py
 ```
 
 ---

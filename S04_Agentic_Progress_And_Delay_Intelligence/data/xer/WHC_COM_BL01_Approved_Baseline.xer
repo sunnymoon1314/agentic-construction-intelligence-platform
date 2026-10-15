@@ -1,0 +1,26 @@
+ERMHDR	8.3	2026-10-09	ACIP_S04_FIXTURE
+%T	PROJECT
+%F	proj_id	proj_short_name	plan_start_date	plan_end_date	last_recalc_date
+%R	1001	PRJ-WHC-COM-001	2026-11-02 08:00	2026-11-19 17:00	2026-11-02 08:00
+%T	PROJWBS
+%F	wbs_id	proj_id	wbs_short_name	wbs_name
+%R	2001	1001	WHC.SUB	Woodlands Substructure Package
+%T	TASK
+%F	task_id	proj_id	wbs_id	task_code	task_name	target_durn_hr_cnt	total_float_hr_cnt
+%R	3001	1001	2001	ACT-01	Project Notice to Proceed	0.0	0.0
+%R	3002	1001	2001	ACT-02	Substructure Piling	40.0	0.0
+%R	3003	1001	2001	ACT-03	Basement Excavation	32.0	0.0
+%R	3004	1001	2001	ACT-04	Ground Anchor Installation	48.0	40.0
+%R	3005	1001	2001	ACT-05	Basement Slab Casting	40.0	0.0
+%R	3006	1001	2001	ACT-06	Substructure Complete	0.0	0.0
+%T	TASKPRED
+%F	task_pred_id	task_id	pred_task_id	pred_type	lag_hr_cnt
+%R	4001	3002	3001	PR_FS	0.0
+%R	4002	3003	3002	PR_FS	0.0
+%R	4003	3004	3002	PR_SS	16.0
+%R	4004	3005	3003	PR_FS	0.0
+%R	4005	3005	3004	PR_FF	8.0
+%R	4006	3006	3005	PR_FS	0.0
+%T	UDFVALUE
+%F	udf_id	foreign_key	udf_text
+%R	9001	3002	Preserved Pass-Through Enterprise Field Value

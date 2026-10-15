@@ -8,6 +8,7 @@ env/
 
 # Backup / Custom
 backup_old/
+internal/
 CASE_STUDY_ENTERPRISE_ARCHITECTURE.md
 
 # Rust Build Artifacts

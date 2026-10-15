@@ -106,7 +106,7 @@ def calculate_mom_safety_set_off(swo_idle_days: int, demerit_points: int, unrem_
     }
 
 # -------------------------------------------------------------------------
-# Part 3: Canonical Ground-Truth Datasets (The Chancellor's Blueprints)
+# Part 3: Canonical Ground-Truth Datasets (Project Baseline Blueprints)
 # -------------------------------------------------------------------------
 
 # Primary Flagship Scenario: Woodlands Health Campus Commercial Annex (PRJ-WHC-COM-001)

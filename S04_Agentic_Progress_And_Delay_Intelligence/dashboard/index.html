@@ -1,0 +1,3188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACIP S04: Agentic Progress & Delay Intelligence | Forensic Cockpit</title>
+  <link rel="icon" type="image/svg+xml" href="assets/acip_logo_symbol.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --border-color: rgba(15, 23, 42, 0.10);
+      --border-accent: rgba(37, 99, 235, 0.35);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent-blue: #2563eb;
+      --accent-cyan: #0891b2;
+      --accent-green: #059669;
+      --accent-amber: #d97706;
+      --accent-red: #dc2626;
+      --accent-purple: #7c3aed;
+      --status-green-bg: rgba(5, 150, 105, 0.10);
+      --status-amber-bg: rgba(217, 119, 6, 0.12);
+      --status-red-bg: rgba(220, 38, 38, 0.10);
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --touch-target: 48px;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --border-color: rgba(15, 23, 42, 0.10);
+      --border-accent: rgba(37, 99, 235, 0.35);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent-blue: #2563eb;
+      --accent-cyan: #0891b2;
+      --accent-green: #059669;
+      --accent-amber: #d97706;
+      --accent-red: #dc2626;
+      --accent-purple: #7c3aed;
+      --status-green-bg: rgba(5, 150, 105, 0.10);
+      --status-amber-bg: rgba(217, 119, 6, 0.12);
+      --status-red-bg: rgba(220, 38, 38, 0.10);
+      --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: #151d30;
+      --bg-card-hover: #1e293b;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(59, 130, 246, 0.4);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      --status-green-bg: rgba(16, 185, 129, 0.15);
+      --status-amber-bg: rgba(245, 158, 11, 0.15);
+      --status-red-bg: rgba(239, 68, 68, 0.15);
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* HIGH-CONTRAST OUTDOOR SUNLIGHT MODE FOR FIELD PERSONNEL */
+    [data-theme="sunlight"] {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f4f4f5;
+      --bg-card: #ffffff;
+      --bg-card-hover: #e4e4e7;
+      --border-color: #000000;
+      --border-accent: #000000;
+      --text-primary: #000000;
+      --text-secondary: #18181b;
+      --text-muted: #27272a;
+      --accent-blue: #0044cc;
+      --accent-cyan: #006688;
+      --accent-green: #006622;
+      --accent-amber: #995500;
+      --accent-red: #cc0000;
+      --accent-purple: #5500aa;
+      --status-green-bg: #dcfce7;
+      --status-amber-bg: #fef3c7;
+      --status-red-bg: #fee2e2;
+      --card-shadow: 0 0 0 2px #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+
+    /* ---------------------------------------------------------
+       S03 Parity: Top Header Bar (Stacked Title & Project Toolbar)
+       --------------------------------------------------------- */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 6px 14px;
+      box-shadow: var(--card-shadow);
+      flex-shrink: 0;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-main-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon-box {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 7px;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .brand-text-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+      line-height: 1.15;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin: 0;
+    }
+
+    .brand-acip-tag {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-left: 2px;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .brand-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.1px;
+      line-height: 1.15;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .project-toolbar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .header-actions {
+      display: grid;
+      grid-template-columns: minmax(170px, auto) minmax(110px, auto);
+      grid-template-rows: 24px 24px;
+      gap: 4px 6px;
+      align-items: center;
+      flex-shrink: 0;
+      margin-left: 12px;
+    }
+
+    #eotCountdownPill, #sopaCountdownPill {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    #sreHealthPill {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .config-status {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    #themeCycleBtn {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .project-selector-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .project-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .project-select {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      max-width: 360px;
+    }
+
+    .meta-chip {
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      height: 24px;
+      box-sizing: border-box;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .theme-toggle-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    .config-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 2px 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      height: 24px;
+      box-sizing: border-box;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+    }
+
+    .config-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #16a34a;
+      display: inline-block;
+      box-shadow: 0 0 4px rgba(22, 163, 74, 0.6);
+      animation: pulse-dot 2.2s infinite;
+    }
+    @keyframes pulse-dot {
+      0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+      70% { box-shadow: 0 0 0 4px rgba(22, 163, 74, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      height: 24px;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+    .status-pill.green { background: var(--status-green-bg); color: var(--accent-green); border: 1px solid rgba(5,150,105,0.3); }
+    .status-pill.amber { background: var(--status-amber-bg); color: var(--accent-amber); border: 1px solid rgba(217,119,6,0.3); }
+    .status-pill.red { background: var(--status-red-bg); color: var(--accent-red); border: 1px solid rgba(220,38,38,0.3); }
+
+    /* Statutory Warning Banner */
+    .warning-banner {
+      background: var(--status-amber-bg);
+      border: 1px solid var(--accent-amber);
+      border-radius: 6px;
+      padding: 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+      flex-shrink: 0;
+      margin-bottom: 12px;
+    }
+    .warning-banner.critical {
+      background: var(--status-red-bg);
+      border-color: var(--accent-red);
+    }
+    .banner-btn {
+      background: var(--accent-red);
+      color: #fff;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .banner-btn:hover {
+      background: #b91c1c;
+    }
+
+    .info-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 9px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 5px;
+      margin-right: 0;
+      position: relative;
+      user-select: none;
+      transition: all 0.15s ease;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .info-btn:hover {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+    .info-btn .acip-tooltip {
+      display: none !important;
+    }
+
+    .acip-global-tooltip {
+      position: fixed;
+      z-index: 999999;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.45;
+      max-width: 350px;
+      box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      text-transform: none;
+      letter-spacing: normal;
+      white-space: normal;
+      text-align: left;
+    }
+    [data-theme="dark"] .acip-global-tooltip {
+      background: #1e293b;
+      color: #f1f5f9;
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+    .acip-global-tooltip::after {
+      content: "";
+      position: absolute;
+      left: var(--arrow-left, 50%);
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+    }
+    .acip-global-tooltip.pos-below::after {
+      bottom: 100%;
+      border-bottom-color: #0f172a;
+    }
+    [data-theme="dark"] .acip-global-tooltip.pos-below::after {
+      border-bottom-color: #1e293b;
+    }
+    .acip-global-tooltip.pos-above::after {
+      top: 100%;
+      border-top-color: #0f172a;
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      flex: 1;
+      padding: 16px 20px;
+      max-width: 100%;
+      margin: 0;
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* PROJECT HERO BANNER */
+    .project-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .banner-main h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .banner-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    .banner-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .banner-status-tag {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .status-red { background: var(--status-red-bg); color: var(--accent-red); border: 1px solid var(--accent-red); }
+    .status-amber { background: var(--status-amber-bg); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+    .status-green { background: var(--status-green-bg); color: var(--accent-green); border: 1px solid var(--accent-green); }
+    .status-blue { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+
+    /* KPI METRIC CARDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-accent);
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dict-trigger {
+      cursor: pointer;
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(6, 182, 212, 0.25);
+    }
+    .dict-trigger:hover {
+      background: rgba(6, 182, 212, 0.2);
+    }
+
+    .kpi-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .kpi-subtext {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+
+    /* NAVIGATION TABS */
+    .tabs-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs-nav::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 12px 18px;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: var(--touch-target);
+      position: relative;
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+    .tab-btn.active {
+      color: var(--accent-blue);
+      font-weight: 700;
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent-blue);
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* TAB CONTENT PANELS */
+    .tab-panel {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .tab-panel.active {
+      display: flex;
+    }
+
+    /* SECTION CARD */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: var(--card-shadow);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    
+    /* Interactive Clickable Table Rows and Cards (S03 Parity) */
+    table tbody tr {
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    table tbody tr:hover td {
+      background-color: var(--bg-card-hover) !important;
+    }
+    .radar-card {
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .radar-card:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .agent-turn-card {
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .agent-turn-card:hover {
+      border-color: var(--accent-purple);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    /* DATA TABLES */
+    .table-container {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.82rem;
+    }
+
+    th {
+      background: var(--bg-secondary);
+      padding: 8px 10px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      font-size: 0.8rem;
+    }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-primary);
+      white-space: nowrap;
+      font-size: 0.8rem;
+    }
+
+    td.desc-cell, .desc-cell {
+      white-space: normal;
+      min-width: 150px;
+      max-width: 280px;
+    }
+
+    tr:hover td {
+      background-color: var(--bg-card-hover);
+    }
+
+    .mono-cell {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .crit-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .crit-yes { background: var(--status-red-bg); color: var(--accent-red); border: 1px solid var(--accent-red); }
+    .crit-no { background: var(--status-green-bg); color: var(--accent-green); border: 1px solid var(--accent-green); }
+
+    /* GANTT TIMELINE ENGINE (Time-Scaled Calendar CPM) */
+    .gantt-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.74rem;
+      padding: 10px 14px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+      border: 1px solid var(--border-color);
+    }
+    .gantt-cell {
+      min-width: 260px;
+      width: 290px;
+      padding: 6px 8px !important;
+      vertical-align: middle;
+    }
+    .gantt-track {
+      width: 100%;
+      height: 26px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 4px;
+      position: relative;
+      border: 1px solid var(--border-color);
+      overflow: visible;
+    }
+    [data-theme="light"] .gantt-track {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+    .gantt-gridline {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+    [data-theme="light"] .gantt-gridline {
+      background: #e2e8f0;
+    }
+    .gantt-bar-crit {
+      position: absolute;
+      top: 4px;
+      height: 16px;
+      background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(239, 68, 68, 0.3);
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      z-index: 2;
+    }
+    .gantt-bar-norm {
+      position: absolute;
+      top: 4px;
+      height: 16px;
+      background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      z-index: 2;
+    }
+    .gantt-float-extension {
+      position: absolute;
+      top: 7px;
+      height: 10px;
+      background: rgba(59, 130, 246, 0.16);
+      border: 1px dashed #3b82f6;
+      border-left: none;
+      border-radius: 0 3px 3px 0;
+      z-index: 1;
+    }
+    .gantt-milestone {
+      position: absolute;
+      top: 5px;
+      width: 14px;
+      height: 14px;
+      transform: translateX(-50%) rotate(45deg);
+      border-radius: 2px;
+      z-index: 3;
+    }
+    .gantt-milestone.crit {
+      background: #ef4444;
+      border: 2px solid #991b1b;
+      box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
+    }
+    .gantt-milestone.norm {
+      background: #3b82f6;
+      border: 2px solid #1e40af;
+      box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+    }
+    .gantt-axis-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.70rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      padding: 2px 4px;
+      background: var(--bg-card);
+      border-radius: 3px;
+      margin-top: 4px;
+      border: 1px solid var(--border-color);
+    }
+    .dep-pill {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(139, 92, 246, 0.12);
+      color: var(--accent-purple);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      font-family: 'JetBrains Mono', monospace;
+      margin-right: 4px;
+    }
+
+    /* WHAT-IF SIMULATOR */
+    .simulator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 992px) {
+      .simulator-grid { grid-template-columns: 1fr; }
+    }
+
+    .sim-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .form-input, .form-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      outline: none;
+      min-height: var(--touch-target);
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .duration-slider {
+      flex: 1;
+      height: 8px;
+      accent-color: var(--accent-blue);
+      cursor: pointer;
+    }
+
+    .duration-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      min-width: 60px;
+    }
+
+    .touch-btn {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: var(--touch-target);
+      transition: background 0.2s, transform 0.1s;
+    }
+    .touch-btn:hover {
+      background: #2563eb;
+    }
+    .touch-btn:active {
+      transform: scale(0.98);
+    }
+
+    .sim-result-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-accent);
+      border-radius: 10px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .result-impact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .impact-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .impact-box .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .impact-box .val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .consensus-audit-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .consensus-audit-box h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .consensus-audit-box p {
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    /* AGENT DELIBERATION STYLES */
+    .consensus-ctrl-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 12px 16px;
+      border-radius: 8px;
+    }
+    .agent-turns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .agent-turn-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.2s ease;
+    }
+    .agent-turn-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+    .agent-turn-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .agent-name-role {
+      font-weight: 700;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .agent-tool-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .agent-statement-box {
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      background: rgba(0, 0, 0, 0.15);
+      padding: 10px;
+      border-radius: 6px;
+      border-left: 3px solid var(--accent-blue);
+    }
+    .agent-metrics-row {
+      display: flex;
+      gap: 12px;
+      font-size: 0.78rem;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* RADAR DISCREPANCY DISPLAY */
+    .radar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .radar-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .radar-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .radar-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-color);
+      padding-top: 8px;
+    }
+
+    /* FORENSIC DETAIL DRAWER / BOTTOM SHEET */
+    /* Persistent non-modal drawer: the dashboard remains interactive behind it. */
+    .drawer-overlay { display: none !important; pointer-events: none !important; }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 480px;
+      max-width: 100%;
+      height: 100vh;
+      background: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: -8px 0 24px rgba(0, 0, 0, 0.5);
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer.open {
+      transform: translateX(0);
+    }
+
+    /* BOTTOM SHEET MORPHING ON MOBILE & TABLET (< 768px) */
+    @media (max-width: 768px) {
+      .drawer {
+        top: auto;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        height: 82vh;
+        max-height: 90vh;
+        border-left: none;
+        border-top: 2px solid var(--border-accent);
+        border-radius: 16px 16px 0 0;
+        transform: translateY(100%);
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
+      }
+      .drawer.open {
+        transform: translateY(0);
+      }
+      .drawer-grabber {
+        width: 48px;
+        height: 5px;
+        background: var(--border-color);
+        border-radius: 999px;
+        margin: 10px auto 4px auto;
+      }
+    }
+
+    .drawer-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .drawer-header h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .drawer-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .drawer-close-btn:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .drawer-body {
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .drawer-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .drawer-section h4 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+
+
+    /* Interactive elements */
+    .dict-trigger { width:20px; height:20px; padding:0; border-radius:50%; }
+    .kpi-interactive { cursor:pointer; outline:none; }
+    .kpi-interactive:hover { transform:translateY(-4px); border-color:var(--border-accent); box-shadow:0 10px 24px rgba(0,0,0,.18); }
+    .kpi-interactive:focus-visible { outline:2px solid var(--accent-blue); outline-offset:3px; }
+    .kpi-card .kpi-value { transition:color .15s; }
+    .kpi-card[data-kpi="kpiNetDelay"] { border-top:3px solid var(--accent-red); }
+    .kpi-card[data-kpi="kpiLdExposure"] { border-top:3px solid var(--accent-amber); }
+    .kpi-card[data-kpi="kpiAssessedEot"] { border-top:3px solid var(--accent-blue); }
+    .kpi-card[data-kpi="kpiForecastDate"] { border-top:3px solid var(--accent-purple); }
+    /* Forensic Drawer Badges & Evidence Styles */
+    .badge-blue { background: rgba(37,99,235,0.12); color: var(--accent-blue); border: 1px solid rgba(37,99,235,0.25); }
+    .badge-purple { background: rgba(124,58,237,0.12); color: var(--accent-purple); border: 1px solid rgba(124,58,237,0.25); }
+    .badge-amber { background: rgba(217,119,6,0.12); color: var(--accent-amber); border: 1px solid rgba(217,119,6,0.25); }
+    .badge-red { background: rgba(220,38,38,0.12); color: var(--accent-red); border: 1px solid rgba(220,38,38,0.25); }
+    .badge-green { background: rgba(5,150,105,0.12); color: var(--accent-green); border: 1px solid rgba(5,150,105,0.25); }
+
+    .drawer { z-index:500; border-radius:10px 0 0 10px; box-shadow:-10px 0 32px rgba(0,0,0,.20); pointer-events:auto; }
+    .drawer-header { background:var(--bg-card); }
+    .drawer-body { overscroll-behavior:contain; }
+    .drawer-section { border-bottom:1px solid var(--border-color); padding-bottom:14px; margin-bottom:14px; }
+    .drawer-section h4 { display:flex; align-items:center; gap:7px; }
+    .theme-btn:hover,.nav-portal-btn:hover,.project-selector-wrapper:focus-within { border-color:var(--border-accent); }
+    @media(max-width:900px) { header { align-items:flex-start; flex-direction:column; } .header-actions { justify-content:flex-start; width:100%; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; animation:none !important; scroll-behavior:auto !important; } }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION BAR (S03 PARITY) -->
+  <header class="top-bar">
+    <div class="header-main-col">
+      <!-- Row 1: Brand Icon Box + Title/Subtitle Stack -->
+      <div class="brand-container">
+        <div class="brand-icon-box">🏛️</div>
+        <div class="brand-text-stack">
+          <h1 class="brand-title">
+            <span>Agentic Progress &amp; Delay Intelligence</span>
+            <span class="brand-acip-tag">(ACIP S04 <span class="info-btn" id="infoPlatformBtn">ℹ<span class="acip-tooltip tooltip-align-left" style="width: 330px; font-weight: 500; line-height: 1.45;">ACIP Forensics is an evidence-centric platform combining deterministic CPM engineering computation, delay forensics, and statutory PSSCOC governance across the project lifecycle.</span></span>)</span>
+          </h1>
+          <span class="brand-sub">
+            ACIP Forensics &mdash; Executive Delay Forensics, Critical Path &amp; Statutory EOT Cockpit
+            <span class="info-btn" id="infoCockpitBtn">ℹ<span class="acip-tooltip" id="tipCockpit">⚡ <strong>S04 COCKPIT:</strong> Deterministic CPM critical path delay forensics, Time Impact Analysis (TIA), contemporaneous rain gauge radar reconciliation, and statutory PSSCOC Clause 24.1 notice tracking.</span></span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Row 2: Project List shifted below Title with Project Description Meta Chips -->
+      <div class="project-toolbar-row">
+        <div class="project-selector-wrapper">
+          <span>📁</span>
+          <span class="project-label">PROJECT:</span>
+          <select id="projectSelect" class="project-select" onchange="onProjectChange(this.value)">
+            <option value="PRJ-T5-003">Changi Airport Terminal 5 — Substructure &amp; Tunnels (S$145M)</option>
+            <option value="PRJ-JID-ATP-004">Jurong Innovation District Advanced Tech Park (S$68.5M)</option>
+            <option value="PRJ-TWRP-002">Tuas Water Reclamation Plant — Biosolids Facility (S$78.5M)</option>
+            <option value="PRJ-WHC-COM-001" selected>Woodlands Health Campus Commercial Annex (S$55M)</option>
+          </select>
+          <span class="info-btn" id="infoProjectBtn">ℹ<span class="acip-tooltip" id="tipProject">Project delay &amp; forensic baseline profile</span></span>
+        </div>
+
+        <div class="meta-chip">
+          <span id="headerSectorIcon">🏥</span>
+          <span id="headerSector">Healthcare Infrastructure</span>
+          <span class="info-btn" id="infoSectorBtn">ℹ<span class="acip-tooltip">Target infrastructure classification and client risk profile</span></span>
+        </div>
+
+        <div class="meta-chip">
+          <span id="headerContractFormIcon">📦</span>
+          <span id="headerContractForm">PSSCOC 2020</span>
+          <span class="info-btn" id="infoContractBtn">ℹ<span class="acip-tooltip">Standard Conditions of Contract governing delay notices, EOT, and liquidated damages</span></span>
+        </div>
+
+        <div class="meta-chip">
+          <span id="headerContractorIcon">🏢</span>
+          <span id="headerContractor">WinningPine Construction Pte Ltd</span>
+          <span class="info-btn" id="infoContractorBtn">ℹ<span class="acip-tooltip">Main contractor identity and critical path schedule tracking</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Column 1, Row 1: PSSCOC Notice Window Pill -->
+      <div id="eotCountdownPill" class="status-pill amber" onclick="openNoticeDrawer()">
+        <span id="noticeCountdownText">⏱️ PSSCOC Notice: 14 Days Remaining</span>
+        <span class="info-btn" id="infoNoticeBtn" onclick="event.stopPropagation()">ℹ<span class="acip-tooltip">PSSCOC Clause 24.1 mandatory 28-day statutory notice condition precedent window. Click to open delay notice timeline.</span></span>
+      </div>
+      <!-- Column 2, Row 1: Local Engine -->
+      <div class="config-status">
+        <span class="config-item">
+          <span class="status-dot"></span>
+          <span id="engineBadge">Local Engine</span>
+        </span>
+        <span class="info-btn" id="infoEngineBtn">ℹ<span class="acip-tooltip">Runtime execution engine: Local / AWS / Azure / GCP stateless Python / DuckDB instance.</span></span>
+      </div>
+
+      <!-- Column 1, Row 2: SRE Health Pill -->
+      <div id="sreHealthPill" class="status-pill green" onclick="openSREDrawer()">
+        <span>🟢 SRE: 99.98% System Healthy</span>
+        <span class="info-btn" id="infoSreBtn" onclick="event.stopPropagation()">ℹ<span class="acip-tooltip">Stateless DuckDB OLAP engine &amp; Apache Parquet Lakehouse telemetry health status. Click to open SRE diagnostics.</span></span>
+      </div>
+      <!-- Column 2, Row 2: Light / Dark Mode Toggle Button (Shows target mode to switch into) -->
+      <button class="theme-toggle-btn" id="themeCycleBtn" onclick="toggleTheme()">
+        <span style="display:inline-flex; align-items:center; gap:5px;">
+          <span id="themeIcon">🌙</span>
+          <span id="themeText">Dark Mode</span>
+        </span>
+        <span class="info-btn" id="infoThemeBtn" onclick="event.stopPropagation()">ℹ<span class="acip-tooltip">Visual theme toggle: click to switch between Light Mode and Dark Mode across all analytics cockpits.</span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT -->
+  <main>
+    <!-- Real-Time Statutory Warning Banner (S03 Parity) -->
+    <div id="statutoryWarningBanner" class="warning-banner critical">
+      <div>
+        <span style="font-weight:800; color:var(--accent-red);">🚨 CRITICAL PATH DELAY &amp; TIMEBAR NOTICE WARNING:</span>
+        <span id="warningBannerText">Groundwater ingress event DLY-2026-001 has caused 14 workdays of critical path delay. Mandatory PSSCOC Clause 24.1 statutory notice required within 28 days!</span>
+      </div>
+      <button class="banner-btn" onclick="reviewDelayNotice()">Review Delay Notice Details</button>
+    </div>
+
+    <!-- Hidden compatibility tags so JS updates never error -->
+    <div style="display:none;" aria-hidden="true">
+      <span id="bannerProjectTitle">Woodlands Health Campus Commercial Annex</span>
+      <span id="bannerProjectId">PRJ-WHC-COM-001</span>
+      <span id="bannerContractor">WinningPine Construction Pte Ltd</span>
+      <span id="bannerContractForm">PSSCOC 2020</span>
+      <span id="bannerLdRate">S$15,000/day</span>
+      <span id="bannerStatusBadge">Critical Delay (Excavation Ingress)</span>
+    </div>
+
+    <!-- KPI METRIC CARDS -->
+    <div class="kpi-grid">
+      <div class="kpi-card kpi-interactive" id="cardForecastDate" role="button" tabindex="0" onclick="openMetricDrawer('forecast_finish')" data-kpi="kpiForecastDate" data-kpi-title="Forecast Finish" aria-label="Open Forecast Finish evidence drawer">
+        <div class="kpi-label">
+          <span>Forecast Finish</span>
+          <button type="button" class="dict-trigger info-btn" aria-label="Forecast finish evidence" onclick="event.stopPropagation(); openMetricDrawer('forecast_finish');">ℹ</button>
+        </div>
+        <div class="kpi-value" id="kpiForecastDate">24 Nov 2026</div>
+        <div class="kpi-subtext" id="kpiForecastSub">Baseline: 19 Nov 2026 (+3 workdays / 5 calendar days)</div>
+      </div>
+
+      <div class="kpi-card kpi-interactive" id="cardNetDelay" role="button" tabindex="0" onclick="openMetricDrawer('net_delay')" data-kpi="kpiNetDelay" data-kpi-title="Net Critical Delay" aria-label="Open Net Critical Delay evidence drawer">
+        <div class="kpi-label">
+          <span>Net Critical Delay</span>
+          <button type="button" class="dict-trigger info-btn" aria-label="Net critical delay evidence" onclick="event.stopPropagation(); openMetricDrawer('net_delay');">ℹ</button>
+        </div>
+        <div class="kpi-value" id="kpiNetDelay" style="color: var(--accent-red);">3 Workdays</div>
+        <div class="kpi-subtext" id="kpiNetDelaySub">Groundwater Ingress (DLY-2026-001)</div>
+      </div>
+
+      <div class="kpi-card kpi-interactive" id="cardAssessedEot" role="button" tabindex="0" onclick="openMetricDrawer('assessed_eot')" data-kpi="kpiAssessedEot" data-kpi-title="Assessed EOT" aria-label="Open Assessed EOT evidence drawer">
+        <div class="kpi-label">
+          <span>Assessed EOT</span>
+          <button type="button" class="dict-trigger info-btn" aria-label="Assessed EOT evidence" onclick="event.stopPropagation(); openMetricDrawer('assessed_eot');">ℹ</button>
+        </div>
+        <div class="kpi-value" id="kpiAssessedEot" style="color: var(--accent-blue);">2 / 4 Days</div>
+        <div class="kpi-subtext" id="kpiAssessedEotSub">Clause 23.1(f) Neutral Rain Event (2d Approved)</div>
+      </div>
+
+      <div class="kpi-card kpi-interactive" id="cardLdExposure" role="button" tabindex="0" onclick="openMetricDrawer('ld_exposure')" data-kpi="kpiLdExposure" data-kpi-title="LD Exposure" aria-label="Open LD Exposure evidence drawer">
+        <div class="kpi-label">
+          <span>LD Exposure</span>
+          <button type="button" class="dict-trigger info-btn" aria-label="Liquidated damages exposure evidence" onclick="event.stopPropagation(); openMetricDrawer('ld_exposure');">ℹ</button>
+        </div>
+        <div class="kpi-value" id="kpiLdExposure" style="color: var(--accent-amber);">S$45,000</div>
+        <div class="kpi-subtext" id="kpiLdExposureSub">Gross 3 workdays Slippage (S$45k) | Approved Ledger: S$30,000 | AI Advisory: S$0</div>
+      </div>
+    </div>
+
+    <!-- TABS NAVIGATION (S03 Parity: Shaded Interactive Buttons with i-Tooltips & Architectural Insight Drawers) -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" id="tabBtnSchedule" onclick="switchTab('tab-schedule', this)">
+        <span>⏱️ Schedule & Critical Path</span>
+        <span class="info-btn" id="infoTabScheduleBtn" onclick="event.stopPropagation(); openTabInsightDrawer('tab-schedule');" aria-label="Schedule engine insight">ℹ<span class="acip-tooltip">Deterministic Discrete-Day CPM Engine with forward/backward passes, float calculation, and driving path discovery. Click to open architectural insight drawer.</span></span>
+      </button>
+      <button class="tab-btn" id="tabBtnWhatif" onclick="switchTab('tab-whatif', this)">
+        <span>🧪 What-If Fragnet Simulator</span>
+        <span class="info-btn" id="infoTabWhatifBtn" onclick="event.stopPropagation(); openTabInsightDrawer('tab-whatif');" aria-label="What-if fragnet simulator insight">ℹ<span class="acip-tooltip">Time Impact Analysis (TIA) fragnet injection simulating schedule delay propagation on critical path. Click to open architectural insight drawer.</span></span>
+      </button>
+      <button class="tab-btn" id="tabBtnClaims" onclick="switchTab('tab-claims', this)">
+        <span>📜 Clause 23.1 Claims Ledger</span>
+        <span class="info-btn" id="infoTabClaimsBtn" onclick="event.stopPropagation(); openTabInsightDrawer('tab-claims');" aria-label="Claims ledger insight">ℹ<span class="acip-tooltip">PSSCOC Clause 23.1 delay events, 28-day notice timebar enforcement, and liquidated damages ledger. Click to open architectural insight drawer.</span></span>
+      </button>
+      <button class="tab-btn" id="tabBtnRadar" onclick="switchTab('tab-radar', this)">
+        <span>📡 Contemporaneous Rain Radar</span>
+        <span class="info-btn" id="infoTabRadarBtn" onclick="event.stopPropagation(); openTabInsightDrawer('tab-radar');" aria-label="Rain radar insight">ℹ<span class="acip-tooltip">Automated NEA weather station telemetry cross-examination against manual rain diaries and turnstiles. Click to open architectural insight drawer.</span></span>
+      </button>
+      <button class="tab-btn" id="tabBtnConsensus" onclick="switchTab('tab-consensus', this)">
+        <span>🤖 AI Consensus Audit</span>
+        <span class="info-btn" id="infoTabConsensusBtn" onclick="event.stopPropagation(); openTabInsightDrawer('tab-consensus');" aria-label="Consensus deliberation insight">ℹ<span class="acip-tooltip">Multi-agent adversarial deliberation across Claimant, Respondent, and Superintending Officer agents. Click to open architectural insight drawer.</span></span>
+      </button>
+    </div>
+
+    <!-- TAB 1: SCHEDULE & CPM CRITICAL PATH -->
+    <div id="tab-schedule" class="tab-panel active">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">
+            <span>📊 Primavera P6 Schedule Activities (Discrete-Day CPM)</span>
+          </div>
+          <div>
+            <span class="calc-boundary-badge" id="schedVersionBadge">Baseline BL-01 vs Progress Update UP-01</span>
+          </div>
+        </div>
+
+        <!-- GANTT VISUAL ENCODING LEGEND -->
+        <div class="gantt-legend">
+          <span style="font-weight: 700; color: var(--text-primary);">CPM Gantt Visual Encoding:</span>
+          <span style="display: flex; align-items: center; gap: 5px;"><span style="color: var(--accent-red); font-size: 0.95rem;">◆</span> Critical Milestone (TF=0d)</span>
+          <span style="display: flex; align-items: center; gap: 5px;"><span style="display: inline-block; width: 14px; height: 10px; background: linear-gradient(90deg, #ef4444, #b91c1c); border-radius: 2px;"></span> Critical Driving Path (TF=0d)</span>
+          <span style="display: flex; align-items: center; gap: 5px;"><span style="display: inline-block; width: 14px; height: 10px; background: linear-gradient(90deg, #3b82f6, #1d4ed8); border-radius: 2px;"></span> Non-Critical Activity</span>
+          <span style="display: flex; align-items: center; gap: 5px;"><span style="display: inline-block; width: 14px; height: 8px; background: rgba(59,130,246,0.18); border: 1px dashed #3b82f6; border-radius: 2px;"></span> Available Total Float (TF &gt; 0d)</span>
+          <span style="display: flex; align-items: center; gap: 5px;"><span class="dep-pill">FS ← ACT</span> CPM Dependency Chain</span>
+        </div>
+
+        <div class="table-container">
+          <table id="scheduleTable">
+            <thead>
+              <tr>
+                <th>WBS</th>
+                <th>Activity ID</th>
+                <th>Task Description</th>
+                <th>Duration</th>
+                <th>Early Start</th>
+                <th>Early Finish</th>
+                <th>Late Start</th>
+                <th>Late Finish</th>
+                <th>Total Float</th>
+                <th>Free Float</th>
+                <th>Critical Path</th>
+                <th id="thGanttTimeline" style="min-width: 270px; width: 300px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Gantt Timeline (Calendar-Scaled)</span>
+                  </div>
+                  <div class="gantt-axis-header" id="ganttAxisHeader">
+                    <span id="ganttAxisStart">Start Date</span>
+                    <span id="ganttAxisMid">Mid</span>
+                    <span id="ganttAxisEnd">Forecast Finish</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="scheduleTableBody">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: WHAT-IF FRAGNET SIMULATOR -->
+    <div id="tab-whatif" class="tab-panel">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">
+            <span>🧪 Time Impact Analysis (TIA) Fragnet Injection Simulator</span>
+          </div>
+          <div>
+            <span class="calc-boundary-badge">Zero-LLM Deterministic CPM Forward/Backward Pass</span>
+          </div>
+        </div>
+
+        <div class="simulator-grid">
+          <!-- FORM CONTROLS -->
+          <div class="sim-form">
+            <div class="form-group">
+              <label for="fragnetTitle">Fragnet Event Title</label>
+              <input type="text" id="fragnetTitle" class="form-input" value="Unforeseen Groundwater Pit Pumping Delay">
+            </div>
+
+            <div class="form-group">
+              <label for="insertActivity">Predecessor Insertion Node</label>
+              <select id="insertActivity" class="form-select">
+                <option value="ACT-03">ACT-03 Basement Excavation (Critical Path)</option>
+                <option value="ACT-04">ACT-04 Ground Anchor Installation (Total Float: 5d)</option>
+                <option value="ACT-02">ACT-02 Substructure Piling</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Fragnet Duration (Workdays):</label>
+              <div class="slider-row">
+                <input type="range" id="durationSlider" class="duration-slider" min="1" max="20" value="3" oninput="updateDurationValue(this.value)">
+                <span class="duration-display" id="durationDisplay">3 Days</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="riskAllocation">Contractual Risk Allocation</label>
+              <select id="riskAllocation" class="form-select">
+                <option value="NEUTRAL_FORCE_MAJEURE">Neutral Force Majeure (Rain / Flooding - EOT Only)</option>
+                <option value="EMPLOYER_RISK">Employer Risk (Architect Instruction / Late Site Access)</option>
+                <option value="CONTRACTOR_RISK">Contractor Risk (Equipment Breakdown / Resource Shortage)</option>
+              </select>
+            </div>
+
+            <button class="touch-btn" onclick="executeTiaSimulation()">
+              <span>⚡ Execute Time Impact Analysis</span>
+            </button>
+          </div>
+
+          <!-- RESULT CARD -->
+          <div class="sim-result-card" id="tiaResultCard">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 2px;">Deterministic Simulation Results</h3>
+                <span style="font-size: 0.72rem; color: var(--text-muted);">Hypothetical Fragnet Sandbox • Isolated from Persisted Records</span>
+              </div>
+              <span class="calc-boundary-badge" id="simBadge" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-purple);">WHAT-IF SCENARIO</span>
+            </div>
+
+            <div class="result-impact-grid">
+              <div class="impact-box">
+                <span class="label">Impacted Completion</span>
+                <span class="val" id="resImpactedFinish" style="color: var(--accent-red);">24 Nov 2026</span>
+              </div>
+              <div class="impact-box">
+                <span class="label">Critical Path Shift</span>
+                <span class="val" id="resCriticalShift">+3 Workdays</span>
+              </div>
+              <div class="impact-box">
+                <span class="label">Entitled EOT Days</span>
+                <span class="val" id="resEotEntitled" style="color: var(--accent-green);">3 Workdays</span>
+              </div>
+              <div class="impact-box">
+                <span class="label">Net Scenario LD Exposure</span>
+                <span class="val" id="resLdExposure" style="color: var(--accent-green);">S$0</span>
+              </div>
+            </div>
+
+            <div class="consensus-audit-box">
+              <h4><span>🛡️</span> <span id="resConsensusStatus">DETERMINISTIC EVALUATION &amp; CPM SYNTHESIS</span></h4>
+              <p id="resSynthesisSummary">
+                The deterministic CPM simulation confirms that inserting 3 workdays directly into ACT-01 shifts project completion from 2026-11-19 to 2026-11-24 (over standard 5-day working calendar, skipping Nov 21-22 weekend). Under PSSCOC 2020, Neutral Force Majeure allocates 3 workdays of EOT, resulting in S$0.00 of contractor LD exposure (residual culpable delay = 0 workdays).
+              </p>
+            </div>
+
+            <div style="margin-top: 10px; padding: 8px 12px; background: rgba(59, 130, 246, 0.08); border-radius: 6px; font-size: 0.75rem; color: var(--text-secondary); border-left: 3px solid var(--accent-blue);">
+              🧪 <strong>Scenario Isolation Notice:</strong> This simulation calculates the theoretical forward-looking shift for this specific what-if fragnet. It operates strictly in memory and does not alter official project baseline dates, approved delay event assessments in the Claims Ledger, or executive KPI metrics.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: CLAIMS & LD LEDGER -->
+    <div id="tab-claims" class="tab-panel">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">
+            <span>📜 PSSCOC Clause 23.1 Delay Events & Liquidated Damages Ledger</span>
+          </div>
+          <div>
+            <span class="calc-boundary-badge">Audit Trail & Notice Condition Precedent</span>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Event ID</th>
+                <th>Revision Stage</th>
+                <th>Delay Event Description</th>
+                <th>Affected Activity</th>
+                <th>Notice Date</th>
+                <th>Notice Compliance</th>
+                <th>Claimed EOT</th>
+                <th>Assessed EOT</th>
+                <th>Culpable LD Days</th>
+                <th>LD Exposure (SGD)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="delayEventsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: CONTEMPORANEOUS RAIN RADAR -->
+    <div id="tab-radar" class="tab-panel">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">
+            <span>📡 Contemporaneous Rain Gauge vs Biometrics Radar</span>
+          </div>
+          <div>
+            <span class="calc-boundary-badge">Forensic Discrepancy & Fraud Detector</span>
+          </div>
+        </div>
+
+        <div class="radar-grid" id="radarGridContainer">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: AI CONSENSUS AUDIT -->
+    <div id="tab-consensus" class="tab-panel">
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">
+            <span>🤖 Multi-Agent Adversarial Deliberation & Statutory Consensus Engine</span>
+          </div>
+          <div>
+            <span class="calc-boundary-badge">Deterministic FastMCP & Fail-Closed Guardrails</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- CONTROLS ROW -->
+          <div class="consensus-ctrl-row">
+            <label for="consensusEventSelect" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Inspect Delay Event:</label>
+            <select id="consensusEventSelect" class="form-select" style="min-width: 280px;" onchange="onConsensusEventChange(this.value)">
+              <!-- Populated via JS -->
+            </select>
+            <button class="touch-btn" style="padding: 6px 14px; font-size: 0.82rem;" onclick="reExecuteDeliberation()">
+              <span>⚡ Deliberate Live</span>
+            </button>
+            <span id="consensusLoading" style="display: none; font-size: 0.8rem; color: var(--accent-cyan);">Deliberating across agents...</span>
+          </div>
+
+          <!-- OVERALL DETERMINATION BOX -->
+          <div class="consensus-audit-box" id="consensusBoxMain" style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <h4 style="font-size: 1rem; margin: 0;">
+                <span id="consensusStatusIcon">🛡️</span> <span id="consensusStatusTitle">STATUS: MULTI-AGENT SYNTHESIS READY</span>
+              </h4>
+              <span class="calc-boundary-badge" id="consensusTierBadge">DETERMINISTIC_ADVISORY_ASSESSMENT</span>
+            </div>
+            <p id="consensusSummaryText" style="font-size: 0.88rem; line-height: 1.6; margin-top: 10px;">
+              Loading multi-agent statutory determination...
+            </p>
+            <div style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.25); border-radius: 6px; font-size: 0.78rem; color: var(--text-muted); border-left: 3px solid var(--accent-amber);" id="consensusDisclaimer">
+              ⚖️ <strong>Statutory Adjudication Guardrail:</strong> Advisory determination only. Under Singapore PSSCOC and SOPA legislation, final legal authority belongs exclusively to the authorized human Superintending Officer or SOPA Adjudicator.
+            </div>
+          </div>
+
+          <!-- 3-AGENT ADVERSARIAL TURNS GRID -->
+          <div>
+            <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 8px;">Adversarial Agent Deliberation Transcript</h4>
+            <div class="agent-turns-grid" id="agentTurnsContainer">
+              <!-- Dynamically rendered agent cards -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FORENSIC DETAIL DRAWER / BOTTOM SHEET -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <aside class="drawer" id="forensicDrawer" role="complementary" aria-label="Forensic detail drawer" aria-hidden="true">
+    <div class="drawer-grabber"></div>
+    <div class="drawer-header">
+      <h3 id="drawerTitle"><span>📖</span> Dictionary Reference</h3>
+      <button class="drawer-close-btn" onclick="closeDrawer()" title="Close drawer">&times;</button>
+    </div>
+    <div class="drawer-body" id="drawerBody">
+      <!-- Populated via JS -->
+    </div>
+  </aside>
+
+  <script>
+    // State management (Woodlands Health Campus is the default showcase project)
+    let currentProjectId = 'PRJ-WHC-COM-001';
+    let dictionaryBundle = null;
+    let currentProjectData = null;
+
+    // Theme Toggle (S03 Parity: Light Mode default shows '🌙 Dark Mode' as target action)
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'light';
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('acip_theme', theme);
+
+      const icon = document.getElementById('themeIcon');
+      const text = document.getElementById('themeText') || document.getElementById('themeLabel');
+      if (theme === 'dark') {
+        if (icon) icon.innerText = '☀️';
+        if (text) text.innerText = 'Light Mode';
+      } else {
+        if (icon) icon.innerText = '🌙';
+        if (text) text.innerText = 'Dark Mode';
+      }
+    }
+
+    // Canonical S01/S02/S03 Project Profile Metadata
+    const PROJECT_META = {
+      "PRJ-T5-003": {
+        name: "Changi Airport Terminal 5 — Substructure & Tunnels (S$145M)",
+        sector: "Aviation Transit Substructure",
+        icon: "✈️",
+        contract_form: "LTA / CAG Civil Standard",
+        contractor: "GrandPillar Infrastructure Pte Ltd",
+        warning: "Unmapped 66kV SP Power High-Voltage Duct Clash. 14-day certified EOT benchmark active."
+      },
+      "PRJ-JID-ATP-004": {
+        name: "Jurong Innovation District Advanced Tech Park (S$68.5M)",
+        sector: "Advanced Manufacturing",
+        icon: "🏭",
+        contract_form: "PSSCOC 2020",
+        contractor: "Heng Win (Private) Limited",
+        warning: "Artificially bloated substructure fragnet detected. 38 days disputed delay exposure under PSSCOC Clause 23.1!"
+      },
+      "PRJ-TWRP-002": {
+        name: "Tuas Water Reclamation Plant — Biosolids Facility (S$78.5M)",
+        sector: "Environmental Water Infrastructure",
+        icon: "🌊",
+        contract_form: "PUB Standard Conditions",
+        contractor: "Koh Brothers - China State JV",
+        warning: "Deep piling obstruction in marine clay active. 6 culpable delay days under PUB Standard Conditions."
+      },
+      "PRJ-WHC-COM-001": {
+        name: "Woodlands Health Campus Commercial Annex (S$55M)",
+        sector: "Healthcare Infrastructure",
+        icon: "🏥",
+        contract_form: "PSSCOC 2020",
+        contractor: "WinningPine Construction Pte Ltd",
+        warning: "Groundwater ingress event DLY-2026-001 has caused 14 workdays of critical path delay. Mandatory PSSCOC Clause 24.1 statutory notice required within 28 days!"
+      },
+      "PRJ-MBF-FIT-002": {
+        name: "Marina Bay Financial Tower L28-35 Commercial Fit-Out (S$22.4M)",
+        sector: "Commercial High-Density Fit-Out",
+        icon: "🏢",
+        contract_form: "SIA Measurement 9th Ed",
+        contractor: "GemStone Building Contractors Pte Ltd",
+        warning: "Rapid architect instructions disruption window analysis active. 2 culpable delay days under SIA Clause 23."
+      },
+      "PRJ-CRL-CR108": {
+        name: "Cross Island Line Underground Ancillary Shaft (S$145M)",
+        sector: "Heavy Civil Underground Transit",
+        icon: "🚇",
+        contract_form: "LTA Civil Standard",
+        contractor: "GrandPillar Infrastructure Pte Ltd",
+        warning: "TBM shaft launch window schedule critical. Real-time telemetry monitoring 45-day float consumption."
+      }
+    };
+
+    function initGlobalTooltips() {
+      const tooltipEl = document.getElementById('acipGlobalTooltip');
+      if (!tooltipEl) return;
+
+      document.querySelectorAll('.info-btn').forEach(btn => {
+        const textSpan = btn.querySelector('.acip-tooltip');
+        const tipText = textSpan ? textSpan.innerHTML : (btn.getAttribute('data-tip') || '');
+
+        btn.addEventListener('mouseenter', (e) => {
+          if (!tipText) return;
+          tooltipEl.innerHTML = tipText;
+          tooltipEl.style.opacity = '1';
+          tooltipEl.style.visibility = 'visible';
+          
+          const rect = btn.getBoundingClientRect();
+          const tipRect = tooltipEl.getBoundingClientRect();
+          
+          let top = rect.bottom + 8;
+          let left = rect.left + (rect.width / 2) - (tipRect.width / 2);
+          
+          if (left < 10) left = 10;
+          if (left + tipRect.width > window.innerWidth - 10) {
+            left = window.innerWidth - tipRect.width - 10;
+          }
+          if (top + tipRect.height > window.innerHeight - 10) {
+            top = rect.top - tipRect.height - 8;
+            tooltipEl.classList.remove('pos-below');
+            tooltipEl.classList.add('pos-above');
+          } else {
+            tooltipEl.classList.remove('pos-above');
+            tooltipEl.classList.add('pos-below');
+          }
+          
+          const arrowLeft = rect.left + (rect.width / 2) - left;
+          tooltipEl.style.setProperty('--arrow-left', `${arrowLeft}px`);
+          tooltipEl.style.top = `${top}px`;
+          tooltipEl.style.left = `${left}px`;
+        });
+
+        btn.addEventListener('mouseleave', () => {
+          tooltipEl.style.opacity = '0';
+          tooltipEl.style.visibility = 'hidden';
+        });
+      });
+    }
+
+    function openSREDrawer() {
+      const html = `
+        <div class="drawer-section">
+          <h4>🟢 Site Reliability Engineering (SRE) Diagnostics</h4>
+          <p style="margin-top:8px;"><strong>Availability SLO:</strong> 99.98% Available</p>
+          <p><strong>Computation Boundary:</strong> Strictly Deterministic CPM Forward/Backward Pass (Zero-LLM Math Kernel)</p>
+          <p><strong>OLAP Lakehouse:</strong> DuckDB In-Memory Stateless Engine + Apache Parquet Telemetry</p>
+          <p><strong>Deployment Mode:</strong> Local HTTP Daemon (Port 8087) | Cloud Parity via Docker</p>
+        </div>
+      `;
+      openDrawer("SRE Diagnostics & Architecture", html);
+    }
+
+    function openNoticeDrawer() {
+      const meta = PROJECT_META[currentProjectId] || PROJECT_META["PRJ-WHC-COM-001"];
+      const html = `
+        <div class="drawer-section">
+          <h4>⏱️ Statutory Delay Notice Window (PSSCOC Clause 24.1)</h4>
+          <p style="margin-top:8px;"><strong>Active Notice Window:</strong> 14 Days Remaining of 28 Days Condition Precedent</p>
+          <p><strong>Governing Contract:</strong> ${escapeHtml(meta.contract_form)}</p>
+          <p><strong>Contractor:</strong> ${escapeHtml(meta.contractor)}</p>
+          <p style="margin-top:8px;"><strong>Statutory Condition Precedent:</strong> Failure to submit formal contemporaneous notice within 28 days of delay event occurrence bars contractor from Extension of Time (EOT) entitlement.</p>
+          <p style="margin-top:10px; color:var(--accent-red); font-weight:700;">Action Required: Serve written notice of delay to Superintending Officer (SO) with prima facie critical path impact evidence.</p>
+        </div>
+      `;
+      openDrawer("PSSCOC Delay Notice Governance", html);
+    }
+
+    function reviewDelayNotice() {
+      openNoticeDrawer();
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function updateDurationValue(val) {
+      document.getElementById('durationDisplay').innerText = val + ' Days';
+    }
+
+    // On Project Changed
+    function onProjectChange(projectId) {
+      closeDrawer();
+      currentProjectId = projectId;
+      localStorage.setItem('acip_active_project_id', projectId);
+      try {
+        const url = new URL(window.location);
+        url.searchParams.set('project', projectId);
+        window.history.pushState({}, '', url);
+      } catch (e) {}
+      loadProjectData(projectId);
+    }
+
+    // Load Project Profile & Associated Datasets
+    async function loadProjectData(projectId) {
+      try {
+        const pRes = await fetch(`/api/projects?id=${projectId}`);
+        const pData = await pRes.json();
+        currentProjectData = pData;
+
+        // Sync project dropdown selector
+        const pSel = document.getElementById('projectSelect');
+        if (pSel && pSel.value !== projectId) pSel.value = projectId;
+
+        // Update Banner & KPIs
+        if (document.getElementById("bannerProjectTitle")) document.getElementById("bannerProjectTitle").innerText = pData.project_name;
+        if (document.getElementById("bannerProjectId")) document.getElementById("bannerProjectId").innerText = pData.project_id;
+        if (document.getElementById("bannerContractor")) document.getElementById("bannerContractor").innerText = pData.contractor;
+        if (document.getElementById("bannerContractForm")) document.getElementById("bannerContractForm").innerText = pData.contract_form;
+        if (document.getElementById("bannerLdRate")) document.getElementById("bannerLdRate").innerText = `S$${pData.liquidated_damages_daily_sgd.toLocaleString()}/day`;
+
+        // Update S03-Parity Meta Chips & Notice Countdown Pill
+        const pMeta = PROJECT_META[projectId] || {
+          sector: pData.sector || 'Healthcare Infrastructure',
+          icon: pData.sector_icon || '🏥',
+          contract_form: pData.contract_form || 'PSSCOC 2020',
+          contractor: pData.contractor || 'WinningPine Construction Pte Ltd',
+          warning: 'Critical path delay notice window active!'
+        };
+
+        // Header Notice Countdown Pill Refresh
+        const noticePill = document.getElementById('eotCountdownPill');
+        const noticeText = document.getElementById('noticeCountdownText');
+        if (noticeText) noticeText.innerText = pData.notice_pill_text || '⏱️ Notice Window Monitored';
+        if (noticePill) noticePill.className = pData.notice_pill_class || 'status-pill green';
+
+        const secEl = document.getElementById('headerSector');
+        const secIconEl = document.getElementById('headerSectorIcon');
+        if (secEl) secEl.innerText = pData.sector || pMeta.sector;
+        if (secIconEl) secIconEl.innerText = pData.sector_icon || pMeta.icon;
+
+        const formEl = document.getElementById('headerContractForm');
+        if (formEl) formEl.innerText = pData.contract_form || pMeta.contract_form;
+
+        const contEl = document.getElementById('headerContractor');
+        if (contEl) contEl.innerText = pData.contractor || pMeta.contractor;
+
+        // Dynamic Warning Banner with Project-Specific Statutory Notice
+        const warnBanner = document.getElementById('statutoryWarningBanner');
+        const warnText = document.getElementById('warningBannerText');
+        if (warnBanner && warnText) {
+          const warningMessage = pMeta.warning || `${pData.key_event || 'Critical delay event'} has caused ${pData.net_delay_days} workdays of critical path delay. Mandatory statutory notice required!`;
+          warnBanner.style.display = 'flex';
+          warnText.innerText = warningMessage;
+        }
+
+        // 4 KPI Cards Complete Dynamic Refresh
+        // Card 1: Forecast Finish
+        if (document.getElementById('kpiForecastDate')) document.getElementById('kpiForecastDate').innerText = pData.current_forecast_completion_date;
+        if (document.getElementById('kpiForecastSub')) {
+          if (pData.project_id === 'PRJ-WHC-COM-001') {
+            document.getElementById('kpiForecastSub').innerText = `Baseline: ${pData.original_completion_date} (+${pData.net_delay_days} workdays / 5 calendar days)`;
+          } else {
+            const unit = pData.net_delay_unit || 'workdays';
+            document.getElementById('kpiForecastSub').innerText = `Baseline: ${pData.original_completion_date} (+${pData.net_delay_days} ${unit})`;
+          }
+        }
+
+        // Card 2: Net Critical Delay
+        if (document.getElementById('kpiNetDelay')) {
+          const delayUnit = pData.net_delay_unit ? (pData.net_delay_unit === 'workdays' ? 'Workdays' : pData.net_delay_unit) : 'Workdays';
+          document.getElementById('kpiNetDelay').innerText = `${pData.net_delay_days} ${delayUnit}`;
+        }
+        if (document.getElementById('kpiNetDelaySub')) document.getElementById('kpiNetDelaySub').innerText = pData.key_event || 'Critical Path Driving Delay';
+
+        // Card 3: Assessed EOT
+        if (document.getElementById('kpiAssessedEot')) document.getElementById('kpiAssessedEot').innerText = pData.assessed_eot || (pData.net_delay_days > 0 ? '2 / 4 Days' : '0 / 0 Days');
+        if (document.getElementById('kpiAssessedEotSub')) document.getElementById('kpiAssessedEotSub').innerText = pData.assessed_eot_sub || pData.governing_clause || 'Statutory Assessment';
+
+        // Card 4: LD Exposure
+        if (document.getElementById('kpiLdExposure')) document.getElementById('kpiLdExposure').innerText = `S$${Number(pData.ld_exposure_sgd || 0).toLocaleString()}`;
+        if (document.getElementById('kpiLdExposureSub')) document.getElementById('kpiLdExposureSub').innerText = pData.ld_sub || `${pData.net_delay_days} Culpable Days @ S$${Number(pData.liquidated_damages_daily_sgd || 0).toLocaleString()}/day`;
+
+        // Schedule Version Badge
+        if (document.getElementById('schedVersionBadge')) {
+          document.getElementById('schedVersionBadge').innerText = `Baseline ${pData.baseline_version || 'BL-01'} vs Progress Update ${pData.latest_update_version || 'UP-01'}`;
+        }
+
+        // Load Schedule
+        loadSchedule(projectId);
+
+        // Load Delay Events
+        loadDelayEvents(projectId);
+
+        // Load Radar
+        loadSiteRadar(projectId);
+
+        // Load Multi-Agent Deliberation Consensus
+        loadConsensusForProject(projectId);
+
+      } catch (err) {
+        console.error("Error loading project data:", err);
+      }
+    }
+
+    // Load Schedule with Time-Scaled Calendar CPM Gantt
+    async function loadSchedule(projectId) {
+      try {
+        const res = await fetch(`/api/schedule?project_id=${encodeURIComponent(projectId)}`);
+        const data = await res.json();
+        const tbody = document.getElementById('scheduleTableBody');
+        tbody.innerHTML = '';
+
+        // Populate Fragnet Simulator Activity Dropdown dynamically for active project
+        const insertSel = document.getElementById('insertActivity');
+        if (insertSel) {
+          insertSel.innerHTML = '';
+          data.activities.forEach(act => {
+            const opt = document.createElement('option');
+            opt.value = act.activity_id;
+            opt.innerText = `${act.activity_id} ${act.task_name}${act.is_critical ? ' (Critical Path)' : ''}`;
+            insertSel.appendChild(opt);
+          });
+        }
+
+        // Calculate time-scale boundaries across all project activities
+        const dateObjects = [];
+        data.activities.forEach(a => {
+          if (a.early_start) dateObjects.push(new Date(a.early_start));
+          if (a.early_finish) dateObjects.push(new Date(a.early_finish));
+          if (a.late_finish) dateObjects.push(new Date(a.late_finish));
+        });
+
+        let minTs = dateObjects.length ? Math.min(...dateObjects.map(d => d.getTime())) : new Date().getTime();
+        let maxTs = dateObjects.length ? Math.max(...dateObjects.map(d => d.getTime())) : minTs + (30 * 86400 * 1000);
+        if (maxTs <= minTs) maxTs = minTs + (14 * 86400 * 1000);
+
+        const totalSpanMs = maxTs - minTs;
+        const minDateStr = new Date(minTs).toISOString().split('T')[0];
+        const maxDateStr = new Date(maxTs).toISOString().split('T')[0];
+        const midDateStr = new Date(minTs + totalSpanMs / 2).toISOString().split('T')[0];
+
+        // Update Gantt Calendar Axis Header
+        if (document.getElementById('ganttAxisStart')) document.getElementById('ganttAxisStart').innerText = minDateStr;
+        if (document.getElementById('ganttAxisMid')) document.getElementById('ganttAxisMid').innerText = midDateStr;
+        if (document.getElementById('ganttAxisEnd')) document.getElementById('ganttAxisEnd').innerText = maxDateStr;
+
+        // Map relationships for visible dependency connectors
+        const rels = data.relationships || [];
+        const predMap = {};
+        rels.forEach(r => {
+          const p = r.pred || r.predecessor_id || r.predecessor_activity_id;
+          const s = r.succ || r.successor_id || r.successor_activity_id;
+          const typ = r.type || r.relationship_type || 'FS';
+          if (p && s) {
+            if (!predMap[s]) predMap[s] = [];
+            predMap[s].push(`${p} (${typ})`);
+          }
+        });
+
+        data.activities.forEach(act => {
+          const tr = document.createElement('tr');
+          tr.style.cursor = 'pointer';
+          tr.title = 'Click to open activity forensic drawer';
+          tr.onclick = () => openActivityDrawer(act);
+          const isCrit = Boolean(act.is_critical);
+          const isMilestone = Boolean(act.is_milestone || Number(act.duration_workdays) === 0);
+
+          // Calculate time-scaled coordinates
+          const actStartTs = act.early_start ? new Date(act.early_start).getTime() : minTs;
+          const actFinishTs = act.early_finish ? new Date(act.early_finish).getTime() : actStartTs;
+          const durationDays = Number(act.duration_workdays || 0);
+
+          let leftPct = Math.max(0, Math.min(94, ((actStartTs - minTs) / totalSpanMs) * 100));
+          let widthPct = isMilestone ? 0 : Math.max(5, Math.min(100 - leftPct, ((actFinishTs - actStartTs) / totalSpanMs) * 100));
+
+          // Float extension buffer for non-critical activities
+          const totalFloat = Number(act.total_float || 0);
+          let floatWidthPct = 0;
+          if (!isCrit && totalFloat > 0) {
+            const floatMs = totalFloat * 86400 * 1000;
+            floatWidthPct = Math.min(100 - (leftPct + widthPct), (floatMs / totalSpanMs) * 100);
+          }
+
+          // Predecessor dependency string
+          const preds = predMap[act.activity_id] || [];
+          const depHtml = preds.length ? `<div style="font-size:0.68rem; color:var(--text-muted); margin-top:2px;">${preds.map(p => `<span class="dep-pill">← ${escapeHtml(p)}</span>`).join('')}</div>` : '';
+
+          let ganttBarHtml = '';
+          if (isMilestone) {
+            ganttBarHtml = `
+              <div class="gantt-track" title="Milestone: ${act.activity_id} on ${act.early_start}">
+                <div class="gantt-gridline" style="left: 0%;"></div>
+                <div class="gantt-gridline" style="left: 33%;"></div>
+                <div class="gantt-gridline" style="left: 66%;"></div>
+                <div class="gantt-gridline" style="left: 100%;"></div>
+                <div class="gantt-milestone ${isCrit ? 'crit' : 'norm'}" style="left: ${leftPct}%;"></div>
+              </div>
+            `;
+          } else {
+            ganttBarHtml = `
+              <div class="gantt-track" title="${act.activity_id}: ${act.early_start} -> ${act.early_finish} (${durationDays}d, TF=${totalFloat}d)">
+                <div class="gantt-gridline" style="left: 0%;"></div>
+                <div class="gantt-gridline" style="left: 33%;"></div>
+                <div class="gantt-gridline" style="left: 66%;"></div>
+                <div class="gantt-gridline" style="left: 100%;"></div>
+                <div class="${isCrit ? 'gantt-bar-crit' : 'gantt-bar-norm'}" style="left: ${leftPct}%; width: ${widthPct}%;">
+                  ${durationDays}d
+                </div>
+                ${floatWidthPct > 0 ? `<div class="gantt-float-extension" style="left: ${leftPct + widthPct}%; width: ${floatWidthPct}%;" title="Available Total Float: +${totalFloat}d"></div>` : ''}
+              </div>
+            `;
+          }
+
+          let descCellHtml = escapeHtml(act.task_name);
+          if (act.activity_id === 'ACT-06') {
+            descCellHtml = `
+              <strong>${escapeHtml(act.task_name)}</strong>
+              <div style="font-size:0.68rem; color:var(--accent-purple); font-weight:700; margin-top:3px;">
+                🚩 Contract Completion Milestone • Baseline: ${escapeHtml(act.baseline_finish || '2026-11-19')} | Forecast: ${escapeHtml(act.forecast_finish || '2026-11-24')} (+3 workdays)
+              </div>
+            `;
+          }
+
+          tr.innerHTML = `
+            <td class="mono-cell">${escapeHtml(act.wbs_code)}</td>
+            <td class="mono-cell">
+              <strong>${escapeHtml(act.activity_id)}</strong>
+              ${depHtml}
+            </td>
+            <td class="desc-cell">${descCellHtml}</td>
+            <td class="mono-cell">${escapeHtml(act.duration_workdays)}d</td>
+            <td class="mono-cell">${escapeHtml(act.early_start)}</td>
+            <td class="mono-cell">${escapeHtml(act.early_finish)}</td>
+            <td class="mono-cell">${escapeHtml(act.late_start)}</td>
+            <td class="mono-cell">${escapeHtml(act.late_finish)}</td>
+            <td class="mono-cell">${escapeHtml(act.total_float)}d</td>
+            <td class="mono-cell">${escapeHtml(act.free_float)}d</td>
+            <td>
+              <span class="crit-badge ${isCrit ? 'crit-yes' : 'crit-no'}">${isCrit ? 'CRITICAL (TF=0)' : 'NON-CRITICAL'}</span>
+            </td>
+            <td class="gantt-cell">
+              ${ganttBarHtml}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Error loading schedule:", err);
+      }
+    }
+
+    // Load Delay Events
+    async function loadDelayEvents(projectId) {
+      try {
+        const res = await fetch(`/api/delay_events?project_id=${encodeURIComponent(projectId)}`);
+        const data = await res.json();
+        const tbody = document.getElementById('delayEventsTableBody');
+        tbody.innerHTML = '';
+
+        data.delay_events.forEach(evt => {
+          const tr = document.createElement('tr');
+          tr.style.cursor = 'pointer';
+          tr.title = 'Click to open delay event forensic audit dossier';
+          tr.onclick = () => openEventDetail(evt.event_id, evt);
+          const isCompliant = Boolean(evt.is_notice_compliant);
+          tr.innerHTML = `
+            <td class="mono-cell">
+              <strong>${escapeHtml(evt.event_id)}</strong>
+            </td>
+            <td><span class="crit-badge crit-no">${escapeHtml(evt.revision_stage)}</span></td>
+            <td class="desc-cell"><strong>${escapeHtml(evt.event_title)}</strong></td>
+            <td class="mono-cell">${escapeHtml(evt.affected_activity_id)}</td>
+            <td class="mono-cell">${escapeHtml(evt.notice_served_date)}</td>
+            <td>
+              <span class="crit-badge ${isCompliant ? 'crit-no' : 'crit-yes'}">
+                ${isCompliant ? 'COMPLIANT' : 'TIME-BARRED'}
+              </span>
+            </td>
+            <td class="mono-cell">${escapeHtml(evt.claimed_eot_workdays)}d</td>
+            <td class="mono-cell">${escapeHtml(evt.assessed_eot_workdays)}d</td>
+            <td class="mono-cell" style="color: var(--accent-red);">${escapeHtml(evt.culpable_delay_workdays)}d</td>
+            <td class="mono-cell" style="font-weight: 700;">S$${escapeHtml(Number(evt.liquidated_damages_sgd || 0).toLocaleString())}</td>
+            <td>
+              <button class="dict-trigger audit-dossier-btn" onclick="event.stopPropagation(); openEventDetail('${escapeHtml(evt.event_id)}', evt);">Audit Dossier</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Error loading delay events:", err);
+      }
+    }
+
+    // Load Radar
+    async function loadSiteRadar(projectId) {
+      try {
+        const res = await fetch(`/api/site_radar?project_id=${encodeURIComponent(projectId)}`);
+        const data = await res.json();
+        const container = document.getElementById('radarGridContainer');
+        container.innerHTML = '';
+
+        data.site_records.forEach(rec => {
+          const card = document.createElement('div');
+          card.className = 'radar-card';
+          card.style.cursor = 'pointer';
+          card.title = 'Click to open contemporaneous telemetry audit drawer';
+          card.onclick = () => openRadarDrawer(rec);
+          const isFlagged = String(rec.status || '').includes('DISCREPANCY');
+          card.innerHTML = `
+            <div class="radar-date">
+              <span style="display:inline-flex; align-items:center; gap:4px;">
+                <span>📅 ${escapeHtml(rec.date)}</span>
+              </span>
+              <span class="crit-badge ${isFlagged ? 'crit-yes' : 'crit-no'}">${escapeHtml(rec.status)}</span>
+            </div>
+            <div style="font-size: 0.82rem;">
+              <div>🌧️ <strong>Automated Rain Gauge:</strong> <code class="mono-cell">${escapeHtml(rec.weather_station_rain_mm)} mm</code></div>
+              <div style="margin-top: 4px;">📝 <strong>Contractor Rain Diary Claim:</strong> <code class="mono-cell">${escapeHtml(rec.contractor_rain_claim_hrs)} hrs</code></div>
+            </div>
+            <div class="radar-stats">
+              <span>Biometric Turnstiles:</span>
+              <strong class="mono-cell" style="color: ${isFlagged ? 'var(--accent-red)' : 'var(--accent-green)'};">${escapeHtml(rec.biometric_worker_count)} Workers</strong>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error("Error loading site radar:", err);
+      }
+    }
+
+    // Execute TIA Simulation
+    async function executeTiaSimulation() {
+      const fragnetTitle = document.getElementById('fragnetTitle').value;
+      const insertNode = document.getElementById('insertActivity').value;
+      const duration = parseInt(document.getElementById('durationSlider').value);
+      const riskAlloc = document.getElementById('riskAllocation').value;
+
+      try {
+        const res = await fetch('/api/tia/simulate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project_id: currentProjectId,
+            fragnet_name: fragnetTitle,
+            inserted_after_activity_id: insertNode,
+            fragnet_duration_days: duration,
+            risk_allocation: riskAlloc
+          })
+        });
+        const d = await res.json();
+        if (!res.ok) {
+          throw new Error(d.error || `Server responded with status ${res.status}`);
+        }
+
+        const impactedDate = d.impacted_completion_date || '--';
+        const shiftDays = (d.critical_path_shift_workdays !== undefined && d.critical_path_shift_workdays !== null) ? d.critical_path_shift_workdays : 0;
+        const eotDays = (d.compensable_eot_workdays !== undefined && d.compensable_eot_workdays !== null) ? d.compensable_eot_workdays : 0;
+        const ldExposure = (d.calculated_liquidated_damages_exposure_sgd !== undefined && d.calculated_liquidated_damages_exposure_sgd !== null) ? Number(d.calculated_liquidated_damages_exposure_sgd) : 0;
+        const synthesis = (d.agentic_synthesis && d.agentic_synthesis.synthesis_summary) ? d.agentic_synthesis.synthesis_summary : (d.synthesis_summary || 'Deterministic CPM simulation completed.');
+
+        // Update Results Display
+        document.getElementById('resImpactedFinish').innerText = impactedDate;
+        document.getElementById('resCriticalShift').innerText = `+${shiftDays} Workdays`;
+        document.getElementById('resEotEntitled').innerText = `${eotDays} Workdays`;
+        document.getElementById('resLdExposure').innerText = `S$${ldExposure.toLocaleString()}`;
+        document.getElementById('resSynthesisSummary').innerText = synthesis;
+        document.getElementById('simBadge').innerText = 'CALCULATED BY DUCKDB CPM';
+
+      } catch (err) {
+        alert("Failed to execute TIA simulation: " + err.message);
+      }
+    }
+
+    // Drawer Controls
+    function openDrawer(title, contentHtml) {
+      document.getElementById('drawerTitle').innerHTML = `<span>📖</span> ${escapeHtml(title)}`;
+      document.getElementById('drawerBody').innerHTML = contentHtml;
+      document.getElementById('drawerOverlay').classList.add('open');
+      document.getElementById('forensicDrawer').classList.add('open');
+    }
+
+    function closeDrawer() {
+      document.getElementById('drawerOverlay').classList.remove('open');
+      document.getElementById('forensicDrawer').classList.remove('open');
+    }
+
+    // MULTI-AGENT ADVERSARIAL DELIBERATION
+    let currentConsensusEventId = 'DLY-2026-001';
+
+    async function loadConsensusForProject(projectId) {
+      try {
+        const res = await fetch(`/api/delay_events?project_id=${projectId}`);
+        const data = await res.json();
+        const select = document.getElementById('consensusEventSelect');
+        select.innerHTML = '';
+        if (data.delay_events && data.delay_events.length > 0) {
+          data.delay_events.forEach(evt => {
+            const opt = document.createElement('option');
+            opt.value = evt.event_id;
+            opt.innerText = `${evt.event_id}: ${evt.event_title}`;
+            select.appendChild(opt);
+          });
+          currentConsensusEventId = data.delay_events[0].event_id;
+          select.value = currentConsensusEventId;
+        } else {
+          const opt = document.createElement('option');
+          opt.value = 'DLY-2026-001';
+          opt.innerText = 'DLY-2026-001: Groundwater Ingress & Pumping Stoppage';
+          select.appendChild(opt);
+          currentConsensusEventId = 'DLY-2026-001';
+        }
+        await loadConsensusData(projectId, currentConsensusEventId);
+      } catch (err) {
+        console.error("Error loading consensus dropdown:", err);
+      }
+    }
+
+    function onConsensusEventChange(eventId) {
+      currentConsensusEventId = eventId;
+      loadConsensusData(currentProjectId, eventId);
+    }
+
+    async function reExecuteDeliberation() {
+      const loader = document.getElementById('consensusLoading');
+      loader.style.display = 'inline';
+      await loadConsensusData(currentProjectId, currentConsensusEventId);
+      loader.style.display = 'none';
+    }
+
+    async function loadConsensusData(projectId, eventId) {
+      try {
+        const res = await fetch(`/api/deliberation/consensus?project_id=${projectId}&event_id=${eventId}`);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        const data = await res.json();
+
+        // Populate Main Summary
+        document.getElementById('consensusStatusTitle').innerText = data.consensus_achieved ? 
+          'STATUS: FULL MULTI-AGENT STATUTORY CONSENSUS REACHED' : 'STATUS: DIVERGENT DELIBERATION (RESOLVED BY SO AWARD)';
+        document.getElementById('consensusStatusIcon').innerText = data.consensus_achieved ? '✅' : '⚖️';
+        document.getElementById('consensusTierBadge').innerText = data.determination_tier;
+
+        const summaryHtml = `
+          <strong>Advisory Award Summary for Event ${escapeHtml(data.event_id || '')}:</strong> ${escapeHtml(data.so_determination_summary || 'Analysis complete.')}<br><br>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px;">
+            <span><strong>Target Event:</strong> <code class="mono-cell" style="color: var(--accent-cyan);">${escapeHtml(data.event_id || '')} (${escapeHtml(data.event_title || '')})</code></span>
+            <span><strong>Critical Delay:</strong> <code class="mono-cell">${escapeHtml(data.net_critical_delay_workdays)} workdays</code></span>
+            <span><strong>SO EOT Relief:</strong> <code class="mono-cell" style="color: var(--accent-green);">${escapeHtml(data.candidate_eot_relief_days)} workdays</code></span>
+            <span><strong>Culpable Delay:</strong> <code class="mono-cell" style="color: var(--accent-red);">${escapeHtml(data.contractor_culpable_days)} workdays</code></span>
+            <span><strong>Adjudicated LD:</strong> <code class="mono-cell" style="color: var(--accent-amber);">S$${escapeHtml(Number(data.liquidated_damages_exposure_sgd || 0).toLocaleString())}</code></span>
+          </div>
+        `;
+        document.getElementById('consensusSummaryText').innerHTML = summaryHtml;
+
+        // Populate Agent Turns
+        const container = document.getElementById('agentTurnsContainer');
+        container.innerHTML = '';
+
+        if (data.turns && data.turns.length > 0) {
+          data.turns.forEach(t => {
+            const card = document.createElement('div');
+            card.className = 'agent-turn-card';
+            card.style.cursor = 'pointer';
+            card.title = 'Click to open agent deliberation position paper';
+            card.onclick = () => openAgentTurnDrawer(t);
+            const roleColor = t.agent_role === 'CLAIMANT' ? 'var(--accent-cyan)' : (t.agent_role === 'RESPONDENT' ? 'var(--accent-purple)' : 'var(--accent-amber)');
+            const roleTag = t.agent_role === 'CLAIMANT' ? 'PARTY SUBMISSION' : (t.agent_role === 'RESPONDENT' ? 'PARTY CONTESTATION' : 'STATUTORY RULING');
+            const ldLabel = t.agent_role === 'CLAIMANT' ? 'Claimed LD' : (t.agent_role === 'RESPONDENT' ? 'Demanded LD Set-Off' : 'Assessed LD');
+            card.innerHTML = `
+              <div class="agent-turn-header">
+                <div class="agent-name-role">
+                  <span style="color: ${roleColor};">●</span>
+                  <span>${escapeHtml(t.agent_name)}</span>
+                  <span class="calc-boundary-badge" style="font-size: 0.65rem; padding: 1px 6px;">${roleTag}</span>
+                  <span class="info-btn" title="View agent position paper" onclick="event.stopPropagation(); openAgentTurnDrawer(t);">ℹ</span>
+                </div>
+                <span class="agent-tool-tag">${escapeHtml(t.tool_invoked || 's04_tool')}</span>
+              </div>
+              <div class="agent-statement-box">
+                ${escapeHtml(t.position_statement)}
+              </div>
+              <div class="agent-metrics-row">
+                <span>EOT: <strong>${escapeHtml(t.recommended_eot_days)}d</strong></span>
+                <span>${ldLabel}: <strong>S$${escapeHtml(Number(t.recommended_ld_exposure_sgd || 0).toLocaleString())}</strong></span>
+                <span>Notice: <strong>${escapeHtml(t.notice_compliance_status)}</strong></span>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        }
+      } catch (err) {
+        console.error("Error loading consensus data:", err);
+      }
+    }
+
+    // Forensic Metric Drill-Down Evidence Drawer (S03 Parity)
+    function openMetricDrawer(metricKey) {
+      const pData = currentProjectData || {
+        project_name: "Woodlands Health Campus Commercial Annex",
+        project_id: currentProjectId || "PRJ-WHC-COM-001",
+        contractor: "WinningPine Construction Pte Ltd",
+        contract_sum_sgd: 55000000.0,
+        contract_form: "PSSCOC 2020",
+        liquidated_damages_daily_sgd: 15000.0,
+        commencement_date: "2026-11-02",
+        original_completion_date: "2026-11-19",
+        current_forecast_completion_date: "2026-11-24",
+        net_delay_days: 14,
+        ld_exposure_sgd: 210000.0,
+        baseline_version: "BL-01",
+        latest_update_version: "UP-01",
+        key_event: "Groundwater Ingress in North Pit (DLY-2026-001)",
+        rain_gauge_discrepancy_score: "HIGH_FLAG"
+      };
+
+      let metricConfig = null;
+
+      if (metricKey === 'forecast_finish') {
+        const netDays = (pData.net_delay_days !== undefined && pData.net_delay_days !== null) ? Number(pData.net_delay_days) : 0;
+        const isZero = netDays === 0;
+        const isWhc = pData.project_id === 'PRJ-WHC-COM-001';
+        metricConfig = {
+          icon: isZero ? '⏱️' : '⏱️',
+          title: 'Forecast Project Finish Date Evidence',
+          value: pData.current_forecast_completion_date || '2026-11-24',
+          sub: isWhc 
+            ? `Baseline Target: 19 Nov 2026 (+3 workdays / 5 calendar days variance)`
+            : `Original Baseline: ${pData.original_completion_date || '2026-11-19'} (+${netDays} ${pData.net_delay_unit || 'workdays'})`,
+          statusBadge: isZero ? 'CRITICAL PATH ON-SCHEDULE' : 'CRITICAL PATH DRIVEN',
+          badgeClass: isZero ? 'badge-green' : 'badge-purple',
+          cardAccent: isZero ? 'var(--accent-green)' : 'var(--accent-purple)',
+          meaning: `<strong>Discrete-Day CPM Schedule Calculation:</strong><br>
+The Forecast Completion Date is calculated through deterministic Critical Path Method (CPM) forward and backward passes across all schedule activities in the authoritative Primavera P6 XER baseline (<code>${escapeHtml(pData.baseline_version)}</code>) vs progress update (<code>${escapeHtml(pData.latest_update_version)}</code>). ${isZero ? 'Critical driving activities are progressing within baseline milestones with zero net delay.' : `Critical path float is exhausted on driving activity <code>${escapeHtml(pData.key_event || 'Critical Milestone')}</code>, extending completion of terminal milestone <code>ACT-06 Substructure Complete</code> from 19 Nov 2026 to 24 Nov 2026 (+3 workdays / 5 calendar days).`}`,
+          breakdownTitle: 'Critical Path Schedule Lineage & Milestone Contract',
+          breakdownItems: isWhc ? [
+            { label: 'Contract Completion Milestone', val: 'ACT-06 Substructure Complete' },
+            { label: 'Authoritative Baseline Version', val: pData.baseline_version || 'BL-01' },
+            { label: 'Latest Progress Update Version', val: pData.latest_update_version || 'UP-01' },
+            { label: 'Baseline BL-01 Planned Finish', val: '2026-11-19 (Contract Target Date)' },
+            { label: 'Current Forecast Completion Date', val: '2026-11-24 (UP-01 Contemporaneous)' },
+            { label: 'Critical Path Variance', val: '+3 Workdays (5 Calendar Days)', alert: true },
+            { label: 'Terminal Total Float', val: '0 Workdays (Strictly Driving Milestone)', alert: true },
+            { label: 'Driving Delay Event', val: pData.key_event || 'Groundwater Ingress (DLY-2026-001)' },
+            { label: 'Math Kernel Authority', val: 'Deterministic DuckDB OLAP (Zero-LLM Math)', ok: true }
+          ] : [
+            { label: 'Authoritative Baseline Version', val: pData.baseline_version || 'BL-01' },
+            { label: 'Latest Progress Update Version', val: pData.latest_update_version || 'UP-01' },
+            { label: 'Contract Commencement Date', val: pData.commencement_date || '2026-11-02' },
+            { label: 'Contractual Completion Date', val: pData.original_completion_date || '2026-11-19' },
+            { label: 'Current Forecast Completion Date', val: pData.current_forecast_completion_date || '2026-11-24' },
+            { label: 'Critical Path Float Variance', val: `+${netDays} Workdays`, alert: !isZero, ok: isZero },
+            { label: 'Driving Delay Event', val: pData.key_event || 'None' },
+            { label: 'Math Kernel Authority', val: 'Deterministic DuckDB OLAP (Zero-LLM Math)', ok: true }
+          ],
+          actionLabel: '⏱️ Inspect Critical Path in Schedule Table',
+          actionTab: 'tab-schedule',
+          dictKey: 'CRITICAL_PATH'
+        };
+      } else if (metricKey === 'net_delay') {
+        const netDays = (pData.net_delay_days !== undefined && pData.net_delay_days !== null) ? Number(pData.net_delay_days) : 0;
+        const isZero = netDays === 0;
+        const isWhc = pData.project_id === 'PRJ-WHC-COM-001';
+        metricConfig = {
+          icon: isZero ? '✅' : '🚨',
+          title: 'Net Critical Path Schedule Delay Evidence',
+          value: isWhc ? '3 Workdays' : `${netDays} Days`,
+          sub: isWhc 
+            ? 'Groundwater Ingress (DLY-2026-001) | 2d Approved EOT'
+            : (isZero ? `${pData.key_event || 'On-Schedule'} | Float Buffer Maintained` : `${pData.key_event || 'Critical Delay Event'} | Float Depleted`),
+          statusBadge: isZero ? 'ON-SCHEDULE / ZERO DELAY' : 'CRITICAL DELAY EXPOSURE',
+          badgeClass: isZero ? 'badge-green' : 'badge-red',
+          cardAccent: isZero ? 'var(--accent-green)' : 'var(--accent-red)',
+          meaning: isZero
+            ? `<strong>SCL Delay Protocol & Statutory Contract Benchmarks:</strong><br>
+Net Critical Delay is strictly <strong>0 Workdays</strong>. The deterministic Critical Path Method (CPM) forward and backward passes confirm that all driving milestones are currently proceeding within contractual float allowances.`
+            : `<strong>SCL Delay Protocol & Statutory ${escapeHtml(pData.governing_clause || 'Conditions')}:</strong><br>
+Net Critical Delay represents the total quantifiable extension of the project's longest path. Total Float is strictly 0 workdays on the critical driving chain. For Woodlands Health Campus, unforeseen groundwater ingress on ACT-03 pushed completion of terminal milestone ACT-06 by <strong>3 workdays</strong> (from 19 Nov to 24 Nov 2026). Under PSSCOC Clause 24.1, contractor culpable delay exposes the contractor to liquidated damages unless an excusable Extension of Time (EOT) is certified under Clause 23.1.`,
+          breakdownTitle: isZero ? 'Critical Path Float & Statutory Compliance' : 'Contemporaneous Delay Causation & Apportionment',
+          breakdownItems: isWhc ? [
+            { label: 'Gross Project Critical Path Delay', val: '3 Workdays (5 Calendar Days)', alert: true },
+            { label: 'Terminal Completion Milestone', val: 'ACT-06 Substructure Complete', ok: true },
+            { label: 'Approved Neutral EOT Relief (Rain)', val: '2 Workdays (PSSCOC 23.1(f))', ok: true },
+            { label: 'Residual Net Culpable Delay', val: '1 Workday (3d gross - 2d EOT)', alert: true },
+            { label: 'Approved Claims Ledger Assessment', val: '2 Culpable Days Assessed (S$30,000 LD)', alert: true },
+            { label: 'Governing Condition Precedent', val: 'PSSCOC Clause 23.1(f) & 24.1', ok: true },
+            { label: 'Telemetry Corroboration', val: '22mm Rainfall recorded 5 Nov 2026', ok: true }
+          ] : [
+            { label: 'Gross Critical Path Delay', val: `${netDays} Days`, alert: true },
+            { label: 'Contractor Culpable Delay', val: `${Math.max(0, netDays - 2)} Days`, alert: true },
+            { label: 'Excusable Neutral Delay (Rain)', val: `${Math.min(netDays, 2)} Days`, ok: true },
+            { label: 'Governing Condition Precedent', val: pData.governing_clause || 'Contract Conditions' },
+            { label: 'Active Delay Event', val: pData.key_event || 'DLY Delay Event' },
+            { label: 'Contemporaneous Telemetry Audit', val: 'Radar Rainfall & Piezometer Telemetry Verified' }
+          ],
+          actionLabel: isZero ? '⏱️ Inspect Schedule Table' : '🧪 Inject Fragnet into Time Impact Simulator',
+          actionTab: isZero ? 'tab-schedule' : 'tab-whatif',
+          dictKey: 'TOTAL_FLOAT'
+        };
+      } else if (metricKey === 'assessed_eot') {
+        const eotVal = pData.assessed_eot || (pData.net_delay_days > 0 ? '2 / 4 Days' : '0 / 0 Days');
+        const eotSub = pData.assessed_eot_sub || pData.governing_clause || 'Statutory Assessment';
+        const isTimeBarred = String(eotSub).includes('Time-Barred');
+        metricConfig = {
+          icon: '📜',
+          title: 'Extension of Time (EOT) Statutory Assessment Dossier',
+          value: eotVal,
+          sub: eotSub,
+          statusBadge: isTimeBarred ? 'REJECTED - TIME-BARRED' : (pData.net_delay_days === 0 ? 'FULL CONTRACTUAL RELIEF' : 'SO VERIFIED EOT ENTITLEMENT'),
+          badgeClass: isTimeBarred ? 'badge-red' : (pData.net_delay_days === 0 ? 'badge-green' : 'badge-blue'),
+          cardAccent: isTimeBarred ? 'var(--accent-red)' : 'var(--accent-blue)',
+          meaning: `<strong>Statutory EOT Claim Audit & Weather Telemetry Reconciliation:</strong><br>
+Assessment of contractor entitlement under contract condition <strong>${escapeHtml(pData.contract_form)}</strong> for project <code>${escapeHtml(pData.project_id)}</code>. Superintending Officer audit reconciled contemporaneous site telemetry, delay causality, and statutory notice compliance under <strong>${escapeHtml(pData.governing_clause || 'Contract Conditions')}</strong>.`,
+          breakdownTitle: 'EOT Claim Audit & Radar Telemetry Reconciliation',
+          breakdownItems: [
+            { label: 'Active Project Title', val: pData.project_name },
+            { label: 'Assessed EOT Relief', val: eotVal, ok: !isTimeBarred },
+            { label: 'Governing Clause', val: pData.governing_clause || 'Contract Conditions' },
+            { label: 'Assessment Disposition', val: eotSub, alert: isTimeBarred, ok: !isTimeBarred },
+            { label: 'Rain Gauge Discrepancy Score', val: `${pData.rain_gauge_discrepancy_score || 'NORMAL'} Telemetry Analysis` },
+            { label: 'Statutory Notice Status', val: isTimeBarred ? 'TIME-BARRED FORFEITURE' : 'COMPLIANT (Within notice window)', alert: isTimeBarred, ok: !isTimeBarred }
+          ],
+          actionLabel: '📡 Audit Contemporaneous Weather Radar Data',
+          actionTab: 'tab-radar',
+          dictKey: 'EOT_CLAIM'
+        };
+      } else if (metricKey === 'ld_exposure') {
+        const dailyLd = Number(pData.liquidated_damages_daily_sgd || 15000);
+        const grossDelayDays = Number(pData.net_delay_days || 0);
+        const totalLd = Number(pData.ld_exposure_sgd || 0);
+        const hasLd = totalLd > 0;
+        const isWhc = pData.project_id === 'PRJ-WHC-COM-001';
+        metricConfig = {
+          icon: '⚖️',
+          title: 'Liquidated Damages (LD) Forensic Exposure & Multi-Tier Reconciliation',
+          value: `S$ ${totalLd.toLocaleString()}`,
+          sub: isWhc ? `Gross 3 workdays Slippage (S$45k) | Approved Ledger: S$30,000 | AI Advisory: S$0` : `${grossDelayDays} Culpable Days @ S$ ${dailyLd.toLocaleString()} / Day`,
+          statusBadge: hasLd ? 'CONTRACTUAL WITHHOLDING ASSESSMENT' : 'ZERO FINANCIAL EXPOSURE',
+          badgeClass: hasLd ? 'badge-amber' : 'badge-green',
+          cardAccent: hasLd ? 'var(--accent-amber)' : 'var(--accent-green)',
+          meaning: `<strong>SOPA Section 11 & Contractual Multi-Tier Reconciliation:</strong><br>
+Under contract form <strong>${escapeHtml(pData.contract_form)}</strong> and Singapore SOPA Section 11, the employer is entitled to exercise statutory set-off against progress payments for certified culpable delay at <code>S$ ${dailyLd.toLocaleString()} per workday</code>.<br><br>
+<strong>Reconciliation of the 5 Distinct Figures Across Cockpit Views:</strong><br>
+1. <strong>Gross Project Schedule Slippage (S$45,000):</strong> The contemporaneous critical path variance from baseline BL-01 (19 Nov 2026) to progress update UP-01 (24 Nov 2026) is exactly 3 workdays (3d @ S$15k/d = S$45,000) before claim relief.<br>
+2. <strong>Contractor Initial Claim (Revision 1):</strong> Contractor claimed 4 workdays of EOT under PSSCOC Clause 23.1(f), seeking full LD relief (S$0.00).<br>
+3. <strong>Employer QS Initial Contestation:</strong> Contested full 4 workdays as contractor culpability (pump downtime on Nov 7-8), demanding S$60,000 (4d @ S$15k/d).<br>
+4. <strong>Employer QS Hearing Contestation:</strong> In the 3-workday fragnet deliberation session, employer contested the 3-day critical shift, demanding S$45,000 (3d @ S$15k/d).<br>
+5. <strong>Superintending Officer Approved Ledger (Revision 2):</strong> The human Superintending Officer formally apportioned the claim into 2 workdays neutral weather EOT and 2 workdays contractor culpable delay, certifying <strong>S$30,000.00</strong> into the enforceable Claims Ledger.<br>
+6. <strong>AI Consensus Deliberation Ruling:</strong> Under SCL Delay Protocol Core Principle 10, the Arbitrator agent recommended full time-relief from LD for neutral weather concurrency, yielding <strong>S$0.00</strong> advisory LD. (Non-binding advisory recommendation).`,
+          breakdownTitle: 'Liquidated Damages Multi-Tier Reconciliation & Audit Trace',
+          breakdownItems: isWhc ? [
+            { label: 'Daily Liquidated Damages Rate', val: `S$ ${dailyLd.toLocaleString()} / Day` },
+            { label: 'Gross Project Critical Path Slippage', val: '3 Workdays (BL-01 19 Nov -> UP-01 24 Nov)', alert: true },
+            { label: 'Gross Unmitigated Exposure', val: 'S$ 45,000 (3 workdays @ S$15k/d)', alert: true },
+            { label: 'Contractor Initial Claim (Rev 01)', val: '4 Workdays Claimed (Full EOT, S$0 LD)', ok: true },
+            { label: 'Employer QS Initial Contestation', val: 'S$ 60,000 (4 workdays @ S$15k/d)', alert: true },
+            { label: 'Employer QS Hearing Contestation', val: 'S$ 45,000 (3 workdays @ S$15k/d)', alert: true },
+            { label: 'SO Approved Claims Ledger (Rev 02)', val: 'S$ 30,000 (2d Culpable @ S$15k/d)', alert: true },
+            { label: 'AI Advisory Deliberation Ruling', val: 'S$ 0.00 (SCL Principle 10 EOT Relief)', ok: true },
+            { label: 'Enforceable Statutory Set-Off', val: 'S$ 30,000 (Human Authorized SO Determination)', alert: true }
+          ] : [
+            { label: 'Daily Liquidated Damages Rate', val: `S$ ${dailyLd.toLocaleString()} / Day` },
+            { label: 'Net Culpable Delay Days', val: `${grossDelayDays} Workdays`, alert: hasLd, ok: !hasLd },
+            { label: 'Total Liquidated Damages Liability', val: `S$ ${totalLd.toLocaleString()}`, alert: hasLd, ok: !hasLd },
+            { label: 'Main Contractor', val: pData.contractor },
+            { label: 'Approved Contract Sum', val: `S$ ${Number(pData.contract_sum_sgd || 0).toLocaleString()}` },
+            { label: 'Statutory Withholding Basis', val: `${pData.governing_clause || 'Contract Conditions'} & SOPA Section 11` }
+          ],
+          actionLabel: '📜 Inspect Clause 23.1 Claims Ledger',
+          actionTab: 'tab-claims',
+          dictKey: 'LIQUIDATED_DAMAGES'
+        };
+      }
+
+      if (!metricConfig) return;
+
+      const drawerHtml = `
+        <div class="drawer-section" style="border-left: 3px solid ${metricConfig.cardAccent};">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.05em;">Forensic Metric Value</span>
+            <span class="badge ${metricConfig.badgeClass}" style="font-size:10px; font-weight:700; padding:2px 7px; border-radius:4px;">${escapeHtml(metricConfig.statusBadge)}</span>
+          </div>
+          <div style="font-size:22px; font-weight:800; font-family:'JetBrains Mono',monospace; margin-top:6px; color:var(--text-primary);">${escapeHtml(metricConfig.value)}</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${escapeHtml(metricConfig.sub)}</div>
+        </div>
+
+        <div class="drawer-section" style="border-left: 3px solid ${metricConfig.cardAccent};">
+          <h4>⚖️ Statutory & Forensic Meaning</h4>
+          <div style="font-size:11.5px; line-height:1.55; color:var(--text-secondary); margin-top:6px;">${metricConfig.meaning}</div>
+        </div>
+
+        <div class="drawer-section">
+          <h4>${escapeHtml(metricConfig.breakdownTitle)}</h4>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+            ${metricConfig.breakdownItems.map(it => `
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; padding:4px 0; border-bottom:1px solid var(--border-color);">
+                <span style="color:var(--text-secondary);">${escapeHtml(it.label)}:</span>
+                <span style="font-weight:700; font-family:'JetBrains Mono',monospace; color:${it.alert ? 'var(--accent-red)' : (it.ok ? 'var(--accent-green)' : 'var(--text-primary)')};">${escapeHtml(it.val)}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
+          <button class="banner-btn" style="width:100%; justify-content:center; padding:9px 12px; font-size:11.5px; background:var(--accent-blue);" onclick="switchTab('${metricConfig.actionTab}'); closeDrawer();">
+            ${escapeHtml(metricConfig.actionLabel)}
+          </button>
+          <button class="banner-btn" style="width:100%; justify-content:center; padding:7px 12px; font-size:11px; background:var(--bg-secondary); color:var(--text-secondary); border:1px solid var(--border-color);" onclick="openDictionaryDetail('${metricConfig.dictKey}')">
+            📖 View Canonical CPM & Statutory Definition
+          </button>
+        </div>
+      `;
+
+      openDrawer(metricConfig.title, drawerHtml);
+    }
+
+
+    async function openDictionaryDetail(termKey) {
+      if (!dictionaryBundle) {
+        try {
+          const res = await fetch('/api/dictionary');
+          dictionaryBundle = await res.json();
+        } catch (e) {
+          console.error("Dictionary fetch error:", e);
+        }
+      }
+
+      let term = null;
+      if (dictionaryBundle) {
+        if (dictionaryBundle.by_id && dictionaryBundle.by_id[termKey]) {
+          term = dictionaryBundle.by_id[termKey];
+        } else if (dictionaryBundle.by_id) {
+          const cleanKey = termKey.toUpperCase().replace(/^ACIP-S04-CPM-/, '').replace(/^ACIP-CORE-/, '');
+          const match = Object.values(dictionaryBundle.by_id).find(item => 
+            item.term_id === termKey ||
+            item.term_id.endsWith('-' + cleanKey) ||
+            item.term_id.includes(cleanKey) ||
+            (item.canonical_name && item.canonical_name.toLowerCase().includes(termKey.toLowerCase().replace(/_/g, ' ')))
+          );
+          term = match;
+        }
+      }
+
+      if (term) {
+        const html = `
+          <div class="drawer-section">
+            <h4>Canonical Definition</h4>
+            <p><strong>${escapeHtml(term.canonical_name)}</strong> (${escapeHtml(term.term_id)})</p>
+            <p style="margin-top: 6px;">${escapeHtml(term.plain_english_summary)}</p>
+          </div>
+          <div class="drawer-section">
+            <h4>Technical Rigor & Mathematical Logic</h4>
+            <p>${escapeHtml(term.technical_rigor_explanation || 'Discrete-day CPM algorithm executing forward/backward passes.')}</p>
+          </div>
+          <div class="drawer-section">
+            <h4>Singapore Statutory & Contract Governance</h4>
+            <p>${escapeHtml(term.statutory_governance || 'Governed under PSSCOC 2020 Clause 23 & Building and Construction Industry Security of Payment Act (SOPA).')}</p>
+          </div>
+        `;
+        openDrawer(term.canonical_name, html);
+      } else {
+        openDrawer(termKey, `<p>Definition retrieved for <strong>${escapeHtml(termKey)}</strong>.</p>`);
+      }
+    }
+
+    // Enhanced Delay Event Forensic Dossier Drawer (Point 3)
+    function openEventDetail(eventId, evtObj) {
+      const safeEventId = escapeHtml(eventId);
+      const safeProjectId = escapeHtml(currentProjectId);
+      
+      let evt = evtObj;
+      if (!evt && window.currentDelayEventsList) {
+        evt = window.currentDelayEventsList.find(e => e.event_id === eventId);
+      }
+      
+      const title = evt ? evt.event_title : 'Delay Event Analysis';
+      const isCompliant = evt ? Boolean(evt.is_notice_compliant) : true;
+      const claimedEot = evt ? evt.claimed_eot_workdays : 4;
+      const assessedEot = evt ? evt.assessed_eot_workdays : 2;
+      const culpableDays = evt ? evt.culpable_delay_workdays : 2;
+      const ldSgd = evt ? Number(evt.liquidated_damages_sgd || 0) : 30000;
+      const soNote = evt ? evt.so_assessment_note : 'Deterministic CPM analysis confirmed critical path delay.';
+      const clause = evt ? evt.clause_citation : 'PSSCOC 2020 Clause 23.1 & 24.1';
+      const evalNote = evt ? (evt.deterministic_evaluation || evt.evaluation_note || '') : '';
+
+      const drawerHtml = `
+        <div style="margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span class="badge ${isCompliant ? 'badge-green' : 'badge-red'}" style="font-size: 10.5px; padding: 3px 8px; font-weight: 700;">
+              ${isCompliant ? 'STATUTORY NOTICE COMPLIANT' : 'TIME-BARRED FORFEITURE'}
+            </span>
+            <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">${safeProjectId}</span>
+          </div>
+          <h3 style="font-size: 15px; font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">${safeEventId}: ${escapeHtml(title)}</h3>
+          <span style="font-size: 11px; color: var(--text-secondary);">Governing Clause: <strong>${escapeHtml(clause)}</strong></span>
+        </div>
+
+        <div class="drawer-section">
+          <h4>Statutory Delay Apportionment</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">CONTRACTOR CLAIMED EOT</span>
+              <strong style="font-size: 14px;">${escapeHtml(claimedEot)} Workdays</strong>
+            </div>
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">SO CERTIFIED EOT</span>
+              <strong style="color: var(--accent-green); font-size: 14px;">${escapeHtml(assessedEot)} Workdays</strong>
+            </div>
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">CONTRACTOR CULPABLE DELAY</span>
+              <strong style="color: var(--accent-red); font-size: 14px;">${escapeHtml(culpableDays)} Workdays</strong>
+            </div>
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">LIQUIDATED DAMAGES LIABILITY</span>
+              <strong style="color: var(--accent-amber); font-size: 14px;">S$${escapeHtml(ldSgd.toLocaleString())}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="drawer-section">
+          <h4>Superintending Officer Assessment Note</h4>
+          <div class="stat-callout" style="border-left-color: var(--accent-blue);">
+            ${escapeHtml(soNote)}
+          </div>
+        </div>
+
+        ${evalNote ? `
+        <div class="drawer-section">
+          <h4>Deterministic CPM Mathematical Verification</h4>
+          <p style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.5;">
+            ${escapeHtml(evalNote)}
+          </p>
+        </div>` : ''}
+
+        <div class="drawer-section">
+          <h4>Direct Cockpit Actions</h4>
+          <button class="btn-primary" style="width: 100%;" onclick="closeDrawer(); switchTab('tab-consensus');">
+            🤖 Review Multi-Agent Deliberation on ${safeEventId}
+          </button>
+        </div>
+      `;
+      openDrawer(`Delay Event: ${safeEventId}`, drawerHtml);
+    }
+
+    // Helper to pre-select activity in Time Impact Simulator from Activity Drawer
+    function injectActivityIntoSimulator(actId) {
+      switchTab('tab-whatif');
+      const insertSel = document.getElementById('insertActivity');
+      if (insertSel) {
+        insertSel.value = actId;
+      }
+    }
+
+    // Tab Architectural & Statutory Insight Drawers (Point 4)
+    function openTabInsightDrawer(tabKey) {
+      const insights = {
+        'tab-schedule': {
+          icon: '⏱️',
+          title: 'Schedule & Critical Path Engine Insight',
+          badge: 'CPM DETERMINISTIC ENGINE',
+          badgeClass: 'badge-purple',
+          content: `
+            <div class="drawer-section">
+              <h4>Discrete-Day CPM Mathematical Foundation</h4>
+              <p>The ACIP S04 schedule engine performs deterministic forward and backward passes across all activities using topological sorting in DuckDB OLAP. It calculates Early Start (ES), Early Finish (EF), Late Start (LS), Late Finish (LF), and Float metrics with Zero-LLM math hallucination:</p>
+              <div class="stat-callout" style="border-left-color: var(--accent-purple);">
+                <strong>Mathematical Formulation:</strong><br>
+                Total Float (TF) = Late Finish (LF) - Early Finish (EF)<br>
+                Free Float (FF) = min(Successor ES) - Early Finish (EF)<br>
+                Critical Path Condition: Total Float = 0 days
+              </div>
+            </div>
+            <div class="drawer-section">
+              <h4>SCL Delay Protocol & Float Ownership</h4>
+              <p>Under SCL Protocol Core Principle 9, total float is not owned exclusively by either the employer or the contractor. It belongs to the project and is consumed on a first-come, first-served basis by the party whose delay arises first.</p>
+            </div>
+            <div class="drawer-section">
+              <h4>Direct Cockpit Actions</h4>
+              <button class="btn-primary" style="width: 100%;" onclick="closeDrawer(); switchTab('tab-schedule');">⏱️ Focus Schedule Table</button>
+            </div>
+          `
+        },
+        'tab-whatif': {
+          icon: '🧪',
+          title: 'What-If Fragnet Simulator Insight',
+          badge: 'TIA CONTEMPORANEOUS METHODOLOGY',
+          badgeClass: 'badge-cyan',
+          content: `
+            <div class="drawer-section">
+              <h4>Time Impact Analysis (TIA) Methodology</h4>
+              <p>Time Impact Analysis inserts a sub-network (fragnet) representing an unpredicted delay event into the unimpacted CPM baseline immediately prior to event occurrence.</p>
+              <div class="stat-callout" style="border-left-color: var(--accent-cyan);">
+                <strong>Statutory Standard:</strong> SCL Delay Protocol Core Principle 4 & PSSCOC Clause 23.1.<br>
+                Calculates discrete shift in contractual Section 14 Completion Date directly attributable to the specific event.
+              </div>
+            </div>
+            <div class="drawer-section">
+              <h4>Direct Cockpit Actions</h4>
+              <button class="btn-primary" style="width: 100%;" onclick="closeDrawer(); switchTab('tab-whatif');">🧪 Open Fragnet Simulator</button>
+            </div>
+          `
+        },
+        'tab-claims': {
+          icon: '📜',
+          title: 'Clause 23.1 Claims Ledger Insight',
+          badge: 'STATUTORY CONDITIONS PRECEDENT',
+          badgeClass: 'badge-amber',
+          content: `
+            <div class="drawer-section">
+              <h4>PSSCOC 2020 Clause 23 & 24 Statutory Framework</h4>
+              <p>Clause 23.1 specifies 11 permissible grounds for Extension of Time (EOT). Clause 23.2 and Clause 24.1 establish strict conditions precedent requiring written notice within 28 calendar days of event inception.</p>
+              <div class="stat-callout" style="border-left-color: var(--accent-amber);">
+                <strong>Statutory Timebar Forfeiture:</strong> Failure to serve notice within 28 days completely extinguishes contractor EOT entitlement, exposing the contractor to mandatory liquidated damages withholding.
+              </div>
+            </div>
+            <div class="drawer-section">
+              <h4>Direct Cockpit Actions</h4>
+              <button class="btn-primary" style="width: 100%;" onclick="closeDrawer(); switchTab('tab-claims');">📜 View Delay Events Ledger</button>
+            </div>
+          `
+        },
+        'tab-radar': {
+          icon: '📡',
+          title: 'Contemporaneous Rain Radar Insight',
+          badge: 'AUTOMATED TELEMETRY RECONCILIATION',
+          badgeClass: 'badge-blue',
+          content: `
+            <div class="drawer-section">
+              <h4>Tri-Source Corroboration & Fraud Detection</h4>
+              <p>Reconciles automated National Environment Agency (NEA) weather station rainfall telemetry against manual contractor site diaries and biometric turnstile worker attendance records.</p>
+              <div class="stat-callout" style="border-left-color: var(--accent-blue);">
+                <strong>Singapore Evidence Act Section 116A Admissibility:</strong> Automated sensor records establish a rebuttable presumption of physical fact, disproving retrospective contractor rain delay claims where zero physical precipitation occurred.
+              </div>
+            </div>
+            <div class="drawer-section">
+              <h4>Direct Cockpit Actions</h4>
+              <button class="btn-primary" style="width: 100%;" onclick="closeDrawer(); switchTab('tab-radar');">📡 Inspect Rain Radar</button>
+            </div>
+          `
+        },
+        'tab-consensus': {
+          icon: '🤖',
+          title: 'Multi-Agent Deliberation Insight',
+          badge: 'ADVERSARIAL GOVERNANCE KERNEL',
+          badgeClass: 'badge-purple',
+          content: `
+            <div class="drawer-section">
+              <h4>Tri-Party Adversarial Deliberation</h4>
+              <p>Orchestrates structured debate between Claimant Contractor Agent, Respondent Employer Agent, and Superintending Officer Arbiter Agent.</p>
+              <div class="stat-callout" style="border-left-color: var(--accent-purple);">
+                <strong>Deterministic Consensus Rule:</strong> Deliberation is strictly governed by CPM topological calculation and Singapore statutory precedents. LLM agents articulate legal and factual arguments while math remains deterministic.
+              </div>
+            </div>
+            <div class="drawer-section">
+              <h4>Direct Cockpit Actions</h4>
+              <button class="btn-primary" style="width: 100%;" onclick="closeDrawer(); switchTab('tab-consensus');">🤖 View Agent Deliberation</button>
+            </div>
+          `
+        }
+      };
+
+      const tabInfo = insights[tabKey];
+      if (!tabInfo) return;
+
+      const drawerHtml = `
+        <div style="margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span class="badge ${tabInfo.badgeClass}" style="font-size: 10.5px; padding: 3px 8px; font-weight: 700;">${tabInfo.badge}</span>
+            <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">ARCHITECTURAL AUDIT</span>
+          </div>
+          <h3 style="font-size: 15px; font-weight: 800; color: var(--text-primary); margin: 0 0 6px 0;">${tabInfo.icon} ${escapeHtml(tabInfo.title)}</h3>
+        </div>
+        ${tabInfo.content}
+      `;
+
+      openDrawer(`${tabInfo.icon} ${tabInfo.title}`, drawerHtml);
+    }
+
+    // Schedule Activity Detail Drawer with Visual CPM Chart & Evidence
+    function openActivityDrawer(act) {
+      if (!act) return;
+      const isCrit = Boolean(act.is_critical);
+      const safeId = escapeHtml(act.activity_id);
+      const safeName = escapeHtml(act.task_name);
+      const tf = Number(act.total_float || 0);
+      const ff = Number(act.free_float || 0);
+      const dur = Number(act.duration_workdays || 0);
+      const es = escapeHtml(act.early_start || 'N/A');
+      const ef = escapeHtml(act.early_finish || 'N/A');
+      const ls = escapeHtml(act.late_start || 'N/A');
+      const lf = escapeHtml(act.late_finish || 'N/A');
+
+      const drawerHtml = `
+        <div style="margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span class="badge ${isCrit ? 'badge-red' : 'badge-green'}" style="font-size: 11px; padding: 4px 10px; font-weight: 800; letter-spacing: 0.3px;">
+              ${isCrit ? '🚨 CRITICAL PATH DRIVING (ZERO FLOAT)' : '🟢 FLOAT BUFFER (NON-CRITICAL)'}
+            </span>
+            <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-weight: 700;">WBS: ${escapeHtml(act.wbs_code)}</span>
+          </div>
+          <h3 style="font-size: 16px; font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">${safeId}: ${safeName}</h3>
+          <span style="font-size: 11px; color: var(--text-secondary);">Authoritative Discrete-Day CPM Network & Delay Forensic Dossier</span>
+        </div>
+
+        ${safeId === 'ACT-06' ? `
+        <div class="drawer-section" style="background: rgba(139, 92, 246, 0.08); border: 1.5px solid var(--accent-purple); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="color: var(--accent-purple); font-size: 12.5px;">🚩 Contractual Completion Milestone Forensic Dossier</strong>
+            <span class="badge badge-purple" style="font-size: 10px;">TERMINAL NETWORK MILESTONE</span>
+          </div>
+          <div style="font-size: 11.5px; line-height: 1.6; color: var(--text-primary);">
+            <div><strong>Milestone Role:</strong> Substructure Package Practical Completion (Contractual Target Milestone).</div>
+            <div><strong>Contractual Baseline (BL-01):</strong> <code>2026-11-19</code> (Authoritative Target Completion).</div>
+            <div><strong>Contemporaneous Forecast (UP-01):</strong> <code>2026-11-24</code> (+3 workdays / 5 calendar days variance).</div>
+            <div><strong>Causal Lineage:</strong> Groundwater Ingress (DLY-2026-001) delayed predecessor ACT-03 Basement Excavation by 3 workdays, shifting downstream ACT-05 Basement Slab Casting and driving terminal milestone ACT-06 from 19 Nov to 24 Nov.</div>
+            <div><strong>Critical Path Status:</strong> Total Float strictly 0 workdays. This terminal milestone governs the statutory completion clock and liquidated damages liability.</div>
+          </div>
+        </div>
+        ` : ''}
+
+        <!-- 1. VISUAL CPM ACTIVITY-ON-NODE (AON) 6-BOX NODE CHART -->
+        <div class="drawer-section">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h4 style="margin: 0;">Interactive CPM Topological Node Box</h4>
+            <span style="font-size: 10px; font-weight: 800; color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'};">
+              ${isCrit ? 'CRITICAL DRIVING PATH (TF = 0d)' : `BUFFER: ${tf}d FLOAT`}
+            </span>
+          </div>
+          
+          <div style="background: var(--bg-card); border: 2px solid ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'}; border-radius: 8px; padding: 10px; box-shadow: ${isCrit ? '0 0 16px rgba(239, 68, 68, 0.25)' : 'none'};">
+            <!-- 6-BOX STANDARD CPM LAYOUT -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; background: var(--bg-primary);">
+              <!-- Top Row: Early Dates & Duration -->
+              <div style="padding: 6px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); text-align: center;">
+                <span style="font-size: 9px; color: var(--text-muted); display: block; font-weight: 700;">EARLY START (ES)</span>
+                <strong style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-primary);">${es}</strong>
+              </div>
+              <div style="padding: 6px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); text-align: center; background: rgba(59, 130, 246, 0.08);">
+                <span style="font-size: 9px; color: var(--accent-blue); display: block; font-weight: 700;">DURATION (DUR)</span>
+                <strong style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--accent-blue);">${dur} Workdays</strong>
+              </div>
+              <div style="padding: 6px 8px; border-bottom: 1px solid var(--border-color); text-align: center;">
+                <span style="font-size: 9px; color: var(--text-muted); display: block; font-weight: 700;">EARLY FINISH (EF)</span>
+                <strong style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-primary);">${ef}</strong>
+              </div>
+
+              <!-- Middle Row: Activity ID & Task Name Banner -->
+              <div style="grid-column: span 3; padding: 8px 10px; background: ${isCrit ? 'rgba(239, 68, 68, 0.12)' : 'rgba(16, 185, 129, 0.1)'}; border-bottom: 1px solid var(--border-color); text-align: center;">
+                <div style="font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 13px; color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'};">
+                  ${safeId}
+                </div>
+                <div style="font-size: 11.5px; font-weight: 600; color: var(--text-primary); margin-top: 2px;">
+                  ${safeName}
+                </div>
+              </div>
+
+              <!-- Bottom Row: Late Dates & Float -->
+              <div style="padding: 6px 8px; border-right: 1px solid var(--border-color); text-align: center;">
+                <span style="font-size: 9px; color: var(--text-muted); display: block; font-weight: 700;">LATE START (LS)</span>
+                <strong style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-primary);">${ls}</strong>
+              </div>
+              <div style="padding: 6px 8px; border-right: 1px solid var(--border-color); text-align: center; background: ${isCrit ? 'rgba(239, 68, 68, 0.18)' : 'rgba(16, 185, 129, 0.18)'};">
+                <span style="font-size: 9px; color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'}; display: block; font-weight: 800;">TOTAL FLOAT (TF)</span>
+                <strong style="font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'};">${tf}d ${isCrit ? '(CRITICAL)' : '(BUFFER)'}</strong>
+              </div>
+              <div style="padding: 6px 8px; text-align: center;">
+                <span style="font-size: 9px; color: var(--text-muted); display: block; font-weight: 700;">LATE FINISH (LF)</span>
+                <strong style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-primary);">${lf}</strong>
+              </div>
+            </div>
+
+            <!-- Topological Link Chain Visualization (Predecessor -> Current -> Successor) -->
+            <div style="margin-top: 10px; padding: 8px; background: var(--bg-secondary); border-radius: 6px; font-size: 11px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; text-align: center;">
+                <div style="flex: 1; padding: 6px 4px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+                  <span style="font-size: 9px; color: var(--text-muted); display: block;">PREDECESSOR</span>
+                  <strong style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px;">Network Pred</strong>
+                </div>
+                <div style="color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'}; font-weight: 700; font-size: 11px;">
+                  --[FS=0d]-->
+                </div>
+                <div style="flex: 1.2; padding: 6px 4px; background: ${isCrit ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.15)'}; border: 1.5px solid ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'}; border-radius: 4px;">
+                  <span style="font-size: 9px; color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'}; display: block; font-weight: 800;">ACTIVE NODE</span>
+                  <strong style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'};">${safeId}</strong>
+                </div>
+                <div style="color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'}; font-weight: 700; font-size: 11px;">
+                  --[FS=0d]-->
+                </div>
+                <div style="flex: 1; padding: 6px 4px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px;">
+                  <span style="font-size: 9px; color: var(--text-muted); display: block;">SUCCESSOR</span>
+                  <strong style="font-family: 'JetBrains Mono', monospace; font-size: 10.5px;">Network Succ</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. DETERMINISTIC CPM MATHEMATICAL PROOF (STRICT NO LATEX) -->
+        <div class="drawer-section">
+          <h4>Deterministic CPM Mathematical Proof</h4>
+          <div style="background: var(--bg-card); padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 11.5px; font-family: 'JetBrains Mono', monospace; line-height: 1.6;">
+            <div style="color: var(--text-muted); margin-bottom: 4px;"># Discrete-Day Forward &amp; Backward Pass Equations:</div>
+            <div>Total Float = Late Finish (LF) - Early Finish (EF) = ${lf} - ${ef} = <strong style="color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'}; font-size: 12px;">${tf} Workdays</strong></div>
+            <div>Late Start Check = Late Start (LS) - Early Start (ES) = ${ls} - ${es} = <strong style="color: ${isCrit ? 'var(--accent-red)' : 'var(--accent-green)'};">${tf} Workdays</strong></div>
+            <div>Free Float (FF) = Min(Succ ES) - Early Finish (EF) = <strong style="color: var(--text-primary);">${ff} Workdays</strong></div>
+            <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border-color); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px;">
+              ${isCrit 
+                ? '<strong style="color: var(--accent-red);">Critical Path Proof Concluded:</strong> Total Float is strictly 0 workdays. Under SCL Delay Protocol Core Principle 9, this activity resides on the driving critical path determining the statutory project completion date. Any 1-day delay immediately pushes the contract completion date and triggers liquidated damages liability.' 
+                : `<strong style="color: var(--accent-green);">Float Buffer Proof Concluded:</strong> Total Float is ${tf} workdays (> 0). This activity possesses a non-critical buffer. Unforeseen delays can be absorbed without impacting statutory completion until the ${tf}-day buffer is fully consumed.`}
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. SCL DELAY PROTOCOL & LEGAL JURISPRUDENCE -->
+        <div class="drawer-section">
+          <h4>SCL Delay Protocol &amp; Singapore Engineering Jurisprudence</h4>
+          <p style="font-size: 12px; line-height: 1.5; color: var(--text-secondary); margin-bottom: 8px;">
+            In Singapore engineering litigation (<em>Comfort Management v OGSP</em> [2007] SGCA 10), the Court of Appeal ruled that critical path delay must be demonstrated contemporaneously through objective CPM analysis. ${isCrit ? `Because <strong>${safeId}</strong> has <strong>Total Float = 0</strong>, delay here directly generates an entitlement to Extension of Time (if employer risk) or liability for liquidated damages (if contractor risk).` : `Because <strong>${safeId}</strong> has <strong>${tf} days of float</strong>, float belongs to the project on a first-come first-served basis until exhausted.`}
+          </p>
+        </div>
+
+        <!-- 4. ACTIONABLE FRAGNET SIMULATION BUTTON -->
+        <div class="drawer-section">
+          <h4>Actionable Fragnet Simulation</h4>
+          <button class="btn-primary" style="width: 100%;" onclick="closeDrawer(); injectActivityIntoSimulator('${safeId}');">
+            🧪 Inject Delay Fragnet onto ${safeId}
+          </button>
+        </div>
+      `;
+      openDrawer(`Activity: ${safeId}`, drawerHtml);
+    }
+
+    // Contemporaneous Site Radar Detail Drawer (Point 3)
+    function openRadarDrawer(rec) {
+      if (!rec) return;
+      const isFlagged = String(rec.status || '').includes('DISCREPANCY');
+      const safeDate = escapeHtml(rec.date);
+      const safeStatus = escapeHtml(rec.status);
+      const drawerHtml = `
+        <div style="margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span class="badge ${isFlagged ? 'badge-red' : 'badge-green'}" style="font-size: 10.5px; padding: 3px 8px; font-weight: 700;">
+              ${safeStatus}
+            </span>
+            <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">NEA RECONCILED</span>
+          </div>
+          <h3 style="font-size: 15px; font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">Contemporaneous Weather Dossier: ${safeDate}</h3>
+          <span style="font-size: 11px; color: var(--text-secondary);">Tri-source physical corroboration cross-examining weather sensors against turnstiles</span>
+        </div>
+
+        <div class="drawer-section">
+          <h4>Site Telemetry Reconciliation</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">AUTOMATED WEATHER GAUGE</span>
+              <strong style="font-size: 14px;">${escapeHtml(rec.weather_station_rain_mm)} mm</strong>
+            </div>
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">CONTRACTOR DIARY CLAIM</span>
+              <strong style="color: ${isFlagged ? 'var(--accent-red)' : 'var(--accent-green)'}; font-size: 14px;">${escapeHtml(rec.contractor_rain_claim_hrs)} Hours Stoppage</strong>
+            </div>
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); grid-column: span 2;">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">BIOMETRIC TURNSTILE ATTENDANCE</span>
+              <strong style="font-size: 14px;">${escapeHtml(rec.biometric_worker_count)} Workers Active On-Site</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="drawer-section">
+          <h4>Singapore Evidence Act Section 116A Admissibility</h4>
+          <p style="font-size: 12px; line-height: 1.5; color: var(--text-secondary);">
+            Automated sensor outputs and electronic turnstile records enjoy a statutory presumption of authenticity under Section 116A. ${isFlagged ? 'Because automated sensors recorded zero precipitation while 39+ workers were biometric verified on site, the contractor diary stoppage claim is refuted and disallowed from excusable EOT calculation.' : 'Automated rain recordings corroborate the adverse weather stoppage during continuous concrete placement.'}
+          </p>
+        </div>
+      `;
+      openDrawer(`Weather Dossier: ${safeDate}`, drawerHtml);
+    }
+
+    // Multi-Agent Deliberation Agent Turn Drawer (Point 3)
+    function openAgentTurnDrawer(t) {
+      if (!t) return;
+      const safeName = escapeHtml(t.agent_name);
+      const safeRole = escapeHtml(t.agent_role);
+      const roleColor = t.agent_role === 'CLAIMANT' ? 'var(--accent-cyan)' : (t.agent_role === 'RESPONDENT' ? 'var(--accent-purple)' : 'var(--accent-amber)');
+      const drawerHtml = `
+        <div style="margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span class="badge" style="background: rgba(14, 165, 233, 0.15); color: ${roleColor}; font-size: 10.5px; padding: 3px 8px; font-weight: 700;">
+              ROLE: ${safeRole}
+            </span>
+            <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">TOOL: ${escapeHtml(t.tool_invoked || 's04_tool')}</span>
+          </div>
+          <h3 style="font-size: 15px; font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0;">${safeName}</h3>
+          <span style="font-size: 11px; color: var(--text-secondary);">Adversarial Deliberation Statutory Submission</span>
+        </div>
+
+        <div class="drawer-section">
+          <h4>Position Paper & Legal Arguments</h4>
+          <div class="stat-callout" style="border-left-color: ${roleColor};">
+            ${escapeHtml(t.position_statement)}
+          </div>
+        </div>
+
+        <div class="drawer-section">
+          <h4>Quantified Assessment Recommendations</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 12px;">
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">RECOMMENDED EOT</span>
+              <strong style="color: var(--accent-green); font-size: 14px;">${escapeHtml(t.recommended_eot_days)} Days</strong>
+            </div>
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">RECOMMENDED LD</span>
+              <strong style="color: var(--accent-red); font-size: 14px;">S$${escapeHtml(Number(t.recommended_ld_exposure_sgd || 0).toLocaleString())}</strong>
+            </div>
+            <div style="background: var(--bg-card); padding: 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 10px; display: block;">NOTICE STATUS</span>
+              <strong style="font-size: 14px;">${escapeHtml(t.notice_compliance_status)}</strong>
+            </div>
+          </div>
+        </div>
+      `;
+      openDrawer(`Agent Turn: ${safeName}`, drawerHtml);
+    }
+
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      // Sync Theme (Default: Light Mode)
+      let savedTheme = localStorage.getItem('acip_theme');
+      if (!savedTheme || savedTheme === 'dark') {
+        savedTheme = 'light';
+        localStorage.setItem('acip_theme', 'light');
+      }
+      applyTheme(savedTheme);
+
+      // Read URL Parameter or Saved Project (Default: Woodlands PRJ-WHC-COM-001)
+      const urlParams = new URLSearchParams(window.location.search);
+      const projectParam = urlParams.get('project') || localStorage.getItem('acip_active_project_id') || 'PRJ-WHC-COM-001';
+      currentProjectId = projectParam;
+      localStorage.setItem('acip_active_project_id', currentProjectId);
+      const pSel = document.getElementById('projectSelect');
+      if (pSel) pSel.value = currentProjectId;
+      loadProjectData(currentProjectId);
+      initGlobalTooltips();
+    });
+  </script>
+  <!-- Floating Global Tooltip Container -->
+  <div id="acipGlobalTooltip" class="acip-global-tooltip"></div>
+</body>
+</html>

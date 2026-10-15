@@ -1,7 +1,7 @@
 # <span style="color:red">🏗️ Agentic Construction Intelligence Platform (ACIP)</span>
 
-- **Go to Business Problem Statement & Case Studies:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/BUSINESS_PROBLEM_STATEMENT.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/BUSINESS_PROBLEM_STATEMENT.md), [S03](./S03_Agentic_Cost_And_Commercial_Control_Intelligence/BUSINESS_PROBLEM_STATEMENT.md)
-- **Go to Implementation Guide & Technical Runbook:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/README.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/README.md), [S03](./S03_Agentic_Cost_And_Commercial_Control_Intelligence/README.md)
+- **Go to Business Problem Statement & Case Studies:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/BUSINESS_PROBLEM_STATEMENT.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/BUSINESS_PROBLEM_STATEMENT.md), [S03](./S03_Agentic_Cost_And_Commercial_Control_Intelligence/BUSINESS_PROBLEM_STATEMENT.md), [S04](./S04_Agentic_Progress_And_Delay_Intelligence/BUSINESS_PROBLEM_STATEMENT.md)
+- **Go to Implementation Guide & Technical Runbook:** [S01](./S01_Agentic_Contractor_PQQ_And_Compliance_Intelligence/README.md), [S02](./S02_Agentic_Bid_Evaluation_And_Tender_Intelligence/README.md), [S03](./S03_Agentic_Cost_And_Commercial_Control_Intelligence/README.md), [S04](./S04_Agentic_Progress_And_Delay_Intelligence/README.md)
 
 ---
 
@@ -63,13 +63,12 @@ In the sections that follow, we dive deeper into the ACIP architecture and explo
   - [3.1 S01: Agentic Contractor PQQ & Compliance Intelligence (Active Reference Implementation)](#s01-pqq)
   - [3.2 S02: Agentic Bid Evaluation & Tender Intelligence (Active Reference Implementation)](#s02-tender)
   - [3.3 S03: Agentic Cost & Commercial Control Intelligence (Active Reference Implementation)](#s03-cost)
-  - [3.4 S04: Agentic Progress & Delay Intelligence (Planned)](#s04-progress)
+  - [3.4 S04: Agentic Progress & Delay Intelligence (Active Reference Implementation)](#s04-progress)
   - [3.5 S05: Agentic Quality & Defect Intelligence (Planned)](#s05-quality)
   - [3.6 S06: Agentic Contract & Claims Intelligence (Planned)](#s06-claims)
   - [3.7 S07: Agentic Regulatory & Code Intelligence (Planned)](#s07-regulatory)
-- [4. Frequently Asked Questions (FAQ)](FAQ.md)
-- [5. Project Execution, Velocity & Delivery Playbook](DELIVERY_PLAYBOOK_AND_METRICS.md)
-- [6. Open Source Governance & Licensing](#licensing)
+- [4. Open Source Governance & Licensing](#licensing)
+- [5. Frequently Asked Questions (FAQ)](FAQ.md)
 
 ---
 
@@ -142,7 +141,7 @@ The ACIP modular portfolio spans seven specialized, interoperable modules coveri
 │ S01          │ Contractor PQQ & Compliance Intel   │ Solvency & MOM    │ Reference Impl│
 │ S02          │ Bid Evaluation & Tender Intel       │ PQM & Drill-Down  │ Reference Impl│
 │ S03          │ Cost & Commercial Control Intel     │ 5D BIM & VOs      │ Reference Impl│
-│ S04          │ Progress & Delay Intelligence       │ SCL Delay & 4D    │ Planned       │
+│ S04          │ Progress & Delay Intelligence       │ SCL Delay & 4D    │ Reference Impl│
 │ S05          │ Quality & Defect Intelligence       │ CONQUAS Defect QA │ Planned       │
 │ S06          │ Contract & Claims Intelligence      │ SOPA Defense & EOT│ Planned       │
 │ S07          │ Regulatory & Code Intelligence      │ CORENET X openBIM │ Planned       │
@@ -317,7 +316,9 @@ In Singapore, this commercial tension is governed by strict statutory rules and 
 
 ---
 
-### <span id="s04-progress"></span>⏱️ 3.4 S04: Agentic Progress & Delay Intelligence (Planned) <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+### <span id="s04-progress"></span>⏱️ 3.4 S04: Agentic Progress & Delay Intelligence (Active Reference Implementation) <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+
+📝 Note: S04 implements Primavera P6 XER ingestion (Increment 1A), dynamic Critical Path Method (CPM) recalculation (Increment 1B), controlled Time Impact Analysis (TIA) with a FastMCP delay server (Increment 2), multi-agent delay deliberation with S05/S06 Parquet handshakes (Increment 3), and an interactive dashboard on Port 8087 (Increment 4). The test suite contains 78 test methods across 6 suites. S04 is fully validated across all four deployment approaches: Local Sovereign (Approach 1), Hybrid Sandbox (Approach 2), Multi-Cloud Serverless Workloads across AWS ECS, Azure Container Apps, and GCP Cloud Run (Approach 3), and Enterprise Landing Zone (Approach 4).
 
 #### 🎯 Core Business Problem & Industry Risk
 
@@ -335,11 +336,21 @@ When delays occur, establishing factual responsibility is complex and contentiou
 - **Multi-Source Site Evidence Reconciliation**: Ingests daily clerk-of-works logs, meteorological rainfall records, and turnstile workforce attendance data to independently substantiate or challenge delay narratives.
 - **SCL Protocol-Aligned Forensic Schedule Analytics**: Applies recognized methods described in the Society of Construction Law (SCL) Delay and Disruption Protocol—including Time Impact Analysis (TIA) and Window Analysis—against contemporaneous baseline programs and schedule updates. The system surfaces delay events and contemporaneous attributions for expert human review; legal liability for concurrent delay remains a matter for contractual interpretation and judicial determination.
 - **Proactive Milestone Slippage Alerts**: Highlights emerging non-critical delays trending toward critical path consumption, allowing project teams to intervene before milestone delivery dates are compromised.
+- **Controlled TIA Fragnet Evaluator & Float Erosion Engine (Increment 2)**: Simulates schedule impact under prospective/retrospective fragnets and quantifies total float consumption with fail-closed PSSCOC notice-window checks.
+- **Downstream Cross-Module Lakehouse Handshakes (Increment 3)**: Emits revision-pinned Parquet link tables with SHA-256 manifest envelopes to S05 Quality Inspection (WBS-activity defect links) and S06 SOPA Claims Triage (formal delay-claim linkages).
+- **Adversarial Multi-Agent Deliberation Theater (Increment 3)**: Orchestrates structured debate between Contractor Claims Agent, Employer QS Agent, and Superintending Officer Agent to reach transparent, balanced delay consensus.
+- **Interactive Executive Delay Cockpit (Increment 4)**: Real-time interactive dashboard on Port 8087 featuring CPM network graphs, what-if fragnet simulation, claims ledger, rainfall radar, and live deliberation theater.
 
 #### 🛠️ Technical Stack & Architectural Mechanics
 
-- **Schedule Ingestion & Graph Modeling**: Python `xerparser` / `PyP6Xer` for native Primavera P6 XER parsing and MPXJ for Microsoft Project files, paired with NetworkX (and `rustworkx` for massive enterprise programs exceeding 100,000 activities) for deterministic critical path network modeling, with ground-truth float validated against the scheduling engine.
+- **Schedule Ingestion & Graph Modeling**: Enterprise Primavera P6 XER parser with fail-closed calendar resolution, topological forward/backward pass recalculation engine, and NetworkX directed acyclic graph (DAG) modeling.
 - **Forensic Evidence Reconciliation**: DuckDB temporal event store cross-referencing daily clerk-of-works logs and meteorological records against schedule variance timelines.
+- **Deterministic FastMCP Delay Server**: 6 typed tools on Port 8087 exposing baseline comparison, dynamic CPM recalculation, TIA fragnet evaluation, float erosion, notice compliance, and liquidated damages exposure.
+- **Testing**: 78 automated test methods across 6 suites (Gate 2, Increments 1A, 1B, 2, 3 and 4) covering XER parsing and provenance, CPM forward/backward passes, TIA fragnet evaluation, multi-agent deliberation, dashboard API behaviour and lakehouse manifest integrity.
+
+#### 📚 Documentation & Technical Guides
+- 📄 **[Go to S04 Business Problem Statement & Case Studies](./S04_Agentic_Progress_And_Delay_Intelligence/BUSINESS_PROBLEM_STATEMENT.md)**
+- 🛠️ **[Go to S04 Implementation Guide & Technical Runbook](./S04_Agentic_Progress_And_Delay_Intelligence/README.md)**
 
 ---
 
@@ -421,28 +432,10 @@ Historically, regulatory coordination has presented significant schedule uncerta
 - **openBIM Model Ingestion**: `IfcOpenShell` parsing buildingSMART IFC4 schemas and Information Delivery Specifications (IDS) XML rulesets.
 - **Spatial Geometry Rule Engine**: Deterministic Python computational geometry engine evaluating 3D spatial clearance vectors, travel distances, and GFA envelope boundaries.
 
----
-
-## <span id="faq"></span><span style="color:red">❓ 4. Frequently Asked Questions (FAQ)</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
-
-For deep architectural, statutory, deployment, and operational inquiries—including the status of upcoming modules (S02 through S07), sovereign air-gapped deployment, and the deterministic execution boundary—consult the comprehensive **[Platform FAQ](FAQ.md)**.
 
 ---
 
-## <span id="delivery-playbook"></span><span style="color:red">⏱️ 5. Project Execution, Velocity & Delivery Playbook</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
-
-To support continuous productivity improvements and benchmark project delivery timelines for future enterprise AI initiatives, consult our detailed **[Project Execution, Velocity & Delivery Playbook](DELIVERY_PLAYBOOK_AND_METRICS.md)**. 
-
-It documents:
-- Empirical time-tracking metrics comparing S01 baseline vs S02 acceleration.
-- Scope evolution history from single-module prototype to 7-stage full-lifecycle platform.
-- Product positioning and narrative packaging playbooks (e.g. anti-hype hooks, the six-word architectural punchline).
-- Singapore statutory framework grounding and synthetic data realism benchmarks.
-- A standardized 8-step execution checklist for future modules.
-
----
-
-## <span id="licensing"></span><span style="color:red">📄 6. Open Source Governance & Licensing</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
+## <span id="licensing"></span><span style="color:red">📄 4. Open Source Governance & Licensing</span> <span style="font-size: 14px; font-weight: normal;">[⬆️ Back to TOC](#toc)</span>
 
 The Agentic Construction Intelligence Platform (ACIP) is released as an open reference architecture and research Proof of Concept under the **Apache License 2.0**.
 

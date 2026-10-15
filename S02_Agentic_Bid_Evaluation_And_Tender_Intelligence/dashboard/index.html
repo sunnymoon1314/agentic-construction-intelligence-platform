@@ -1077,7 +1077,7 @@
       background-color: rgba(220, 38, 38, 0.05);
     }
 
-    .drawer-council-card {
+    .drawer-deliberation-card {
       background: var(--bg-primary);
       border: 1px solid var(--border-color);
       border-radius: 7px;
@@ -2215,16 +2215,16 @@
       renderBoqTableOnly();
 
       // 6. Deliberation Memo
-      const councilText = document.getElementById("drawerCouncilText");
-      if (councilText) {
+      const deliberationText = document.getElementById("drawerDeliberationText");
+      if (deliberationText) {
         if (bidder.bidder_id === "B02") {
-          councilText.innerHTML = `
+          deliberationText.innerHTML = `
             <div>🕵️‍♂️ <strong>Forensic QS Auditor:</strong> <span style="font-weight: 500;">"Line-item leveling demonstrates systematic rate distortion between early civil excavation (Item 02.01: S$64.75 vs S$35.00) and late MEP chillers (Item 06.01: S$487.50 vs S$750.00). Unearned cash-flow extraction risk quantified at S$20.62M."</span></div>
             <div style="margin-top: 4px;">⚖️ <strong>Commercial &amp; Contracts Agent:</strong> <span style="font-weight: 500;">"Recommend withholding progress certification for civil works exceeding PTE benchmark rates until superstructure reaches L10."</span></div>
             <div style="margin-top: 4px;">🏛️ <strong>Tender Board Chairman:</strong> <span style="font-weight: 500;">"Clarification Notice CL-01 dispatched requesting substructure unit rate justification and revised milestone breakdown."</span></div>
           `;
         } else if (bidder.bidder_id === "B04") {
-          councilText.innerHTML = `
+          deliberationText.innerHTML = `
             <div>🕵️‍♂️ <strong>Forensic QS Auditor:</strong> <span style="font-weight: 500;">"Item 07.01 copper gas piping omitted from lump sum total. Equalization adjustment adds S$6.79M, increasing normalized bid from S$105.15M to S$111.94M."</span></div>
             <div style="margin-top: 4px;">⚖️ <strong>Commercial &amp; Contracts Agent:</strong> <span style="font-weight: 500;">"Clause QUAL-14.2 violates Instruction to Tenderers Section 4. Bid is conditional and legally non-compliant unless unconditionally withdrawn."</span></div>
             <div style="margin-top: 4px;">🏛️ <strong>Tender Board Chairman:</strong> <span style="font-weight: 500;">"Issue Clarification Letter CL-02 requiring unconditional withdrawal within 48 hours or formal disqualification."</span></div>
@@ -2242,7 +2242,7 @@
             <div style="margin-top: 4px;">🏛️ <strong>Tender Board Chairman:</strong> <span style="font-weight: 500;">"Unanimous recommendation for contract award at S$113.87M. Letter of Acceptance ready for Tender Board sign-off."</span></div>
           `;
         } else {
-          councilText.innerHTML = `
+          deliberationText.innerHTML = `
             <div>🕵️‍♂️ <strong>Forensic QS Auditor:</strong> <span style="font-weight: 500;">"Unit rates reflect high overhead markup (+12.0% above market median). No front-loading detected."</span></div>
             <div style="margin-top: 4px;">⚖️ <strong>Commercial &amp; Contracts Agent:</strong> <span style="font-weight: 500;">"Standard commercial terms without contractual qualifications."</span></div>
             <div style="margin-top: 4px;">🏛️ <strong>Tender Board Chairman:</strong> <span style="font-weight: 500;">"Non-competitive tender sum. Ranked #5 in commercial evaluation."</span></div>
@@ -2632,12 +2632,12 @@ Notice regarding tender pricing evaluation and benchmarking.`;
       </div>
 
       <!-- 5. Multi-Agent Forensic Deliberation Evidence Trail -->
-      <div class="drawer-council-card" id="drawerCouncilCard">
+      <div class="drawer-deliberation-card" id="drawerDeliberationCard">
         <div style="font-weight: 800; font-size: 11.5px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
           <span>🏛️</span>
           <span>Multi-Agent Deliberation Evidence Trail (QS Auditor • Contracts Counsel • Tender Board)</span>
         </div>
-        <div style="font-size: 11px; line-height: 1.5; color: var(--text-secondary);" id="drawerCouncilText">
+        <div style="font-size: 11px; line-height: 1.5; color: var(--text-secondary);" id="drawerDeliberationText">
           <!-- Populated dynamically -->
         </div>
       </div>
