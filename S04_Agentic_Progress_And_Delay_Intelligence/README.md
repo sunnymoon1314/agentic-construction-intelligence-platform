@@ -398,6 +398,10 @@ Open `http://localhost:8087` in any modern web browser to access:
 
 ![alt text](images/s04_dashboard_01b_local_8087_dark_mode.png)
 
+![alt text](images/s04_dashboard_01c_local_8087_light_mode.png)
+
+![alt text](images/s04_dashboard_01d_local_8087_dark_mode.png)
+
 ![alt text](images/s04_dashboard_02a_metric_drawer_forecast_finish.png)
 
 ![alt text](images/s04_dashboard_02b_metric_drawer_net_critical_delay.png)

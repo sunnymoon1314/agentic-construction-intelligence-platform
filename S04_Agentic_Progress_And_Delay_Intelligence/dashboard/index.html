@@ -1475,12 +1475,19 @@
     <!-- TAB 1: SCHEDULE & CPM CRITICAL PATH -->
     <div id="tab-schedule" class="tab-panel active">
       <div class="section-card">
-        <div class="section-header">
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
           <div class="section-title">
             <span>📊 Primavera P6 Schedule Activities (Discrete-Day CPM)</span>
           </div>
-          <div>
-            <span class="calc-boundary-badge" id="schedVersionBadge">Baseline BL-01 vs Progress Update UP-01</span>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <div id="scheduleVersionSelectorWrapper" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(30,41,59,0.7); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px;">VERSION:</span>
+              <select id="scheduleVersionSelect" class="form-select" style="padding: 2px 8px; font-size: 0.82rem; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer;" onchange="onScheduleVersionChange(this.value)">
+                <option value="BL-01" selected>BL-01: Contract Baseline (6 Activities)</option>
+                <option value="EXP-01">EXP-01: Expanded Baseline (26 Activities)</option>
+              </select>
+            </div>
+            <span class="calc-boundary-badge" id="schedVersionBadge">Schedule: Baseline BL-01</span>
           </div>
         </div>
 
@@ -2039,13 +2046,55 @@
       }
     }
 
+    const initialUrlParams = new URLSearchParams(window.location.search);
+    let currentScheduleVersion = initialUrlParams.get('version') || 'BL-01';
+
+    function onScheduleVersionChange(newVersion) {
+      currentScheduleVersion = newVersion;
+      const projSelect = document.getElementById('projectSelect');
+      const pid = projSelect ? projSelect.value : 'PRJ-WHC-COM-001';
+      loadSchedule(pid, newVersion);
+    }
+
     // Load Schedule with Time-Scaled Calendar CPM Gantt
-    async function loadSchedule(projectId) {
+    async function loadSchedule(projectId, version = currentScheduleVersion) {
       try {
-        const res = await fetch(`/api/schedule?project_id=${encodeURIComponent(projectId)}`);
-        const data = await res.json();
+        const verWrapper = document.getElementById('scheduleVersionSelectorWrapper');
+        const verSelect = document.getElementById('scheduleVersionSelect');
         const tbody = document.getElementById('scheduleTableBody');
+
+        if (projectId === 'PRJ-WHC-COM-001') {
+          if (verWrapper) verWrapper.style.display = 'inline-flex';
+          if (verSelect) verSelect.value = version;
+        } else {
+          if (verWrapper) verWrapper.style.display = 'none';
+          version = 'BL-01';
+        }
+
+        const res = await fetch(`/api/schedule?project_id=${encodeURIComponent(projectId)}&version=${encodeURIComponent(version)}`);
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const errMsg = errData.error || `HTTP ${res.status}: Failed to load schedule version ${version}`;
+          if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; padding: 24px; color: var(--accent-red); font-weight: 700;">⚠️ ${escapeHtml(errMsg)}</td></tr>`;
+          }
+          if (document.getElementById('schedVersionBadge')) {
+            document.getElementById('schedVersionBadge').innerText = `Error: ${version} unavailable`;
+          }
+          return;
+        }
+
+        const data = await res.json();
         tbody.innerHTML = '';
+
+        // Update Version Badge
+        if (document.getElementById('schedVersionBadge')) {
+          if (data.schedule_version === 'EXP-01') {
+            document.getElementById('schedVersionBadge').innerText = 'Schedule: Baseline EXP-01';
+          } else {
+            document.getElementById('schedVersionBadge').innerText = 'Schedule: Baseline BL-01';
+          }
+        }
 
         // Populate Fragnet Simulator Activity Dropdown dynamically for active project
         const insertSel = document.getElementById('insertActivity');
@@ -2149,11 +2198,25 @@
           }
 
           let descCellHtml = escapeHtml(act.task_name);
-          if (act.activity_id === 'ACT-06') {
+          if (data.schedule_version === 'BL-01' && act.activity_id === 'ACT-06') {
             descCellHtml = `
               <strong>${escapeHtml(act.task_name)}</strong>
               <div style="font-size:0.68rem; color:var(--accent-purple); font-weight:700; margin-top:3px;">
                 🚩 Contract Completion Milestone • Baseline: ${escapeHtml(act.baseline_finish || '2026-11-19')} | Forecast: ${escapeHtml(act.forecast_finish || '2026-11-24')} (+3 workdays)
+              </div>
+            `;
+          } else if (data.schedule_version === 'EXP-01' && act.activity_id === 'ACT-26') {
+            descCellHtml = `
+              <strong>${escapeHtml(act.task_name)}</strong>
+              <div style="font-size:0.68rem; color:var(--accent-purple); font-weight:700; margin-top:3px;">
+                🏁 Terminal Project Completion Milestone • Early Finish: ${escapeHtml(act.early_finish || '2027-03-30')} (107 workdays)
+              </div>
+            `;
+          } else if (data.schedule_version === 'EXP-01' && act.activity_id === 'ACT-18') {
+            descCellHtml = `
+              <strong>${escapeHtml(act.task_name)}</strong>
+              <div style="font-size:0.68rem; color:var(--accent-blue); font-weight:700; margin-top:3px;">
+                🚩 Intermediate Milestone: ERSS Handover • Target: ${escapeHtml(act.early_finish || '2027-02-11')}
               </div>
             `;
           }
@@ -2940,11 +3003,11 @@ Under contract form <strong>${escapeHtml(pData.contract_form)}</strong> and Sing
           <span style="font-size: 11px; color: var(--text-secondary);">Authoritative Discrete-Day CPM Network & Delay Forensic Dossier</span>
         </div>
 
-        ${safeId === 'ACT-06' ? `
+        ${(currentScheduleVersion === 'BL-01' && safeId === 'ACT-06') ? `
         <div class="drawer-section" style="background: rgba(139, 92, 246, 0.08); border: 1.5px solid var(--accent-purple); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
             <strong style="color: var(--accent-purple); font-size: 12.5px;">🚩 Contractual Completion Milestone Forensic Dossier</strong>
-            <span class="badge badge-purple" style="font-size: 10px;">TERMINAL NETWORK MILESTONE</span>
+            <span class="badge badge-purple" style="font-size: 10px;">TERMINAL NETWORK MILESTONE (BL-01)</span>
           </div>
           <div style="font-size: 11.5px; line-height: 1.6; color: var(--text-primary);">
             <div><strong>Milestone Role:</strong> Substructure Package Practical Completion (Contractual Target Milestone).</div>
@@ -2952,6 +3015,34 @@ Under contract form <strong>${escapeHtml(pData.contract_form)}</strong> and Sing
             <div><strong>Contemporaneous Forecast (UP-01):</strong> <code>2026-11-24</code> (+3 workdays / 5 calendar days variance).</div>
             <div><strong>Causal Lineage:</strong> Groundwater Ingress (DLY-2026-001) delayed predecessor ACT-03 Basement Excavation by 3 workdays, shifting downstream ACT-05 Basement Slab Casting and driving terminal milestone ACT-06 from 19 Nov to 24 Nov.</div>
             <div><strong>Critical Path Status:</strong> Total Float strictly 0 workdays. This terminal milestone governs the statutory completion clock and liquidated damages liability.</div>
+          </div>
+        </div>
+        ` : ''}
+
+        ${(currentScheduleVersion === 'EXP-01' && safeId === 'ACT-26') ? `
+        <div class="drawer-section" style="background: rgba(139, 92, 246, 0.08); border: 1.5px solid var(--accent-purple); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="color: var(--accent-purple); font-size: 12.5px;">🏁 Terminal Project Completion Milestone</strong>
+            <span class="badge badge-purple" style="font-size: 10px;">TERMINAL PROJECT MILESTONE</span>
+          </div>
+          <div style="font-size: 11.5px; line-height: 1.6; color: var(--text-primary);">
+            <div><strong>Milestone Role:</strong> Substructure Practical Completion (26-Activity Network Terminal Node).</div>
+            <div><strong>Target Finish Date:</strong> <code>2027-03-30</code> (Total Workdays: 107 under CAL-STD-5D).</div>
+            <div><strong>Critical Path Status:</strong> Total Float strictly 0 workdays. Governed by critical predecessor ACT-25 (B1 Suspended Slab Casting).</div>
+          </div>
+        </div>
+        ` : ''}
+
+        ${(currentScheduleVersion === 'EXP-01' && safeId === 'ACT-18') ? `
+        <div class="drawer-section" style="background: rgba(59, 130, 246, 0.08); border: 1.5px solid var(--accent-blue); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <strong style="color: var(--accent-blue); font-size: 12.5px;">🚩 Intermediate ERSS Completion & Handover Milestone</strong>
+            <span class="badge badge-blue" style="font-size: 10px;">INTERMEDIATE HANDOVER MILESTONE</span>
+          </div>
+          <div style="font-size: 11.5px; line-height: 1.6; color: var(--text-primary);">
+            <div><strong>Milestone Role:</strong> Earth Retaining Stabilising Structure (ERSS) Excavation Handover.</div>
+            <div><strong>Contractual Target Finish:</strong> <code>2027-02-11</code> (Workday 73).</div>
+            <div><strong>Critical Path Status:</strong> Critical path driver (Total Float strictly 0 workdays). Successor to ACT-17 (Blinding Concrete Pour) and predecessor to ACT-19 (Sub-slab Waterproofing).</div>
           </div>
         </div>
         ` : ''}
@@ -3053,7 +3144,7 @@ Under contract form <strong>${escapeHtml(pData.contract_form)}</strong> and Sing
         <div class="drawer-section">
           <h4>SCL Delay Protocol &amp; Singapore Engineering Jurisprudence</h4>
           <p style="font-size: 12px; line-height: 1.5; color: var(--text-secondary); margin-bottom: 8px;">
-            In Singapore engineering litigation (<em>Comfort Management v OGSP</em> [2007] SGCA 10), the Court of Appeal ruled that critical path delay must be demonstrated contemporaneously through objective CPM analysis. ${isCrit ? `Because <strong>${safeId}</strong> has <strong>Total Float = 0</strong>, delay here directly generates an entitlement to Extension of Time (if employer risk) or liability for liquidated damages (if contractor risk).` : `Because <strong>${safeId}</strong> has <strong>${tf} days of float</strong>, float belongs to the project on a first-come first-served basis until exhausted.`}
+            In Singapore engineering litigation (Comfort Management v OGSP [2007] SGCA 10), the Court of Appeal ruled that critical path delay must be demonstrated contemporaneously through objective CPM analysis. ${isCrit ? `Because <strong>${safeId}</strong> has <strong>Total Float = 0</strong>, delay here directly generates an entitlement to Extension of Time (if employer risk) or liability for liquidated damages (if contractor risk).` : `Because <strong>${safeId}</strong> has <strong>${tf} days of float</strong>, float belongs to the project on a first-come first-served basis until exhausted.`}
           </p>
         </div>
 

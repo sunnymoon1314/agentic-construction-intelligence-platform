@@ -242,6 +242,9 @@ PROJECT_PROFILES = {
         "badge_color": "red",
         "baseline_version": "BL-01",
         "latest_update_version": "UP-01",
+        "available_versions": ["BL-01", "EXP-01"],
+        "candidate_version": "EXP-01",
+        "candidate_status": "PROPOSED",
         "completion_milestone_id": "ACT-06",
         "completion_milestone_name": "Substructure Complete Milestone",
         "baseline_completion_date": "2026-11-19",
@@ -786,8 +789,135 @@ class ACIPS04DashboardHandler(http.server.SimpleHTTPRequestHandler):
             if pid not in PROJECT_PROFILES and pid not in LEGACY_PROJECT_PROFILES:
                 self._send_error(404, f"Project not found: {pid}")
                 return
+
+            req_version = qs.get("version", qs.get("schedule_version", ["BL-01"]))[0].strip().upper()
+            if not req_version:
+                req_version = "BL-01"
+
             proj = PROJECT_PROFILES.get(pid) or LEGACY_PROJECT_PROFILES.get(pid)
             if pid == "PRJ-WHC-COM-001":
+                if req_version not in ("BL-01", "EXP-01"):
+                    self._send_error(404, f"Schedule version '{req_version}' not found for project '{pid}'. Available versions: BL-01, EXP-01")
+                    return
+
+                if req_version == "EXP-01":
+                    # Load candidate EXP-01 from authoritative candidate directory
+                    exp01_dir = os.path.join(S04_ROOT, "data", "candidate_exp01")
+                    cpm_json_path = os.path.join(exp01_dir, "cpm_execution_output.json")
+                    act_parquet_path = os.path.join(exp01_dir, "schedule_activities.parquet")
+                    rel_parquet_path = os.path.join(exp01_dir, "schedule_relationships.parquet")
+
+                    activities_loaded = None
+                    relationships_loaded = None
+
+                    # Load authoritative CPM calculation output
+                    if os.path.exists(cpm_json_path):
+                        try:
+                            with open(cpm_json_path, "r", encoding="utf-8") as f:
+                                cpm_data = json.load(f)
+                            wbs_map = {}
+                            if os.path.exists(act_parquet_path):
+                                try:
+                                    import pyarrow.parquet as pq
+                                    df_a = pq.read_table(act_parquet_path).to_pandas()
+                                    wbs_map = dict(zip(df_a["activity_id"], df_a["wbs_code"]))
+                                except Exception:
+                                    pass
+
+                            activities_loaded = []
+                            for act in cpm_data.get("activities", []):
+                                aid = act["activity_id"]
+                                is_ms = act.get("is_milestone", False) or (int(act.get("duration_workdays", 0)) == 0)
+                                act_dict = {
+                                    "wbs_code": wbs_map.get(aid, "WBS 1.0"),
+                                    "activity_id": aid,
+                                    "task_name": act.get("activity_name", ""),
+                                    "duration_workdays": int(act.get("duration_workdays", 0)),
+                                    "early_start": act.get("early_start"),
+                                    "early_finish": act.get("early_finish"),
+                                    "late_start": act.get("late_start"),
+                                    "late_finish": act.get("late_finish"),
+                                    "total_float": int(act.get("total_float", 0)),
+                                    "free_float": int(act.get("free_float", 0)),
+                                    "is_critical": bool(act.get("is_critical", False)),
+                                    "is_milestone": is_ms,
+                                    "milestone_type": act.get("milestone_type"),
+                                    "baseline_finish": act.get("early_finish"),
+                                }
+                                if aid == "ACT-26":
+                                    act_dict["milestone_role"] = "CONTRACT_PACKAGE_PRACTICAL_COMPLETION"
+                                elif aid == "ACT-18":
+                                    act_dict["milestone_role"] = "ERSS_COMPLETION_HANDOVER"
+                                activities_loaded.append(act_dict)
+                        except Exception as exc:
+                            logger.warning("Failed to load EXP-01 cpm_execution_output.json: %s", exc)
+                            activities_loaded = None
+
+                    # Load relationships from candidate parquet
+                    if os.path.exists(rel_parquet_path):
+                        try:
+                            import pyarrow.parquet as pq
+                            rel_df = pq.read_table(rel_parquet_path).to_pandas()
+                            rel_whc = rel_df[rel_df["project_id"] == pid]
+                            if not rel_whc.empty:
+                                relationships_loaded = []
+                                for _, r in rel_whc.iterrows():
+                                    relationships_loaded.append({
+                                        "pred": str(r["predecessor_activity_id"]),
+                                        "succ": str(r["successor_activity_id"]),
+                                        "type": str(r["relationship_type"]),
+                                        "lag": int(r["lag_days"]),
+                                        "is_driving": bool(r.get("is_driving", False))
+                                    })
+                        except Exception as exc:
+                            logger.warning("Failed to load candidate schedule_relationships.parquet: %s", exc)
+                            relationships_loaded = None
+
+                    if not activities_loaded or not relationships_loaded:
+                        self._send_error(500, "Candidate EXP-01 files are missing or could not be loaded from data/candidate_exp01")
+                        return
+
+                    self._send_json({
+                        "project_id": pid,
+                        "schedule_version": "EXP-01",
+                        "version_status": "PROPOSED",
+                        "version_type": "PROPOSED_EXPANDED_BASELINE",
+                        "is_candidate": True,
+                        "completion_milestone_id": "ACT-26",
+                        "completion_milestone_name": "Substructure Practical Completion Milestone",
+                        "milestone_role": "CONTRACT_PACKAGE_PRACTICAL_COMPLETION",
+                        "erss_milestone_id": "ACT-18",
+                        "erss_milestone_name": "ERSS Completion & Handover Milestone",
+                        "erss_milestone_date": "2027-02-11",
+                        "baseline_completion_date": "2027-03-30",
+                        "forecast_completion_date": "2027-03-30",
+                        "project_early_start": "2026-11-02",
+                        "project_early_finish": "2027-03-30",
+                        "schedule_variance_workdays": 0,
+                        "schedule_variance_calendar_days": 0,
+                        "total_workdays": 107,
+                        "activity_count": len(activities_loaded),
+                        "relationship_count": len(relationships_loaded),
+                        "critical_activity_count": sum(1 for a in activities_loaded if a["is_critical"]),
+                        "non_critical_activity_count": sum(1 for a in activities_loaded if not a["is_critical"]),
+                        "is_authoritative_fixture": True,
+                        "is_parquet_backed": True,
+                        "is_fallback_schedule": False,
+                        "calculation_type": "CANDIDATE_SCHEDULE_EXP01_PARQUET",
+                        "recalculation_mode": "DETERMINISTIC_CPM_CALCULATION",
+                        "activities_lineage": "data/candidate_exp01/schedule_activities.parquet",
+                        "relationships_lineage": "data/candidate_exp01/schedule_relationships.parquet",
+                        "data_source": "data/candidate_exp01/schedule_activities.parquet & data/candidate_exp01/schedule_relationships.parquet",
+                        "available_versions": [
+                            {"version": "BL-01", "name": "Contract Baseline (6 Activities)"},
+                            {"version": "EXP-01", "name": "Expanded Baseline (26 Activities)"}
+                        ],
+                        "activities": activities_loaded,
+                        "relationships": relationships_loaded
+                    })
+                    return
+
+                # BL-01 Default Path
                 act_parquet_path = SCHEDULE_ACTIVITIES_PARQUET_PATH
                 rel_parquet_path = SCHEDULE_RELATIONSHIPS_PARQUET_PATH
                 activities_loaded = None
@@ -864,6 +994,9 @@ class ACIPS04DashboardHandler(http.server.SimpleHTTPRequestHandler):
                 self._send_json({
                     "project_id": pid,
                     "schedule_version": "BL-01",
+                    "version_status": "APPROVED",
+                    "version_type": "CONTRACT_BASELINE",
+                    "is_candidate": False,
                     "completion_milestone_id": "ACT-06",
                     "completion_milestone_name": "Substructure Complete Milestone",
                     "milestone_role": "CONTRACT_PACKAGE_PRACTICAL_COMPLETION",
@@ -879,6 +1012,10 @@ class ACIPS04DashboardHandler(http.server.SimpleHTTPRequestHandler):
                     "activities_lineage": act_lineage,
                     "relationships_lineage": rel_lineage,
                     "data_source": f"{act_lineage} & {rel_lineage}" if is_full_parquet else "IN_MEMORY_FIXTURE_FALLBACK",
+                    "available_versions": [
+                        {"version": "BL-01", "name": "Contract Baseline (6 Activities)"},
+                        {"version": "EXP-01", "name": "Expanded Baseline (26 Activities)"}
+                    ],
                     "activities": activities_loaded,
                     "relationships": relationships_loaded
                 })
@@ -1063,6 +1200,7 @@ class ACIPS04DashboardHandler(http.server.SimpleHTTPRequestHandler):
                 proj_acts = OTHER_PROJECT_ACTIVITIES.get(project_id, WHC_BASELINE_ACTIVITIES)
 
             valid_activities = {a["activity_id"] for a in proj_acts}.union({a["activity_id"] for a in WHC_BASELINE_ACTIVITIES})
+            valid_activities.update(f"ACT-{i:02d}" for i in range(1, 27))
             for acts in OTHER_PROJECT_ACTIVITIES.values():
                 valid_activities.update(a["activity_id"] for a in acts)
 

@@ -22,26 +22,6 @@ audit_history/
 **/audit_history/
 *.log
 **/*.log
-
-# Internal Delivery Playbook & Metrics & Logbooks
-DELIVERY_PLAYBOOK_AND_METRICS.md
-**/DELIVERY_PLAYBOOK_AND_METRICS.md
-ACIP_MASTER_ACTIVITY_LOGBOOK.md
-**/ACIP_MASTER_ACTIVITY_LOGBOOK.md
-*LOGBOOK*.md
-**/*LOGBOOK*.md
-
-# Internal AI Council & CJ Review Documents
-ACIP_S02_AI_COUNCIL_REVIEW_DOSSIER.md
-**/ACIP_S02_AI_COUNCIL_REVIEW_DOSSIER.md
-COUNCIL_REVIEW_RESPONSE_MATRIX.md
-**/COUNCIL_REVIEW_RESPONSE_MATRIX.md
-ACIP_S03_AI_COUNCIL_REVIEW_DOSSIER.md
-**/ACIP_S03_AI_COUNCIL_REVIEW_DOSSIER.md
-*CJ_Review*/
-**/*CJ_Review*/**
-
-
 # Rust Build Artifacts
 target/
 **/target/
